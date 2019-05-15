@@ -1,0 +1,9 @@
+version: "2"
+services:
+  elm:
+      build: container
+      volumes:
+        - .:/work:delegated
+        - ./dist:/work/output/:delegated
+      working_dir: /work
+      command: watch.sh build.sh
