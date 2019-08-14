@@ -1,7 +1,7 @@
 module Main exposing (Msg(..), main, update, view)
 
 import Browser
-import Html exposing (Html, button, div, text)
+import Html exposing (Html, button, div, text, p)
 import Html.Events exposing (onClick)
 
 
@@ -16,12 +16,14 @@ type Msg
 
 init : Model
 init =
-  { count = 2
+  { count = 1
+  , questions = ["double quote","proper syntax"]
   }
 
 
 type alias Model =
   { count: Int
+  , questions: List String
   }
 
 
@@ -30,15 +32,15 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Increment ->
-            { count = (model.count + 1)
+            { model | count = (model.count + 1)
             }
 
         Decrement ->
-            { count = (model.count - 1)
+            { model | count = (model.count - 1)
             }
 
         ClearCount ->
-            { count = 0
+            { model | count = 0
             }
 
 
@@ -50,4 +52,10 @@ view model =
         , button [ onClick Increment ] [ text "+" ]
         , div [] []
         , button [ onClick ClearCount ] [ text "Zero" ]
+        , div [] ( List.map renderQuestion model.questions )
         ]
+
+
+renderQuestion : String -> Html msg
+renderQuestion questionstring =
+      p [] [ text questionstring ]
