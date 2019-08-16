@@ -18,14 +18,38 @@ init : Model
 init =
   { count = 1
   , questions = ["double quote","proper syntax"]
+  , prompts = initialPrompts
   }
+
+
+initialPrompts : List Prompt
+initialPrompts =
+  [
+    { question = "Water is good."
+    , responseOptions = [Agree, Neutral, Disagree]
+    , selectedResponse = Nothing
+    }
+  ]
 
 
 type alias Model =
   { count: Int
   , questions: List String
+  , prompts: List Prompt
   }
 
+
+type Response
+    = Agree
+    | Neutral
+    | Disagree
+
+
+type alias Prompt =
+  { question: String
+  , responseOptions: List Response
+  , selectedResponse: Maybe Response
+  }
 
 
 update : Msg -> Model -> Model
@@ -52,10 +76,10 @@ view model =
         , button [ onClick Increment ] [ text "+" ]
         , div [] []
         , button [ onClick ClearCount ] [ text "Zero" ]
-        , div [] ( List.map renderQuestion model.questions )
+        , div [] ( List.map renderQuestion model.prompts )
         ]
 
 
-renderQuestion : String -> Html msg
-renderQuestion questionstring =
-      p [] [ text questionstring ]
+renderQuestion : Prompt -> Html msg
+renderQuestion prompt =
+      p [] [ text prompt.question ]
