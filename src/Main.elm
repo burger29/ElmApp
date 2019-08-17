@@ -28,6 +28,7 @@ initialPrompts =
     { question = "Water is good."
     , responseOptions = [Agree, Neutral, Disagree]
     , selectedResponse = Nothing
+    , answer = "Agree"
     }
   ]
 
@@ -49,6 +50,7 @@ type alias Prompt =
   { question: String
   , responseOptions: List Response
   , selectedResponse: Maybe Response
+  , answer: String
   }
 
 
@@ -77,9 +79,15 @@ view model =
         , div [] []
         , button [ onClick ClearCount ] [ text "Zero" ]
         , div [] ( List.map renderQuestion model.prompts )
+        , div [] ( List.map renderAnswer model.prompts )
         ]
 
 
 renderQuestion : Prompt -> Html msg
 renderQuestion prompt =
       p [] [ text prompt.question ]
+
+
+renderAnswer : Prompt -> Html msg
+renderAnswer prompt =
+      p [] [ text prompt.answer ]
