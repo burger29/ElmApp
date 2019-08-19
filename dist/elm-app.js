@@ -4310,15 +4310,9 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$Agree = function (a) {
-	return {$: 0, a: a};
-};
-var author$project$Main$Disagree = function (a) {
-	return {$: 2, a: a};
-};
-var author$project$Main$Neutral = function (a) {
-	return {$: 1, a: a};
-};
+var author$project$Main$Agree = 0;
+var author$project$Main$Disagree = 2;
+var author$project$Main$Neutral = 1;
 var elm$core$Maybe$Nothing = {$: 1};
 var elm$core$Basics$EQ = 1;
 var elm$core$Basics$LT = 0;
@@ -4405,11 +4399,7 @@ var author$project$Main$initialPrompts = _List_fromArray(
 		{
 		M: 'Water is good.',
 		N: _List_fromArray(
-			[
-				author$project$Main$Agree('Agree'),
-				author$project$Main$Neutral('Neutral'),
-				author$project$Main$Disagree('Disagree')
-			]),
+			[0, 1, 2]),
 		ak: elm$core$Maybe$Nothing
 	}
 	]);
@@ -4441,6 +4431,16 @@ var author$project$Main$update = F2(
 var author$project$Main$ClearCount = 2;
 var author$project$Main$Decrement = 1;
 var author$project$Main$Increment = 0;
+var author$project$Main$convertResponse = function (someResponse) {
+	switch (someResponse) {
+		case 0:
+			return 'Agrees';
+		case 1:
+			return 'Neutral';
+		default:
+			return 'Disagree';
+	}
+};
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -4854,27 +4854,15 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 var elm$html$Html$li = _VirtualDom_node('li');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var author$project$Main$unwrapResponse = function (someResponse) {
-	var listItem = function (r) {
-		return A2(
-			elm$html$Html$li,
-			_List_Nil,
-			_List_fromArray(
-				[
-					elm$html$Html$text(r)
-				]));
-	};
-	switch (someResponse.$) {
-		case 0:
-			var response = someResponse.a;
-			return listItem(response);
-		case 1:
-			var response = someResponse.a;
-			return listItem(response);
-		default:
-			var response = someResponse.a;
-			return listItem(response);
-	}
+var author$project$Main$renderResponseList = function (response) {
+	return A2(
+		elm$html$Html$li,
+		_List_Nil,
+		_List_fromArray(
+			[
+				elm$html$Html$text(
+				author$project$Main$convertResponse(response))
+			]));
 };
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
@@ -4964,7 +4952,7 @@ var author$project$Main$renderQuestion = function (prompt) {
 				A2(
 				elm$html$Html$ul,
 				_List_Nil,
-				A2(elm$core$List$map, author$project$Main$unwrapResponse, prompt.N))
+				A2(elm$core$List$map, author$project$Main$renderResponseList, prompt.N))
 			]));
 };
 var elm$html$Html$button = _VirtualDom_node('button');

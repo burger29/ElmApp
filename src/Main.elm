@@ -26,7 +26,7 @@ initialPrompts : List Prompt
 initialPrompts =
   [
     { question = "Water is good."
-    , responseOptions = [Agree "Agree", Neutral "Neutral", Disagree "Disagree"]
+    , responseOptions = [Agree , Neutral , Disagree ]
     , selectedResponse = Nothing
     }
   ]
@@ -40,30 +40,26 @@ type alias Model =
 
 
 type Response
-    = Agree String
-    | Neutral String
-    | Disagree String
+    = Agree
+    | Neutral
+    | Disagree
 
 
 
-unwrapResponse : Response -> Html msg
-unwrapResponse someResponse =
-  let
-    listItem r =
-      li [] [ text r ]
-  in
-    case someResponse of
+convertResponse : Response -> String
+convertResponse someResponse =
+      case someResponse of
 
-      Agree response ->
-        listItem response
+        Agree -> "Agrees"
 
-      Neutral response ->
-        listItem response
+        Neutral -> "Neutral"
 
-      Disagree response ->
-        listItem response
+        Disagree -> "Disagree"
 
 
+renderResponseList : Response -> Html msg
+renderResponseList response =
+    li [] [ text ( convertResponse response )]
 
 
 
@@ -106,5 +102,5 @@ renderQuestion : Prompt -> Html msg
 renderQuestion prompt =
       div []
       [  p [] [ text prompt.question ]
-      , ul [] ( List.map unwrapResponse prompt.responseOptions )
+      , ul [] ( List.map renderResponseList prompt.responseOptions )
       ]
