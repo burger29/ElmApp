@@ -1,7 +1,7 @@
 module Main exposing (Msg(..), main, update, view)
 
 import Browser
-import Html exposing (Html, button, div, text, p)
+import Html exposing (Html, button, div, text, p, ul, li)
 import Html.Events exposing (onClick)
 
 
@@ -26,9 +26,8 @@ initialPrompts : List Prompt
 initialPrompts =
   [
     { question = "Water is good."
-    , responseOptions = [Agree, Neutral, Disagree]
+    , responseOptions = [Agree "Agree", Neutral "Neutral", Disagree "Disagree"]
     , selectedResponse = Nothing
-    , answer = "Agree"
     }
   ]
 
@@ -41,16 +40,37 @@ type alias Model =
 
 
 type Response
-    = Agree
-    | Neutral
-    | Disagree
+    = Agree String
+    | Neutral String
+    | Disagree String
+
+
+
+unwrapResponse : Response -> Html msg
+unwrapResponse someResponse =
+  let
+    listItem r =
+      li [] [ text r ]
+  in
+    case someResponse of
+
+      Agree response ->
+        listItem response
+
+      Neutral response ->
+        listItem response
+
+      Disagree response ->
+        listItem response
+
+
+
 
 
 type alias Prompt =
   { question: String
   , responseOptions: List Response
   , selectedResponse: Maybe Response
-  , answer: String
   }
 
 
@@ -79,15 +99,12 @@ view model =
         , div [] []
         , button [ onClick ClearCount ] [ text "Zero" ]
         , div [] ( List.map renderQuestion model.prompts )
-        , div [] ( List.map renderAnswer model.prompts )
         ]
 
 
 renderQuestion : Prompt -> Html msg
 renderQuestion prompt =
-      p [] [ text prompt.question ]
-
-
-renderAnswer : Prompt -> Html msg
-renderAnswer prompt =
-      p [] [ text prompt.answer ]
+      div []
+      [  p [] [ text prompt.question ]
+      , ul [] ( List.map unwrapResponse prompt.responseOptions )
+      ]

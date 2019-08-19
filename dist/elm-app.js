@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.ay,
-		impl.aG,
-		impl.aE,
+		impl.ax,
+		impl.aF,
+		impl.aD,
 		function() { return function() {} }
 	);
 });
@@ -2661,7 +2661,7 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 	return {
 		l: func(record.l),
 		P: record.P,
-		M: record.M
+		K: record.K
 	}
 });
 
@@ -2933,7 +2933,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.P;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.M) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.K) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3883,11 +3883,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.ay,
-		impl.aG,
-		impl.aE,
+		impl.ax,
+		impl.aF,
+		impl.aD,
 		function(sendToApp, initialModel) {
-			var view = impl.aI;
+			var view = impl.aH;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3919,12 +3919,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.ay,
-		impl.aG,
-		impl.aE,
+		impl.ax,
+		impl.aF,
+		impl.aD,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.B && impl.B(sendToApp)
-			var view = impl.aI;
+			var view = impl.aH;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3932,12 +3932,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.ar);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aq);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aF) && (_VirtualDom_doc.title = title = doc.aF);
+				(title !== doc.aE) && (_VirtualDom_doc.title = title = doc.aE);
 			});
 		}
 	);
@@ -3993,8 +3993,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.aA;
-	var onUrlRequest = impl.aB;
+	var onUrlChange = impl.az;
+	var onUrlRequest = impl.aA;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4024,13 +4024,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		ay: function(flags)
+		ax: function(flags)
 		{
-			return A3(impl.ay, flags, _Browser_getUrl(), key);
+			return A3(impl.ax, flags, _Browser_getUrl(), key);
 		},
-		aI: impl.aI,
-		aG: impl.aG,
-		aE: impl.aE
+		aH: impl.aH,
+		aF: impl.aF,
+		aD: impl.aD
 	});
 }
 
@@ -4096,17 +4096,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aw: 'hidden', as: 'visibilitychange' }
+		? { av: 'hidden', ar: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aw: 'mozHidden', as: 'mozvisibilitychange' }
+		? { av: 'mozHidden', ar: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aw: 'msHidden', as: 'msvisibilitychange' }
+		? { av: 'msHidden', ar: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aw: 'webkitHidden', as: 'webkitvisibilitychange' }
-		: { aw: 'hidden', as: 'visibilitychange' };
+		? { av: 'webkitHidden', ar: 'webkitvisibilitychange' }
+		: { av: 'hidden', ar: 'visibilitychange' };
 }
 
 
@@ -4187,10 +4187,10 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		ak: _Browser_getScene(),
-		ao: {
-			H: _Browser_window.pageXOffset,
-			I: _Browser_window.pageYOffset,
+		aj: _Browser_getScene(),
+		an: {
+			G: _Browser_window.pageXOffset,
+			H: _Browser_window.pageYOffset,
 			y: _Browser_doc.documentElement.clientWidth,
 			t: _Browser_doc.documentElement.clientHeight
 		}
@@ -4226,13 +4226,13 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			ak: {
+			aj: {
 				y: node.scrollWidth,
 				t: node.scrollHeight
 			},
-			ao: {
-				H: node.scrollLeft,
-				I: node.scrollTop,
+			an: {
+				G: node.scrollLeft,
+				H: node.scrollTop,
 				y: node.clientWidth,
 				t: node.clientHeight
 			}
@@ -4264,16 +4264,16 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			ak: _Browser_getScene(),
-			ao: {
-				H: x,
-				I: y,
+			aj: _Browser_getScene(),
+			an: {
+				G: x,
+				H: y,
 				y: _Browser_doc.documentElement.clientWidth,
 				t: _Browser_doc.documentElement.clientHeight
 			},
-			at: {
-				H: x + rect.left,
-				I: y + rect.top,
+			as: {
+				G: x + rect.left,
+				H: y + rect.top,
 				y: rect.width,
 				t: rect.height
 			}
@@ -4310,9 +4310,15 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$Agree = 0;
-var author$project$Main$Disagree = 2;
-var author$project$Main$Neutral = 1;
+var author$project$Main$Agree = function (a) {
+	return {$: 0, a: a};
+};
+var author$project$Main$Disagree = function (a) {
+	return {$: 2, a: a};
+};
+var author$project$Main$Neutral = function (a) {
+	return {$: 1, a: a};
+};
 var elm$core$Maybe$Nothing = {$: 1};
 var elm$core$Basics$EQ = 1;
 var elm$core$Basics$LT = 0;
@@ -4397,16 +4403,19 @@ var elm$core$Set$toList = function (_n0) {
 var author$project$Main$initialPrompts = _List_fromArray(
 	[
 		{
-		J: 'Agree',
-		N: 'Water is good.',
-		aj: _List_fromArray(
-			[0, 1, 2]),
-		al: elm$core$Maybe$Nothing
+		M: 'Water is good.',
+		N: _List_fromArray(
+			[
+				author$project$Main$Agree('Agree'),
+				author$project$Main$Neutral('Neutral'),
+				author$project$Main$Disagree('Disagree')
+			]),
+		ak: elm$core$Maybe$Nothing
 	}
 	]);
 var author$project$Main$init = {
 	k: 1,
-	G: author$project$Main$initialPrompts,
+	L: author$project$Main$initialPrompts,
 	ag: _List_fromArray(
 		['double quote', 'proper syntax'])
 };
@@ -4842,26 +4851,30 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
-var elm$html$Html$p = _VirtualDom_node('p');
+var elm$html$Html$li = _VirtualDom_node('li');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var author$project$Main$renderAnswer = function (prompt) {
-	return A2(
-		elm$html$Html$p,
-		_List_Nil,
-		_List_fromArray(
-			[
-				elm$html$Html$text(prompt.J)
-			]));
-};
-var author$project$Main$renderQuestion = function (prompt) {
-	return A2(
-		elm$html$Html$p,
-		_List_Nil,
-		_List_fromArray(
-			[
-				elm$html$Html$text(prompt.N)
-			]));
+var author$project$Main$unwrapResponse = function (someResponse) {
+	var listItem = function (r) {
+		return A2(
+			elm$html$Html$li,
+			_List_Nil,
+			_List_fromArray(
+				[
+					elm$html$Html$text(r)
+				]));
+	};
+	switch (someResponse.$) {
+		case 0:
+			var response = someResponse.a;
+			return listItem(response);
+		case 1:
+			var response = someResponse.a;
+			return listItem(response);
+		default:
+			var response = someResponse.a;
+			return listItem(response);
+	}
 };
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
@@ -4932,8 +4945,29 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$p = _VirtualDom_node('p');
+var elm$html$Html$ul = _VirtualDom_node('ul');
+var author$project$Main$renderQuestion = function (prompt) {
+	return A2(
+		elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text(prompt.M)
+					])),
+				A2(
+				elm$html$Html$ul,
+				_List_Nil,
+				A2(elm$core$List$map, author$project$Main$unwrapResponse, prompt.N))
+			]));
+};
+var elm$html$Html$button = _VirtualDom_node('button');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
@@ -4999,11 +5033,7 @@ var author$project$Main$view = function (model) {
 				A2(
 				elm$html$Html$div,
 				_List_Nil,
-				A2(elm$core$List$map, author$project$Main$renderQuestion, model.G)),
-				A2(
-				elm$html$Html$div,
-				_List_Nil,
-				A2(elm$core$List$map, author$project$Main$renderAnswer, model.G))
+				A2(elm$core$List$map, author$project$Main$renderQuestion, model.L))
 			]));
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -5233,22 +5263,22 @@ var elm$url$Url$fromString = function (str) {
 var elm$browser$Browser$sandbox = function (impl) {
 	return _Browser_element(
 		{
-			ay: function (_n0) {
-				return _Utils_Tuple2(impl.ay, elm$core$Platform$Cmd$none);
+			ax: function (_n0) {
+				return _Utils_Tuple2(impl.ax, elm$core$Platform$Cmd$none);
 			},
-			aE: function (_n1) {
+			aD: function (_n1) {
 				return elm$core$Platform$Sub$none;
 			},
-			aG: F2(
+			aF: F2(
 				function (msg, model) {
 					return _Utils_Tuple2(
-						A2(impl.aG, msg, model),
+						A2(impl.aF, msg, model),
 						elm$core$Platform$Cmd$none);
 				}),
-			aI: impl.aI
+			aH: impl.aH
 		});
 };
 var author$project$Main$main = elm$browser$Browser$sandbox(
-	{ay: author$project$Main$init, aG: author$project$Main$update, aI: author$project$Main$view});
+	{ax: author$project$Main$init, aF: author$project$Main$update, aH: author$project$Main$view});
 _Platform_export({'Main':{'init':author$project$Main$main(
 	elm$json$Json$Decode$succeed(0))(0)}});}(this));
