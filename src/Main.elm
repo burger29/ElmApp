@@ -1,8 +1,9 @@
 module Main exposing (Msg(..), main, update, view)
 
 import Browser
-import Html exposing (Html, button, div, text, p, ul, li)
+import Html exposing (Html, button, div, text, p, ul, li )
 import Html.Events exposing (onClick)
+import Html.Attributes exposing (class)
 
 
 main =
@@ -10,9 +11,7 @@ main =
 
 
 type Msg
-    = Increment
-    | Decrement
-    | ClearCount
+    = ClearCount
 
 init : Model
 init =
@@ -50,16 +49,11 @@ convertResponse : Response -> String
 convertResponse someResponse =
       case someResponse of
 
-        Agree -> "Agrees"
+        Agree -> "Agree"
 
         Neutral -> "Neutral"
 
         Disagree -> "Disagree"
-
-
-renderResponseList : Response -> Html msg
-renderResponseList response =
-    li [] [ text ( convertResponse response )]
 
 
 
@@ -73,13 +67,6 @@ type alias Prompt =
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Increment ->
-            { model | count = (model.count + 1)
-            }
-
-        Decrement ->
-            { model | count = (model.count - 1)
-            }
 
         ClearCount ->
             { model | count = 0
@@ -88,12 +75,10 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ button [ onClick Decrement ] [ text "-" ]
-        , div [] [ text (String.fromInt model.count ) ]
-        , button [ onClick Increment ] [ text "+" ]
+    div [ class "container" ]
+        [ div [] [ text (String.fromInt model.count ) ]
         , div [] []
-        , button [ onClick ClearCount ] [ text "Zero" ]
+        , button [ onClick ClearCount, class "btn btn-info" ] [ text "Zero" ]
         , div [] ( List.map renderQuestion model.prompts )
         ]
 
@@ -102,5 +87,10 @@ renderQuestion : Prompt -> Html msg
 renderQuestion prompt =
       div []
       [  p [] [ text prompt.question ]
-      , ul [] ( List.map renderResponseList prompt.responseOptions )
+      , ul [ class "list-group" ] ( List.map renderResponseList prompt.responseOptions )
       ]
+
+
+renderResponseList : Response -> Html msg
+renderResponseList response =
+    li [ class "list-group-item" ] [ text ( convertResponse response )]

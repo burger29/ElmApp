@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.O.A === region.T.A)
+	if (region.O.z === region.T.z)
 	{
-		return 'on line ' + region.O.A;
+		return 'on line ' + region.O.z;
 	}
-	return 'on lines ' + region.O.A + ' through ' + region.T.A;
+	return 'on lines ' + region.O.z + ' through ' + region.T.z;
 }
 
 
@@ -2659,7 +2659,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		l: func(record.l),
+		k: func(record.k),
 		P: record.P,
 		K: record.K
 	}
@@ -2929,7 +2929,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.l;
+		var message = !tag ? value : tag < 3 ? value.a : value.k;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.P;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -3923,7 +3923,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.aF,
 		impl.aD,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.B && impl.B(sendToApp)
+			var divertHrefToApp = impl.A && impl.A(sendToApp)
 			var view = impl.aH;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -3998,7 +3998,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		B: function(sendToApp)
+		A: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4191,8 +4191,8 @@ function _Browser_getViewport()
 		an: {
 			G: _Browser_window.pageXOffset,
 			H: _Browser_window.pageYOffset,
-			y: _Browser_doc.documentElement.clientWidth,
-			t: _Browser_doc.documentElement.clientHeight
+			x: _Browser_doc.documentElement.clientWidth,
+			s: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4202,8 +4202,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		y: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		t: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		x: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		s: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4227,14 +4227,14 @@ function _Browser_getViewportOf(id)
 	{
 		return {
 			aj: {
-				y: node.scrollWidth,
-				t: node.scrollHeight
+				x: node.scrollWidth,
+				s: node.scrollHeight
 			},
 			an: {
 				G: node.scrollLeft,
 				H: node.scrollTop,
-				y: node.clientWidth,
-				t: node.clientHeight
+				x: node.clientWidth,
+				s: node.clientHeight
 			}
 		};
 	});
@@ -4268,14 +4268,14 @@ function _Browser_getElement(id)
 			an: {
 				G: x,
 				H: y,
-				y: _Browser_doc.documentElement.clientWidth,
-				t: _Browser_doc.documentElement.clientHeight
+				x: _Browser_doc.documentElement.clientWidth,
+				s: _Browser_doc.documentElement.clientHeight
 			},
 			as: {
 				G: x + rect.left,
 				H: y + rect.top,
-				y: rect.width,
-				t: rect.height
+				x: rect.width,
+				s: rect.height
 			}
 		};
 	});
@@ -4404,37 +4404,22 @@ var author$project$Main$initialPrompts = _List_fromArray(
 	}
 	]);
 var author$project$Main$init = {
-	k: 1,
+	F: 1,
 	L: author$project$Main$initialPrompts,
 	ag: _List_fromArray(
 		['double quote', 'proper syntax'])
 };
-var elm$core$Basics$add = _Basics_add;
-var elm$core$Basics$sub = _Basics_sub;
 var author$project$Main$update = F2(
 	function (msg, model) {
-		switch (msg) {
-			case 0:
-				return _Utils_update(
-					model,
-					{k: model.k + 1});
-			case 1:
-				return _Utils_update(
-					model,
-					{k: model.k - 1});
-			default:
-				return _Utils_update(
-					model,
-					{k: 0});
-		}
+		return _Utils_update(
+			model,
+			{F: 0});
 	});
-var author$project$Main$ClearCount = 2;
-var author$project$Main$Decrement = 1;
-var author$project$Main$Increment = 0;
+var author$project$Main$ClearCount = 0;
 var author$project$Main$convertResponse = function (someResponse) {
 	switch (someResponse) {
 		case 0:
-			return 'Agrees';
+			return 'Agree';
 		case 1:
 			return 'Neutral';
 		default:
@@ -4545,6 +4530,7 @@ var elm$core$Array$treeFromBuilder = F2(
 			}
 		}
 	});
+var elm$core$Basics$add = _Basics_add;
 var elm$core$Basics$apL = F2(
 	function (f, x) {
 		return f(x);
@@ -4556,6 +4542,7 @@ var elm$core$Basics$max = F2(
 		return (_Utils_cmp(x, y) > 0) ? x : y;
 	});
 var elm$core$Basics$mul = _Basics_mul;
+var elm$core$Basics$sub = _Basics_sub;
 var elm$core$Elm$JsArray$length = _JsArray_length;
 var elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
@@ -4854,10 +4841,22 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 var elm$html$Html$li = _VirtualDom_node('li');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var author$project$Main$renderResponseList = function (response) {
 	return A2(
 		elm$html$Html$li,
-		_List_Nil,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('list-group-item')
+			]),
 		_List_fromArray(
 			[
 				elm$html$Html$text(
@@ -4951,7 +4950,10 @@ var author$project$Main$renderQuestion = function (prompt) {
 					])),
 				A2(
 				elm$html$Html$ul,
-				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('list-group')
+					]),
 				A2(elm$core$List$map, author$project$Main$renderResponseList, prompt.N))
 			]));
 };
@@ -4976,43 +4978,27 @@ var elm$html$Html$Events$onClick = function (msg) {
 var author$project$Main$view = function (model) {
 	return A2(
 		elm$html$Html$div,
-		_List_Nil,
 		_List_fromArray(
 			[
-				A2(
-				elm$html$Html$button,
-				_List_fromArray(
-					[
-						elm$html$Html$Events$onClick(1)
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text('-')
-					])),
+				elm$html$Html$Attributes$class('container')
+			]),
+		_List_fromArray(
+			[
 				A2(
 				elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
 					[
 						elm$html$Html$text(
-						elm$core$String$fromInt(model.k))
-					])),
-				A2(
-				elm$html$Html$button,
-				_List_fromArray(
-					[
-						elm$html$Html$Events$onClick(0)
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text('+')
+						elm$core$String$fromInt(model.F))
 					])),
 				A2(elm$html$Html$div, _List_Nil, _List_Nil),
 				A2(
 				elm$html$Html$button,
 				_List_fromArray(
 					[
-						elm$html$Html$Events$onClick(2)
+						elm$html$Html$Events$onClick(0),
+						elm$html$Html$Attributes$class('btn btn-info')
 					]),
 				_List_fromArray(
 					[
