@@ -26,7 +26,7 @@ initialPrompts =
   [
     { question = "Water is good."
     , responseOptions = [Agree , Neutral , Disagree ]
-    , selectedResponse = Nothing
+    , selectedResponse =  Just Agree
     }
   ]
 
@@ -58,7 +58,8 @@ convertResponse someResponse =
 
 
 type alias Prompt =
-  { question: String
+  {
+  question: String
   , responseOptions: List Response
   , selectedResponse: Maybe Response
   }
@@ -87,10 +88,25 @@ renderQuestion : Prompt -> Html msg
 renderQuestion prompt =
       div []
       [  p [] [ text prompt.question ]
-      , ul [ class "list-group" ] ( List.map renderResponseList prompt.responseOptions )
+      , ul [ class "list-group" ] ( List.map
+      (\ x -> renderResponseList x prompt.selectedResponse) prompt.responseOptions )
       ]
 
 
-renderResponseList : Response -> Html msg
-renderResponseList response =
-    li [ class "list-group-item" ] [ text ( convertResponse response )]
+renderResponseList : Response -> Maybe Response -> Html msg
+renderResponseList response maybeSelectedResponse =
+
+    let
+      maybeActive =
+
+        case maybeSelectedResponse of
+
+          Just selectedResponse ->
+            if selectedResponse == response then
+              " active"
+            else ""
+          Nothing ->
+            ""
+    in
+
+    li [ class ("list-group-item list-group-item-action" ++ maybeActive)  ] [ text ( convertResponse response )]

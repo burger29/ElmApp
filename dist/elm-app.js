@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.O.z === region.T.z)
+	if (region.P.z === region.U.z)
 	{
-		return 'on line ' + region.O.z;
+		return 'on line ' + region.P.z;
 	}
-	return 'on lines ' + region.O.z + ' through ' + region.T.z;
+	return 'on lines ' + region.P.z + ' through ' + region.U.z;
 }
 
 
@@ -2660,7 +2660,7 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		k: func(record.k),
-		P: record.P,
+		Q: record.Q,
 		K: record.K
 	}
 });
@@ -2930,7 +2930,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.k;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.P;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Q;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
 			(tag == 2 ? value.b : tag == 3 && value.K) && event.preventDefault(),
@@ -4014,9 +4014,9 @@ function _Browser_application(impl)
 					var next = elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.ae === next.ae
-							&& curr.W === next.W
-							&& curr.ab.a === next.ab.a
+							&& curr.af === next.af
+							&& curr.X === next.X
+							&& curr.ac.a === next.ac.a
 						)
 							? elm$browser$Browser$Internal(next)
 							: elm$browser$Browser$External(href)
@@ -4187,7 +4187,7 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aj: _Browser_getScene(),
+		ak: _Browser_getScene(),
 		an: {
 			G: _Browser_window.pageXOffset,
 			H: _Browser_window.pageYOffset,
@@ -4226,7 +4226,7 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aj: {
+			ak: {
 				x: node.scrollWidth,
 				s: node.scrollHeight
 			},
@@ -4264,7 +4264,7 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aj: _Browser_getScene(),
+			ak: _Browser_getScene(),
 			an: {
 				G: x,
 				H: y,
@@ -4313,7 +4313,9 @@ function _Browser_load(url)
 var author$project$Main$Agree = 0;
 var author$project$Main$Disagree = 2;
 var author$project$Main$Neutral = 1;
-var elm$core$Maybe$Nothing = {$: 1};
+var elm$core$Maybe$Just = function (a) {
+	return {$: 0, a: a};
+};
 var elm$core$Basics$EQ = 1;
 var elm$core$Basics$LT = 0;
 var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
@@ -4400,13 +4402,13 @@ var author$project$Main$initialPrompts = _List_fromArray(
 		M: 'Water is good.',
 		N: _List_fromArray(
 			[0, 1, 2]),
-		ak: elm$core$Maybe$Nothing
+		O: elm$core$Maybe$Just(0)
 	}
 	]);
 var author$project$Main$init = {
 	F: 1,
 	L: author$project$Main$initialPrompts,
-	ag: _List_fromArray(
+	ah: _List_fromArray(
 		['double quote', 'proper syntax'])
 };
 var author$project$Main$update = F2(
@@ -4426,6 +4428,8 @@ var author$project$Main$convertResponse = function (someResponse) {
 			return 'Disagree';
 	}
 };
+var elm$core$Basics$append = _Utils_append;
+var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -4509,7 +4513,6 @@ var elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
 	});
-var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Tuple$first = function (_n0) {
 	var x = _n0.a;
 	return x;
@@ -4609,9 +4612,7 @@ var elm$core$Array$initialize = F2(
 			return A5(elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
-var elm$core$Maybe$Just = function (a) {
-	return {$: 0, a: a};
-};
+var elm$core$Maybe$Nothing = {$: 1};
 var elm$core$Result$Err = function (a) {
 	return {$: 1, a: a};
 };
@@ -4634,7 +4635,6 @@ var elm$json$Json$Decode$OneOf = function (a) {
 	return {$: 2, a: a};
 };
 var elm$core$Basics$and = _Basics_and;
-var elm$core$Basics$append = _Utils_append;
 var elm$core$Basics$or = _Basics_or;
 var elm$core$Char$toCode = _Char_toCode;
 var elm$core$Char$isLower = function (_char) {
@@ -4850,19 +4850,28 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var author$project$Main$renderResponseList = function (response) {
-	return A2(
-		elm$html$Html$li,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('list-group-item')
-			]),
-		_List_fromArray(
-			[
-				elm$html$Html$text(
-				author$project$Main$convertResponse(response))
-			]));
-};
+var author$project$Main$renderResponseList = F2(
+	function (response, maybeSelectedResponse) {
+		var maybeActive = function () {
+			if (!maybeSelectedResponse.$) {
+				var selectedResponse = maybeSelectedResponse.a;
+				return _Utils_eq(selectedResponse, response) ? ' active' : '';
+			} else {
+				return '';
+			}
+		}();
+		return A2(
+			elm$html$Html$li,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('list-group-item list-group-item-action' + maybeActive)
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text(
+					author$project$Main$convertResponse(response))
+				]));
+	});
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -4954,7 +4963,12 @@ var author$project$Main$renderQuestion = function (prompt) {
 					[
 						elm$html$Html$Attributes$class('list-group')
 					]),
-				A2(elm$core$List$map, author$project$Main$renderResponseList, prompt.N))
+				A2(
+					elm$core$List$map,
+					function (x) {
+						return A2(author$project$Main$renderResponseList, x, prompt.O);
+					},
+					prompt.N))
 			]));
 };
 var elm$html$Html$button = _VirtualDom_node('button');
@@ -5130,7 +5144,7 @@ var elm$core$String$contains = _String_contains;
 var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {V: fragment, W: host, _: path, ab: port_, ae: protocol, af: query};
+		return {W: fragment, X: host, aa: path, ac: port_, af: protocol, ag: query};
 	});
 var elm$url$Url$chompBeforePath = F5(
 	function (protocol, path, params, frag, str) {
