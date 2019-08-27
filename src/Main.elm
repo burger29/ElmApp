@@ -12,6 +12,7 @@ main =
 
 type Msg
     = ClearCount
+    | SelectResponse Response Int
 
 init : Model
 init =
@@ -26,7 +27,12 @@ initialPrompts =
   [
     { question = "Water is good."
     , responseOptions = [Agree , Neutral , Disagree ]
-    , selectedResponse =  Just Agree
+    , selectedResponse =  Nothing
+    }
+    ,
+    { question = "You can nuke hurricanes."
+    , responseOptions = [Agree , Neutral , Disagree ]
+    , selectedResponse =  Nothing
     }
   ]
 
@@ -73,6 +79,10 @@ update msg model =
             { model | count = 0
             }
 
+        SelectResponse response index ->
+            model
+
+
 
 view : Model -> Html Msg
 view model =
@@ -80,21 +90,21 @@ view model =
         [ div [] [ text (String.fromInt model.count ) ]
         , div [] []
         , button [ onClick ClearCount, class "btn btn-info" ] [ text "Zero" ]
-        , div [] ( List.map renderQuestion model.prompts )
+        , div [] ( List.indexedMap renderQuestion model.prompts )
         ]
 
 
-renderQuestion : Prompt -> Html msg
-renderQuestion prompt =
+renderQuestion : Int -> Prompt -> Html Msg
+renderQuestion index prompt =
       div []
       [  p [] [ text prompt.question ]
       , ul [ class "list-group" ] ( List.map
-      (\ x -> renderResponseList x prompt.selectedResponse) prompt.responseOptions )
+      (\ x -> renderResponseList x index prompt.selectedResponse) prompt.responseOptions )
       ]
 
 
-renderResponseList : Response -> Maybe Response -> Html msg
-renderResponseList response maybeSelectedResponse =
+renderResponseList : Response -> Int -> Maybe Response -> Html Msg
+renderResponseList response index maybeSelectedResponse =
 
     let
       maybeActive =
@@ -109,4 +119,7 @@ renderResponseList response maybeSelectedResponse =
             ""
     in
 
-    li [ class ("list-group-item list-group-item-action" ++ maybeActive)  ] [ text ( convertResponse response )]
+    li
+      [ class ("list-group-item list-group-item-action" ++ maybeActive)
+      , onClick (SelectResponse response index )
+      ] [ text ( convertResponse response )]

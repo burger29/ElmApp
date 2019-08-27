@@ -2661,7 +2661,7 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 	return {
 		k: func(record.k),
 		Q: record.Q,
-		K: record.K
+		N: record.N
 	}
 });
 
@@ -2933,7 +2933,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Q;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.K) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.N) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -4189,8 +4189,8 @@ function _Browser_getViewport()
 	return {
 		ak: _Browser_getScene(),
 		an: {
-			G: _Browser_window.pageXOffset,
-			H: _Browser_window.pageYOffset,
+			J: _Browser_window.pageXOffset,
+			K: _Browser_window.pageYOffset,
 			x: _Browser_doc.documentElement.clientWidth,
 			s: _Browser_doc.documentElement.clientHeight
 		}
@@ -4231,8 +4231,8 @@ function _Browser_getViewportOf(id)
 				s: node.scrollHeight
 			},
 			an: {
-				G: node.scrollLeft,
-				H: node.scrollTop,
+				J: node.scrollLeft,
+				K: node.scrollTop,
 				x: node.clientWidth,
 				s: node.clientHeight
 			}
@@ -4266,14 +4266,14 @@ function _Browser_getElement(id)
 		return {
 			ak: _Browser_getScene(),
 			an: {
-				G: x,
-				H: y,
+				J: x,
+				K: y,
 				x: _Browser_doc.documentElement.clientWidth,
 				s: _Browser_doc.documentElement.clientHeight
 			},
 			as: {
-				G: x + rect.left,
-				H: y + rect.top,
+				J: x + rect.left,
+				K: y + rect.top,
 				x: rect.width,
 				s: rect.height
 			}
@@ -4313,9 +4313,7 @@ function _Browser_load(url)
 var author$project$Main$Agree = 0;
 var author$project$Main$Disagree = 2;
 var author$project$Main$Neutral = 1;
-var elm$core$Maybe$Just = function (a) {
-	return {$: 0, a: a};
-};
+var elm$core$Maybe$Nothing = {$: 1};
 var elm$core$Basics$EQ = 1;
 var elm$core$Basics$LT = 0;
 var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
@@ -4399,25 +4397,41 @@ var elm$core$Set$toList = function (_n0) {
 var author$project$Main$initialPrompts = _List_fromArray(
 	[
 		{
-		M: 'Water is good.',
-		N: _List_fromArray(
+		G: 'Water is good.',
+		H: _List_fromArray(
 			[0, 1, 2]),
-		O: elm$core$Maybe$Just(0)
+		I: elm$core$Maybe$Nothing
+	},
+		{
+		G: 'You can nuke hurricanes.',
+		H: _List_fromArray(
+			[0, 1, 2]),
+		I: elm$core$Maybe$Nothing
 	}
 	]);
 var author$project$Main$init = {
 	F: 1,
-	L: author$project$Main$initialPrompts,
+	O: author$project$Main$initialPrompts,
 	ah: _List_fromArray(
 		['double quote', 'proper syntax'])
 };
 var author$project$Main$update = F2(
 	function (msg, model) {
-		return _Utils_update(
-			model,
-			{F: 0});
+		if (!msg.$) {
+			return _Utils_update(
+				model,
+				{F: 0});
+		} else {
+			var response = msg.a;
+			var index = msg.b;
+			return model;
+		}
 	});
-var author$project$Main$ClearCount = 0;
+var author$project$Main$ClearCount = {$: 0};
+var author$project$Main$SelectResponse = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
 var author$project$Main$convertResponse = function (someResponse) {
 	switch (someResponse) {
 		case 0:
@@ -4612,7 +4626,9 @@ var elm$core$Array$initialize = F2(
 			return A5(elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
-var elm$core$Maybe$Nothing = {$: 1};
+var elm$core$Maybe$Just = function (a) {
+	return {$: 0, a: a};
+};
 var elm$core$Result$Err = function (a) {
 	return {$: 1, a: a};
 };
@@ -4850,8 +4866,25 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var author$project$Main$renderResponseList = F2(
-	function (response, maybeSelectedResponse) {
+var elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 0, a: a};
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
+};
+var author$project$Main$renderResponseList = F3(
+	function (response, index, maybeSelectedResponse) {
 		var maybeActive = function () {
 			if (!maybeSelectedResponse.$) {
 				var selectedResponse = maybeSelectedResponse.a;
@@ -4864,7 +4897,9 @@ var author$project$Main$renderResponseList = F2(
 			elm$html$Html$li,
 			_List_fromArray(
 				[
-					elm$html$Html$Attributes$class('list-group-item list-group-item-action' + maybeActive)
+					elm$html$Html$Attributes$class('list-group-item list-group-item-action' + maybeActive),
+					elm$html$Html$Events$onClick(
+					A2(author$project$Main$SelectResponse, response, index))
 				]),
 			_List_fromArray(
 				[
@@ -4944,51 +4979,35 @@ var elm$core$List$map = F2(
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$ul = _VirtualDom_node('ul');
-var author$project$Main$renderQuestion = function (prompt) {
-	return A2(
-		elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$p,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text(prompt.M)
-					])),
-				A2(
-				elm$html$Html$ul,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('list-group')
-					]),
-				A2(
-					elm$core$List$map,
-					function (x) {
-						return A2(author$project$Main$renderResponseList, x, prompt.O);
-					},
-					prompt.N))
-			]));
-};
-var elm$html$Html$button = _VirtualDom_node('button');
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 0, a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
-	function (event, decoder) {
+var author$project$Main$renderQuestion = F2(
+	function (index, prompt) {
 		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
+			elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text(prompt.G)
+						])),
+					A2(
+					elm$html$Html$ul,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('list-group')
+						]),
+					A2(
+						elm$core$List$map,
+						function (x) {
+							return A3(author$project$Main$renderResponseList, x, index, prompt.I);
+						},
+						prompt.H))
+				]));
 	});
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
-};
+var elm$html$Html$button = _VirtualDom_node('button');
 var author$project$Main$view = function (model) {
 	return A2(
 		elm$html$Html$div,
@@ -5011,7 +5030,7 @@ var author$project$Main$view = function (model) {
 				elm$html$Html$button,
 				_List_fromArray(
 					[
-						elm$html$Html$Events$onClick(0),
+						elm$html$Html$Events$onClick(author$project$Main$ClearCount),
 						elm$html$Html$Attributes$class('btn btn-info')
 					]),
 				_List_fromArray(
@@ -5021,7 +5040,7 @@ var author$project$Main$view = function (model) {
 				A2(
 				elm$html$Html$div,
 				_List_Nil,
-				A2(elm$core$List$map, author$project$Main$renderQuestion, model.L))
+				A2(elm$core$List$indexedMap, author$project$Main$renderQuestion, model.O))
 			]));
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
