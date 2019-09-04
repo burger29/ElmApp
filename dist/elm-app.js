@@ -4888,7 +4888,7 @@ var author$project$Main$renderResponseList = F3(
 		var maybeActive = function () {
 			if (!maybeSelectedResponse.$) {
 				var selectedResponse = maybeSelectedResponse.a;
-				return _Utils_eq(selectedResponse, response) ? ' active' : '';
+				return _Utils_eq(selectedResponse, response) ? 'active' : '';
 			} else {
 				return '';
 			}

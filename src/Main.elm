@@ -4,6 +4,7 @@ import Browser
 import Html exposing (Html, button, div, text, p, ul, li )
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
+import Array
 
 
 main =
@@ -12,7 +13,7 @@ main =
 
 type Msg
     = ClearCount
-    | SelectResponse Response Int
+    | SelectResponse Response Int Prompt
 
 init : Model
 init =
@@ -50,6 +51,8 @@ type Response
     | Disagree
 
 
+responseArray = Array.fromList [ "Agree", "Neutral", "Disagree" ]
+
 
 convertResponse : Response -> String
 convertResponse someResponse =
@@ -79,7 +82,24 @@ update msg model =
             { model | count = 0
             }
 
-        SelectResponse response index ->
+        SelectResponse response index prompt ->
+
+            let
+              beforeIndex =
+                List.take index model.prompts
+
+              afterIndex =
+                List.drop (index + 1) model.prompts
+
+              updatedPrompt =
+                { prompt | selectedResponse = Just response }
+
+              promptWithSelection =
+                { }
+
+
+
+            in
             model
 
 
@@ -99,12 +119,12 @@ renderQuestion index prompt =
       div []
       [  p [] [ text prompt.question ]
       , ul [ class "list-group" ] ( List.map
-      (\ x -> renderResponseList x index prompt.selectedResponse) prompt.responseOptions )
+      (\ x -> renderResponseList x index prompt.selectedResponse prompt) prompt.responseOptions )
       ]
 
 
-renderResponseList : Response -> Int -> Maybe Response -> Html Msg
-renderResponseList response index maybeSelectedResponse =
+renderResponseList : Response -> Int -> Maybe Response -> Prompt -> Html Msg
+renderResponseList response index maybeSelectedResponse prompt =
 
     let
       maybeActive =
@@ -113,13 +133,13 @@ renderResponseList response index maybeSelectedResponse =
 
           Just selectedResponse ->
             if selectedResponse == response then
-              " active"
+              "active"
             else ""
           Nothing ->
             ""
     in
 
     li
-      [ class ("list-group-item list-group-item-action" ++ maybeActive)
-      , onClick (SelectResponse response index )
+      [ class ( "list-group-item list-group-item-action" ++ maybeActive )
+      , onClick ( SelectResponse response index prompt )
       ] [ text ( convertResponse response )]
