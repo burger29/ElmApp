@@ -1,7 +1,7 @@
 module Main exposing (Msg(..), main, update, view)
 
 import Browser
-import Html exposing (Html, button, div, text, p, ul, li )
+import Html exposing (Html, button, div, text, p, ul, li, h1 )
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
 import Array
@@ -12,13 +12,17 @@ main =
 
 
 type Msg
-    = ClearCount
-    | SelectResponse Response Int Prompt
+    = SelectResponse Response Int Prompt
+
+type alias Model =
+  { questions: List String
+  , prompts: List Prompt
+  }
+
 
 init : Model
 init =
-  { count = 1
-  , questions = ["double quote","proper syntax"]
+  { questions = ["double quote","proper syntax"]
   , prompts = initialPrompts
   }
 
@@ -35,14 +39,12 @@ initialPrompts =
     , responseOptions = [Agree , Neutral , Disagree ]
     , selectedResponse =  Nothing
     }
+    ,
+    { question = "Your team needs ITProTV."
+    , responseOptions = [Agree , Neutral , Disagree ]
+    , selectedResponse =  Nothing
+    }
   ]
-
-
-type alias Model =
-  { count: Int
-  , questions: List String
-  , prompts: List Prompt
-  }
 
 
 type Response
@@ -78,10 +80,6 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
 
-        ClearCount ->
-            { model | count = 0
-            }
-
         SelectResponse response index prompt ->
 
             let
@@ -94,31 +92,28 @@ update msg model =
               updatedPrompt =
                 { prompt | selectedResponse = Just response }
 
-              promptWithSelection =
-                { }
-
+              updatedModel =
+                { model | prompts = beforeIndex ++ [updatedPrompt] ++ afterIndex }
 
 
             in
-            model
+            updatedModel
 
 
 
 view : Model -> Html Msg
 view model =
     div [ class "container" ]
-        [ div [] [ text (String.fromInt model.count ) ]
-        , div [] []
-        , button [ onClick ClearCount, class "btn btn-info" ] [ text "Zero" ]
+        [ h1 [ class "text-light" ] [ text "Grade Your Team" ]
         , div [] ( List.indexedMap renderQuestion model.prompts )
         ]
 
 
 renderQuestion : Int -> Prompt -> Html Msg
 renderQuestion index prompt =
-      div []
-      [  p [] [ text prompt.question ]
-      , ul [ class "list-group" ] ( List.map
+      div [ class "pt-5 text-light bg-dark" ]
+      [  p [ class "pl-3 font-weight-bold text-monospace" ] [ text prompt.question ]
+      , ul [ class "list-group list-group-horizontal" ] ( List.map
       (\ x -> renderResponseList x index prompt.selectedResponse prompt) prompt.responseOptions )
       ]
 
@@ -133,13 +128,13 @@ renderResponseList response index maybeSelectedResponse prompt =
 
           Just selectedResponse ->
             if selectedResponse == response then
-              "active"
+              " active"
             else ""
           Nothing ->
             ""
     in
 
     li
-      [ class ( "list-group-item list-group-item-action" ++ maybeActive )
+      [ class ( "list-group-item list-group-item-dark list-group-item-action" ++ maybeActive )
       , onClick ( SelectResponse response index prompt )
       ] [ text ( convertResponse response )]
