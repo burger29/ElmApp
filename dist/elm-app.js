@@ -5066,7 +5066,7 @@ var author$project$Main$renderResponseList = F4(
 			elm$html$Html$li,
 			_List_fromArray(
 				[
-					elm$html$Html$Attributes$class('list-group-item list-group-item-dark list-group-item-action' + maybeActive),
+					elm$html$Html$Attributes$class('list-group-item list-group-item-dark text-monospace list-group-item-action' + maybeActive),
 					elm$html$Html$Events$onClick(
 					A3(author$project$Main$SelectResponse, response, index, prompt))
 				]),
@@ -5215,7 +5215,7 @@ var author$project$Main$view = function (model) {
 				elm$html$Html$h1,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$class('text-body')
+						elm$html$Html$Attributes$class('text-body text-monospace')
 					]),
 				_List_fromArray(
 					[
@@ -5227,7 +5227,10 @@ var author$project$Main$view = function (model) {
 				A2(elm$core$List$indexedMap, author$project$Main$renderQuestion, model.q)),
 				A2(
 				elm$html$Html$div,
-				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('pt-4 pb-4 pl-3 bg-dark text-light text-monospace')
+					]),
 				_List_fromArray(
 					[
 						elm$html$Html$text(

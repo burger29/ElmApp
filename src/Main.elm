@@ -106,9 +106,9 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class "container" ]
-        [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
+        [ h1 [ class "text-body text-monospace" ] [ text "Grade Your Team" ]
         , div [] ( List.indexedMap renderQuestion model.prompts )
-        , div [] [ text ( renderResponses model.prompts )]
+        , div [ class "pt-4 pb-4 pl-3 bg-dark text-light text-monospace"] [ text ( renderResponses model.prompts )]
         ]
 
 
@@ -154,6 +154,6 @@ renderResponseList response index maybeSelectedResponse prompt =
     in
 
     li
-      [ class ( "list-group-item list-group-item-dark list-group-item-action" ++ maybeActive )
+      [ class ( "list-group-item list-group-item-dark text-monospace list-group-item-action" ++ maybeActive )
       , onClick ( SelectResponse response index prompt )
       ] [ text ( convertResponse response )]
