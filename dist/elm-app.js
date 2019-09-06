@@ -4192,7 +4192,7 @@ function _Browser_getViewport()
 			J: _Browser_window.pageXOffset,
 			K: _Browser_window.pageYOffset,
 			z: _Browser_doc.documentElement.clientWidth,
-			s: _Browser_doc.documentElement.clientHeight
+			u: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4203,7 +4203,7 @@ function _Browser_getScene()
 	var elem = _Browser_doc.documentElement;
 	return {
 		z: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		s: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		u: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4228,13 +4228,13 @@ function _Browser_getViewportOf(id)
 		return {
 			aj: {
 				z: node.scrollWidth,
-				s: node.scrollHeight
+				u: node.scrollHeight
 			},
 			am: {
 				J: node.scrollLeft,
 				K: node.scrollTop,
 				z: node.clientWidth,
-				s: node.clientHeight
+				u: node.clientHeight
 			}
 		};
 	});
@@ -4269,13 +4269,13 @@ function _Browser_getElement(id)
 				J: x,
 				K: y,
 				z: _Browser_doc.documentElement.clientWidth,
-				s: _Browser_doc.documentElement.clientHeight
+				u: _Browser_doc.documentElement.clientHeight
 			},
 			ar: {
 				J: x + rect.left,
 				K: y + rect.top,
 				z: rect.width,
-				s: rect.height
+				u: rect.height
 			}
 		};
 	});
@@ -4311,8 +4311,10 @@ function _Browser_load(url)
 	}));
 }
 var author$project$Main$Agree = 0;
-var author$project$Main$Disagree = 2;
-var author$project$Main$Neutral = 1;
+var author$project$Main$Disagree = 3;
+var author$project$Main$Neutral = 2;
+var author$project$Main$StronglyAgree = 1;
+var author$project$Main$StronglyDisagree = 4;
 var elm$core$Maybe$Nothing = {$: 1};
 var elm$core$Basics$EQ = 1;
 var elm$core$Basics$LT = 0;
@@ -4399,24 +4401,24 @@ var author$project$Main$initialPrompts = _List_fromArray(
 		{
 		C: 'Water is good.',
 		D: _List_fromArray(
-			[0, 1, 2]),
-		w: elm$core$Maybe$Nothing
+			[1, 0, 2, 3, 4]),
+		r: elm$core$Maybe$Nothing
 	},
 		{
 		C: 'You can nuke hurricanes.',
 		D: _List_fromArray(
-			[0, 1, 2]),
-		w: elm$core$Maybe$Nothing
+			[1, 0, 2, 3, 4]),
+		r: elm$core$Maybe$Nothing
 	},
 		{
 		C: 'Your team needs ITProTV.',
 		D: _List_fromArray(
-			[0, 1, 2]),
-		w: elm$core$Maybe$Nothing
+			[1, 0, 2, 3, 4]),
+		r: elm$core$Maybe$Nothing
 	}
 	]);
 var author$project$Main$init = {
-	u: author$project$Main$initialPrompts,
+	q: author$project$Main$initialPrompts,
 	ag: _List_fromArray(
 		['double quote', 'proper syntax'])
 };
@@ -4605,14 +4607,14 @@ var author$project$Main$update = F2(
 		var updatedPrompt = _Utils_update(
 			prompt,
 			{
-				w: elm$core$Maybe$Just(response)
+				r: elm$core$Maybe$Just(response)
 			});
-		var beforeIndex = A2(elm$core$List$take, index, model.u);
-		var afterIndex = A2(elm$core$List$drop, index + 1, model.u);
+		var beforeIndex = A2(elm$core$List$take, index, model.q);
+		var afterIndex = A2(elm$core$List$drop, index + 1, model.q);
 		var updatedModel = _Utils_update(
 			model,
 			{
-				u: _Utils_ap(
+				q: _Utils_ap(
 					beforeIndex,
 					_Utils_ap(
 						_List_fromArray(
@@ -4629,10 +4631,14 @@ var author$project$Main$convertResponse = function (someResponse) {
 	switch (someResponse) {
 		case 0:
 			return 'Agree';
-		case 1:
+		case 2:
 			return 'Neutral';
-		default:
+		case 3:
 			return 'Disagree';
+		case 1:
+			return 'Strongly Agree';
+		default:
+			return 'Strongly Disagree';
 	}
 };
 var elm$core$Basics$eq = _Utils_equal;
@@ -5171,11 +5177,30 @@ var author$project$Main$renderQuestion = F2(
 					A2(
 						elm$core$List$map,
 						function (x) {
-							return A4(author$project$Main$renderResponseList, x, index, prompt.w, prompt);
+							return A4(author$project$Main$renderResponseList, x, index, prompt.r, prompt);
 						},
 						prompt.D))
 				]));
 	});
+var elm$core$String$concat = function (strings) {
+	return A2(elm$core$String$join, '', strings);
+};
+var author$project$Main$renderResponses = function (prompts) {
+	var answerList = A2(
+		elm$core$List$indexedMap,
+		F2(
+			function (index, prompt) {
+				var _n0 = prompt.r;
+				if (!_n0.$) {
+					var response = _n0.a;
+					return elm$core$String$fromInt(index + 1) + ('. ' + (author$project$Main$convertResponse(response) + ' '));
+				} else {
+					return elm$core$String$fromInt(index + 1) + '. No Response ';
+				}
+			}),
+		prompts);
+	return elm$core$String$concat(answerList);
+};
 var elm$html$Html$h1 = _VirtualDom_node('h1');
 var author$project$Main$view = function (model) {
 	return A2(
@@ -5190,7 +5215,7 @@ var author$project$Main$view = function (model) {
 				elm$html$Html$h1,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$class('text-light')
+						elm$html$Html$Attributes$class('text-body')
 					]),
 				_List_fromArray(
 					[
@@ -5199,7 +5224,15 @@ var author$project$Main$view = function (model) {
 				A2(
 				elm$html$Html$div,
 				_List_Nil,
-				A2(elm$core$List$indexedMap, author$project$Main$renderQuestion, model.u))
+				A2(elm$core$List$indexedMap, author$project$Main$renderQuestion, model.q)),
+				A2(
+				elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						author$project$Main$renderResponses(model.q))
+					]))
 			]));
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;

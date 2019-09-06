@@ -31,17 +31,17 @@ initialPrompts : List Prompt
 initialPrompts =
   [
     { question = "Water is good."
-    , responseOptions = [Agree , Neutral , Disagree ]
+    , responseOptions = [ StronglyAgree, Agree , Neutral , Disagree, StronglyDisagree ]
     , selectedResponse =  Nothing
     }
     ,
     { question = "You can nuke hurricanes."
-    , responseOptions = [Agree , Neutral , Disagree ]
+    , responseOptions = [ StronglyAgree, Agree , Neutral , Disagree, StronglyDisagree ]
     , selectedResponse =  Nothing
     }
     ,
     { question = "Your team needs ITProTV."
-    , responseOptions = [Agree , Neutral , Disagree ]
+    , responseOptions = [ StronglyAgree, Agree , Neutral , Disagree, StronglyDisagree ]
     , selectedResponse =  Nothing
     }
   ]
@@ -49,11 +49,10 @@ initialPrompts =
 
 type Response
     = Agree
+    | StronglyAgree
     | Neutral
     | Disagree
-
-
-responseArray = Array.fromList [ "Agree", "Neutral", "Disagree" ]
+    | StronglyDisagree
 
 
 convertResponse : Response -> String
@@ -66,11 +65,14 @@ convertResponse someResponse =
 
         Disagree -> "Disagree"
 
+        StronglyAgree -> "Strongly Agree"
+
+        StronglyDisagree -> "Strongly Disagree"
+
 
 
 type alias Prompt =
-  {
-  question: String
+  { question: String
   , responseOptions: List Response
   , selectedResponse: Maybe Response
   }
@@ -104,9 +106,26 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class "container" ]
-        [ h1 [ class "text-light" ] [ text "Grade Your Team" ]
+        [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
         , div [] ( List.indexedMap renderQuestion model.prompts )
+        , div [] [ text ( renderResponses model.prompts )]
         ]
+
+
+renderResponses : List Prompt -> String
+renderResponses prompts =
+      let
+          answerList =
+            List.indexedMap
+                (\ index prompt ->
+                  case prompt.selectedResponse of
+                    Just response ->
+                      ( String.fromInt (index + 1) ) ++ ". " ++ convertResponse response ++ " "
+                    Nothing ->
+                      ( String.fromInt (index + 1) ) ++ ". No Response "
+                ) prompts
+      in
+        String.concat answerList
 
 
 renderQuestion : Int -> Prompt -> Html Msg
