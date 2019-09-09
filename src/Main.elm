@@ -23,27 +23,42 @@ type alias Model =
 init : Model
 init =
   { questions = ["double quote","proper syntax"]
-  , prompts = initialPrompts
+  , prompts = (List.map promptBuilder questionList)
   }
 
 
-initialPrompts : List Prompt
-initialPrompts =
+
+promptBuilder : String -> Prompt
+promptBuilder question =
+
+      { question = question
+      , responseOptions = [ StronglyAgree, Agree , Neutral , Disagree, StronglyDisagree ]
+      , selectedResponse =  Nothing
+    }
+
+
+questionList : List String
+questionList =
   [
-    { question = "Water is good."
-    , responseOptions = [ StronglyAgree, Agree , Neutral , Disagree, StronglyDisagree ]
-    , selectedResponse =  Nothing
-    }
+    "My team can clearly articulate their goals"
     ,
-    { question = "You can nuke hurricanes."
-    , responseOptions = [ StronglyAgree, Agree , Neutral , Disagree, StronglyDisagree ]
-    , selectedResponse =  Nothing
-    }
+    "My team feels recognized for their accomplishments"
     ,
-    { question = "Your team needs ITProTV."
-    , responseOptions = [ StronglyAgree, Agree , Neutral , Disagree, StronglyDisagree ]
-    , selectedResponse =  Nothing
-    }
+    "All team members have personal development plans and see regular progress towards their goals"
+    ,
+    "My team feels empowered to make decisions"
+    ,
+    "My team is more efficient when I’m not there"
+    ,
+    "My team has productive meetings that everyone is involved in (but only when necessary)"
+    ,
+    "Team members will openly express their opinions and concerns"
+    ,
+    "Other people want to be on our team"
+    ,
+    "My team has created their own set of operating guidelines and practices which they are fully bought into"
+    ,
+    "All team members hold each other, including me, accountable for outcomes"
   ]
 
 
@@ -106,9 +121,9 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class "container" ]
-        [ h1 [ class "text-body text-monospace" ] [ text "Grade Your Team" ]
+        [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
         , div [] ( List.indexedMap renderQuestion model.prompts )
-        , div [ class "pt-4 pb-4 pl-3 bg-dark text-light text-monospace"] [ text ( renderResponses model.prompts )]
+        , div [ class "pt-4 pb-4 pl-3 bg-dark text-light  "] [ text ( renderResponses model.prompts )]
         ]
 
 
@@ -131,7 +146,7 @@ renderResponses prompts =
 renderQuestion : Int -> Prompt -> Html Msg
 renderQuestion index prompt =
       div [ class "pt-5 text-light bg-dark" ]
-      [  p [ class "pl-3 font-weight-bold text-monospace" ] [ text prompt.question ]
+      [  p [ class "pl-3 font-weight-bold" ] [ text prompt.question ]
       , ul [ class "list-group list-group-horizontal" ] ( List.map
       (\ x -> renderResponseList x index prompt.selectedResponse prompt) prompt.responseOptions )
       ]
@@ -154,6 +169,6 @@ renderResponseList response index maybeSelectedResponse prompt =
     in
 
     li
-      [ class ( "list-group-item list-group-item-dark text-monospace list-group-item-action" ++ maybeActive )
+      [ class ( "list-group-item list-group-item-dark list-group-item-action" ++ maybeActive )
       , onClick ( SelectResponse response index prompt )
       ] [ text ( convertResponse response )]
