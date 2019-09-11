@@ -143,6 +143,31 @@ renderResponses prompts =
         String.concat answerList
 
 
+scoreResponse : Response -> Int
+scoreResponse select =
+        case select of
+
+          StronglyAgree -> 5
+          Agree -> 4
+          Neutral -> 3
+          Disagree -> 2
+          StronglyDisagree -> 1
+
+scoreResponses : List Response -> Int
+scoreResponses responses =
+
+  -- let
+  --   f : Response -> Int
+  --   f = \ response -> scoreResponse response
+  --   f     response =  scoreResponse response
+  --   f              =  scoreResponse
+  -- in
+    -- List.sum ( List.map scoreResponse responses )
+    responses
+      |> List.map scoreResponse
+      |> List.sum
+
+
 renderQuestion : Int -> Prompt -> Html Msg
 renderQuestion index prompt =
       div [ class "pt-5 text-light bg-dark" ]
