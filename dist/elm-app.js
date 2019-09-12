@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.O.A === region.T.A)
+	if (region.O.B === region.T.B)
 	{
-		return 'on line ' + region.O.A;
+		return 'on line ' + region.O.B;
 	}
-	return 'on lines ' + region.O.A + ' through ' + region.T.A;
+	return 'on lines ' + region.O.B + ' through ' + region.T.B;
 }
 
 
@@ -4191,7 +4191,7 @@ function _Browser_getViewport()
 		am: {
 			H: _Browser_window.pageXOffset,
 			I: _Browser_window.pageYOffset,
-			y: _Browser_doc.documentElement.clientWidth,
+			z: _Browser_doc.documentElement.clientWidth,
 			t: _Browser_doc.documentElement.clientHeight
 		}
 	};
@@ -4202,7 +4202,7 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		y: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		z: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
 		t: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
@@ -4227,13 +4227,13 @@ function _Browser_getViewportOf(id)
 	{
 		return {
 			aj: {
-				y: node.scrollWidth,
+				z: node.scrollWidth,
 				t: node.scrollHeight
 			},
 			am: {
 				H: node.scrollLeft,
 				I: node.scrollTop,
-				y: node.clientWidth,
+				z: node.clientWidth,
 				t: node.clientHeight
 			}
 		};
@@ -4268,13 +4268,13 @@ function _Browser_getElement(id)
 			am: {
 				H: x,
 				I: y,
-				y: _Browser_doc.documentElement.clientWidth,
+				z: _Browser_doc.documentElement.clientWidth,
 				t: _Browser_doc.documentElement.clientHeight
 			},
 			ar: {
 				H: x + rect.left,
 				I: y + rect.top,
-				y: rect.width,
+				z: rect.width,
 				t: rect.height
 			}
 		};
@@ -4401,7 +4401,7 @@ var author$project$Main$promptBuilder = function (question) {
 		M: question,
 		N: _List_fromArray(
 			[1, 0, 2, 3, 4]),
-		B: elm$core$Maybe$Nothing
+		w: elm$core$Maybe$Nothing
 	};
 };
 var author$project$Main$questionList = _List_fromArray(
@@ -4665,7 +4665,7 @@ var author$project$Main$update = F2(
 		var updatedPrompt = _Utils_update(
 			prompt,
 			{
-				B: elm$core$Maybe$Just(response)
+				w: elm$core$Maybe$Just(response)
 			});
 		var beforeIndex = A2(elm$core$List$take, index, model.q);
 		var afterIndex = A2(elm$core$List$drop, index + 1, model.q);
@@ -5166,7 +5166,7 @@ var author$project$Main$renderQuestion = F2(
 					A2(
 						elm$core$List$map,
 						function (x) {
-							return A4(author$project$Main$renderResponseList, x, index, prompt.B, prompt);
+							return A4(author$project$Main$renderResponseList, x, index, prompt.w, prompt);
 						},
 						prompt.N))
 				]));
@@ -5179,7 +5179,7 @@ var author$project$Main$renderResponses = function (prompts) {
 		elm$core$List$indexedMap,
 		F2(
 			function (index, prompt) {
-				var _n0 = prompt.B;
+				var _n0 = prompt.w;
 				if (!_n0.$) {
 					var response = _n0.a;
 					return elm$core$String$fromInt(index + 1) + ('. ' + (author$project$Main$convertResponse(response) + ' '));
@@ -5224,7 +5224,8 @@ var author$project$Main$view = function (model) {
 					[
 						elm$html$Html$text(
 						author$project$Main$renderResponses(model.q))
-					]))
+					])),
+				A2(elm$html$Html$div, _List_Nil, _List_Nil)
 			]));
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;

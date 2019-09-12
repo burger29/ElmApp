@@ -95,6 +95,7 @@ type alias Prompt =
 
 update : Msg -> Model -> Model
 update msg model =
+
     case msg of
 
         SelectResponse response index prompt ->
@@ -118,12 +119,14 @@ update msg model =
 
 
 
+
 view : Model -> Html Msg
 view model =
     div [ class "container" ]
         [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
         , div [] ( List.indexedMap renderQuestion model.prompts )
         , div [ class "pt-4 pb-4 pl-3 bg-dark text-light  "] [ text ( renderResponses model.prompts )]
+        , div [] []
         ]
 
 
@@ -144,8 +147,8 @@ renderResponses prompts =
 
 
 scoreResponse : Response -> Int
-scoreResponse select =
-        case select of
+scoreResponse selectedResponse =
+        case selectedResponse of
 
           StronglyAgree -> 5
           Agree -> 4
@@ -166,6 +169,18 @@ scoreResponses responses =
     responses
       |> List.map scoreResponse
       |> List.sum
+
+
+checkResponses : Prompt -> Bool
+checkResponses prompt =
+      case prompt.selectedResponse of
+        Just selectedResponse -> True
+        Nothing -> False
+
+
+allowScoring : List Prompt -> Bool
+allowScoring prompts =
+      List.any checkResponses prompts
 
 
 renderQuestion : Int -> Prompt -> Html Msg
