@@ -14,16 +14,26 @@ main =
 type Msg
     = SelectResponse Response Int Prompt
 
+
 type alias Model =
   { questions: List String
   , prompts: List Prompt
+  , state: ModelState
+  , results : Int
   }
+
+
+type ModelState
+  = AnsweringQuestions
+  | ShowingResults
 
 
 init : Model
 init =
   { questions = ["double quote","proper syntax"]
   , prompts = (List.map promptBuilder questionList)
+  , state = AnsweringQuestions
+  , results = 0
   }
 
 
@@ -93,6 +103,18 @@ type alias Prompt =
   }
 
 
+checkResponses : Prompt -> Bool
+checkResponses prompt =
+      case prompt.selectedResponse of
+        Just selectedResponse -> True
+        Nothing -> False
+
+
+allowScoring : List Prompt -> Bool
+allowScoring prompts =
+      List.all checkResponses prompts
+
+
 update : Msg -> Model -> Model
 update msg model =
 
@@ -110,40 +132,40 @@ update msg model =
               updatedPrompt =
                 { prompt | selectedResponse = Just response }
 
-              updatedModel =
-                { model | prompts = beforeIndex ++ [updatedPrompt] ++ afterIndex }
+              updatedPrompts =
+                beforeIndex ++ [updatedPrompt] ++ afterIndex
 
+              updatedState =
+                if allowScoring updatedPrompts then
+                  ShowingResults
+                else
+                  AnsweringQuestions
+
+              updatedModel =
+                { model | prompts = updatedPrompts, state = updatedState }
 
             in
             updatedModel
 
 
 
-
 view : Model -> Html Msg
 view model =
-    div [ class "container" ]
-        [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
-        , div [] ( List.indexedMap renderQuestion model.prompts )
-        , div [ class "pt-4 pb-4 pl-3 bg-dark text-light  "] [ text ( renderResponses model.prompts )]
-        , div [] []
-        ]
+    case model.state of
 
+      AnsweringQuestions ->
+          div [ class "container" ]
+            [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
+            , div [] ( List.indexedMap renderQuestion model.prompts )
+            , div [] []
+            ]
 
-renderResponses : List Prompt -> String
-renderResponses prompts =
-      let
-          answerList =
-            List.indexedMap
-                (\ index prompt ->
-                  case prompt.selectedResponse of
-                    Just response ->
-                      ( String.fromInt (index + 1) ) ++ ". " ++ convertResponse response ++ " "
-                    Nothing ->
-                      ( String.fromInt (index + 1) ) ++ ". No Response "
-                ) prompts
-      in
-        String.concat answerList
+      ShowingResults ->
+          div [ class "container" ]
+           [ div [] [ text ( String.fromInt model.results) ]
+
+           ]
+
 
 
 scoreResponse : Response -> Int
@@ -170,17 +192,6 @@ scoreResponses responses =
       |> List.map scoreResponse
       |> List.sum
 
-
-checkResponses : Prompt -> Bool
-checkResponses prompt =
-      case prompt.selectedResponse of
-        Just selectedResponse -> True
-        Nothing -> False
-
-
-allowScoring : List Prompt -> Bool
-allowScoring prompts =
-      List.any checkResponses prompts
 
 
 renderQuestion : Int -> Prompt -> Html Msg
