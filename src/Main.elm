@@ -162,35 +162,53 @@ view model =
 
       ShowingResults ->
           div [ class "container" ]
-           [ div [] [ text ( String.fromInt model.results) ]
+           [ div [] [ text ( String.fromInt (model.results)) ]
 
            ]
 
 
+unwrapActive : Response -> Prompt -> Maybe Response -> Bool
+unwrapActive response prompt maybeSelectedResponse =
+      case maybeSelectedResponse of
+          Just selectedResponse ->
+            if selectedResponse == response then True
+              else
+                False
+
+          Nothing -> False
+
 
 scoreResponse : Response -> Int
-scoreResponse selectedResponse =
-        case selectedResponse of
-
+scoreResponse response =
+        case response of
           StronglyAgree -> 5
           Agree -> 4
           Neutral -> 3
           Disagree -> 2
           StronglyDisagree -> 1
 
-scoreResponses : List Response -> Int
-scoreResponses responses =
 
-  -- let
-  --   f : Response -> Int
-  --   f = \ response -> scoreResponse response
-  --   f     response =  scoreResponse response
-  --   f              =  scoreResponse
-  -- in
-    -- List.sum ( List.map scoreResponse responses )
-    responses
-      |> List.map scoreResponse
-      |> List.sum
+applyScore : Response -> Prompt -> Maybe Response -> Int
+applyScore response prompt maybeResponse =
+      if unwrapActive response prompt maybeResponse then scoreResponse response
+        else
+          0
+
+
+
+-- sumResponses : Response -> List Response -> Maybe Response -> Prompt -> List Prompt -> Int
+-- sumResponses response responses maybeSelectedResponse prompt prompts =
+--       List.sum (List.map (applyScore response prompt maybeSelectedResponse) prompt.responseOptions)
+
+
+--
+--
+-- scoreResponses : List Prompt -> Int
+-- scoreResponses prompts =
+--     -- List.sum ( List.map scoreResponse responses )
+--     prompts.selectedResponse
+--       |> List.map scoreResponse
+--       |> List.sum
 
 
 
