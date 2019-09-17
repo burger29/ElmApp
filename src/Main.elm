@@ -13,6 +13,7 @@ main =
 
 type Msg
     = SelectResponse Response Int Prompt
+    | ResetQuiz
 
 
 type alias Model =
@@ -141,12 +142,17 @@ update msg model =
                 else
                   AnsweringQuestions
 
+              updatedResults =
+                sumResponse updatedPrompts
+
               updatedModel =
-                { model | prompts = updatedPrompts, state = updatedState }
+                { model | prompts = updatedPrompts, state = updatedState, results = updatedResults }
 
             in
             updatedModel
 
+        ResetQuiz ->
+            init
 
 
 view : Model -> Html Msg
@@ -163,19 +169,19 @@ view model =
       ShowingResults ->
           div [ class "container" ]
            [ div [] [ text ( String.fromInt (model.results)) ]
-
+           , button [ class "btn btn-primary", onClick ResetQuiz ] [ text "Reset" ]
            ]
 
-
-unwrapActive : Response -> Prompt -> Maybe Response -> Bool
-unwrapActive response prompt maybeSelectedResponse =
-      case maybeSelectedResponse of
-          Just selectedResponse ->
-            if selectedResponse == response then True
-              else
-                False
-
-          Nothing -> False
+--
+-- unwrapActive : Response -> Prompt -> Maybe Response -> Bool
+-- unwrapActive response prompt maybeSelectedResponse =
+--       case maybeSelectedResponse of
+--           Just selectedResponse ->
+--             if selectedResponse == response then True
+--               else
+--                 False
+--
+--           Nothing -> False
 
 
 scoreResponse : Response -> Int
@@ -188,17 +194,21 @@ scoreResponse response =
           StronglyDisagree -> 1
 
 
-applyScore : Response -> Prompt -> Maybe Response -> Int
-applyScore response prompt maybeResponse =
-      if unwrapActive response prompt maybeResponse then scoreResponse response
-        else
-          0
+
+selectedResponseOrZero : Maybe Response -> Int
+selectedResponseOrZero maybeResponse =
+      case maybeResponse of
+          Just response ->
+            scoreResponse response
+
+          Nothing ->
+            0
 
 
-
--- sumResponses : Response -> List Response -> Maybe Response -> Prompt -> List Prompt -> Int
--- sumResponses response responses maybeSelectedResponse prompt prompts =
---       List.sum (List.map (applyScore response prompt maybeSelectedResponse) prompt.responseOptions)
+sumResponse : List Prompt -> Int
+sumResponse prompts =
+      List.map (\ prompt -> selectedResponseOrZero prompt.selectedResponse) prompts
+        |> List.sum
 
 
 --
