@@ -12,39 +12,43 @@ main =
 
 
 type Msg
-    = SelectResponse Response Int Prompt
+    = SelectResponse Response Prompt
     | ResetQuiz
+    | PreviousQuestion
+
 
 
 type alias Model =
   { questions: List String
   , prompts: List Prompt
   , state: ModelState
-  , results : Int
+  , results: Int
   }
 
 
 type ModelState
   = AnsweringQuestions
   | ShowingResults
+  | AllQuestions
 
 
 init : Model
 init =
   { questions = ["double quote","proper syntax"]
-  , prompts = (List.map promptBuilder questionList)
+  , prompts = (List.indexedMap promptBuilder questionList)
   , state = AnsweringQuestions
   , results = 0
   }
 
 
 
-promptBuilder : String -> Prompt
-promptBuilder question =
+promptBuilder : Int -> String -> Prompt
+promptBuilder index question =
 
       { question = question
       , responseOptions = [ StronglyAgree, Agree , Neutral , Disagree, StronglyDisagree ]
       , selectedResponse =  Nothing
+      , index = index
     }
 
 
@@ -81,26 +85,11 @@ type Response
     | StronglyDisagree
 
 
-convertResponse : Response -> String
-convertResponse someResponse =
-      case someResponse of
-
-        Agree -> "Agree"
-
-        Neutral -> "Neutral"
-
-        Disagree -> "Disagree"
-
-        StronglyAgree -> "Strongly Agree"
-
-        StronglyDisagree -> "Strongly Disagree"
-
-
-
 type alias Prompt =
   { question: String
   , responseOptions: List Response
   , selectedResponse: Maybe Response
+  , index: Int
   }
 
 
@@ -111,8 +100,8 @@ checkResponses prompt =
         Nothing -> False
 
 
-allowScoring : List Prompt -> Bool
-allowScoring prompts =
+allowSubmit : List Prompt -> Bool
+allowSubmit prompts =
       List.all checkResponses prompts
 
 
@@ -121,14 +110,14 @@ update msg model =
 
     case msg of
 
-        SelectResponse response index prompt ->
+        SelectResponse response prompt ->
 
             let
               beforeIndex =
-                List.take index model.prompts
+                List.take prompt.index model.prompts
 
               afterIndex =
-                List.drop (index + 1) model.prompts
+                List.drop (prompt.index + 1) model.prompts
 
               updatedPrompt =
                 { prompt | selectedResponse = Just response }
@@ -136,17 +125,11 @@ update msg model =
               updatedPrompts =
                 beforeIndex ++ [updatedPrompt] ++ afterIndex
 
-              updatedState =
-                if allowScoring updatedPrompts then
-                  ShowingResults
-                else
-                  AnsweringQuestions
-
               updatedResults =
                 sumResponse updatedPrompts
 
               updatedModel =
-                { model | prompts = updatedPrompts, state = updatedState, results = updatedResults }
+                { model | prompts = updatedPrompts, results = updatedResults }
 
             in
             updatedModel
@@ -154,15 +137,22 @@ update msg model =
         ResetQuiz ->
             init
 
+        PreviousQuestion ->
+            init
+
 
 view : Model -> Html Msg
 view model =
+    let
+        maybeFirstPrompt =
+          nextUnansweredQuestion model.prompts
+    in
     case model.state of
 
-      AnsweringQuestions ->
+      AllQuestions ->
           div [ class "container" ]
             [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
-            , div [] ( List.indexedMap renderQuestion model.prompts )
+            , div [] ( List.map renderQuestion model.prompts )
             , div [] []
             ]
 
@@ -172,16 +162,50 @@ view model =
            , button [ class "btn btn-primary", onClick ResetQuiz ] [ text "Reset" ]
            ]
 
+      AnsweringQuestions ->
+          div [ class "container" ]
+            [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
+            , div [] [ renderFirstQuestion maybeFirstPrompt ]
+            , div [ class "d-flexjustify-content-start" ] [
+                button [ class "btn btn-danger" ] [ text "Previous" ]
+                -- , button [ class "btn btn-primary", onClick NextQuestion ] [ text "Next" ]
+                  ]
+            ]
+
+
+nextUnansweredQuestion : List Prompt -> Maybe Prompt
+nextUnansweredQuestion prompts =
+      List.filter filterOutUnanswered prompts
+        |> List.head
+
 --
--- unwrapActive : Response -> Prompt -> Maybe Response -> Bool
--- unwrapActive response prompt maybeSelectedResponse =
---       case maybeSelectedResponse of
---           Just selectedResponse ->
---             if selectedResponse == response then True
---               else
---                 False
+-- handlePrompt : Maybe Prompt -> Prompt
+-- handlePrompt maybePrompt =
+--       case maybePrompt of
+--           Just prompt ->
+--             prompt
 --
---           Nothing -> False
+--           Nothing ->
+
+
+filterOutAnswered : Prompt -> Bool
+filterOutAnswered prompt =
+      case prompt.selectedResponse of
+          Just selectedResponse ->
+            True
+
+          Nothing ->
+            False
+
+
+filterOutUnanswered : Prompt -> Bool
+filterOutUnanswered prompt =
+      case prompt.selectedResponse of
+          Just selectedResponse ->
+            False
+
+          Nothing ->
+            True
 
 
 scoreResponse : Response -> Int
@@ -222,17 +246,47 @@ sumResponse prompts =
 
 
 
-renderQuestion : Int -> Prompt -> Html Msg
-renderQuestion index prompt =
-      div [ class "pt-5 text-light bg-dark" ]
-      [  p [ class "pl-3 font-weight-bold" ] [ text prompt.question ]
-      , ul [ class "list-group list-group-horizontal" ] ( List.map
-      (\ x -> renderResponseList x index prompt.selectedResponse prompt) prompt.responseOptions )
-      ]
+renderQuestion : Prompt -> Html Msg
+renderQuestion prompt =
+        div [ class "pt-5 text-light bg-dark" ]
+        [  p [ class "pl-3 font-weight-bold" ] [ text prompt.question ]
+        , ul [ class "list-group list-group-horizontal" ] ( List.map
+        (\ x -> renderResponseList x prompt.selectedResponse prompt) prompt.responseOptions )
+        ]
 
 
-renderResponseList : Response -> Int -> Maybe Response -> Prompt -> Html Msg
-renderResponseList response index maybeSelectedResponse prompt =
+
+renderFirstQuestion : Maybe Prompt -> Html Msg
+renderFirstQuestion maybePrompt =
+    case maybePrompt of
+      Just prompt ->
+        div [ class "pt-5 text-light bg-dark" ]
+        [  p [ class "pl-3 font-weight-bold" ] [ text prompt.question ]
+        , ul [ class "list-group list-group-horizontal" ] ( List.map
+        (\ x -> renderResponseList x prompt.selectedResponse prompt) prompt.responseOptions )
+        ]
+      Nothing ->
+        div [] [ text "Nothing to see here." ]
+
+
+
+convertResponse : Response -> String
+convertResponse someResponse =
+      case someResponse of
+
+        Agree -> "Agree"
+
+        Neutral -> "Neutral"
+
+        Disagree -> "Disagree"
+
+        StronglyAgree -> "Strongly Agree"
+
+        StronglyDisagree -> "Strongly Disagree"
+
+
+renderResponseList : Response -> Maybe Response -> Prompt -> Html Msg
+renderResponseList response maybeSelectedResponse prompt =
 
     let
       maybeActive =
@@ -249,5 +303,5 @@ renderResponseList response index maybeSelectedResponse prompt =
 
     li
       [ class ( "list-group-item list-group-item-dark list-group-item-action" ++ maybeActive )
-      , onClick ( SelectResponse response index prompt )
+      , onClick ( SelectResponse response prompt )
       ] [ text ( convertResponse response )]
