@@ -7,6 +7,7 @@ import Html.Attributes exposing (class)
 import Array
 
 
+
 main =
     Browser.sandbox { init = init, update = update, view = view }
 
@@ -139,6 +140,27 @@ update msg model =
 
         PreviousQuestion ->
             init
+            -- let
+            --
+            --   updatedSelect =
+            --     { prompt | selectedResponse = Nothing }
+            --
+            --   updatedPrompt =
+            --     List.singleton updatedSelect
+            --
+            --   updatedPrompts =
+            --     updatedPrompt ++ model.prompts
+            --
+            --   updatedModel =
+            --     { model | prompts = updatedPrompts }
+            --
+            -- in
+            --
+            -- case findLastAnswered model.prompts of
+            --   Just prompts ->
+            --     updatedModel
+            --   Nothing ->
+            --     init
 
 
 view : Model -> Html Msg
@@ -165,9 +187,9 @@ view model =
       AnsweringQuestions ->
           div [ class "container" ]
             [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
-            , div [] [ renderFirstQuestion maybeFirstPrompt ]
+            , div [] [ renderFirstQuestion model maybeFirstPrompt ]
             , div [ class "d-flexjustify-content-start" ] [
-                button [ class "btn btn-danger" ] [ text "Previous" ]
+                -- button [ class "btn btn-danger" ] [ text "Previous" ]
                 -- , button [ class "btn btn-primary", onClick NextQuestion ] [ text "Next" ]
                   ]
             ]
@@ -178,14 +200,10 @@ nextUnansweredQuestion prompts =
       List.filter filterOutUnanswered prompts
         |> List.head
 
---
--- handlePrompt : Maybe Prompt -> Prompt
--- handlePrompt maybePrompt =
---       case maybePrompt of
---           Just prompt ->
---             prompt
---
---           Nothing ->
+
+answeredQuestions : List Prompt -> List Prompt
+answeredQuestions prompts =
+      List.filter filterOutAnswered prompts
 
 
 filterOutAnswered : Prompt -> Bool
@@ -206,6 +224,21 @@ filterOutUnanswered prompt =
 
           Nothing ->
             True
+
+
+findLastAnswered : List Prompt -> Maybe Prompt
+findLastAnswered prompts =
+      let
+        listLength =
+          List.filter filterOutAnswered prompts
+            |> List.length
+      in
+
+      answeredQuestions prompts
+        |> List.drop (listLength - 1)
+          |> List.head
+
+
 
 
 scoreResponse : Response -> Int
@@ -235,16 +268,6 @@ sumResponse prompts =
         |> List.sum
 
 
---
---
--- scoreResponses : List Prompt -> Int
--- scoreResponses prompts =
---     -- List.sum ( List.map scoreResponse responses )
---     prompts.selectedResponse
---       |> List.map scoreResponse
---       |> List.sum
-
-
 
 renderQuestion : Prompt -> Html Msg
 renderQuestion prompt =
@@ -256,17 +279,19 @@ renderQuestion prompt =
 
 
 
-renderFirstQuestion : Maybe Prompt -> Html Msg
-renderFirstQuestion maybePrompt =
+renderFirstQuestion : Model -> Maybe Prompt -> Html Msg
+renderFirstQuestion model maybePrompt =
     case maybePrompt of
       Just prompt ->
         div [ class "pt-5 text-light bg-dark" ]
         [  p [ class "pl-3 font-weight-bold" ] [ text prompt.question ]
         , ul [ class "list-group list-group-horizontal" ] ( List.map
         (\ x -> renderResponseList x prompt.selectedResponse prompt) prompt.responseOptions )
+        -- , button [ class "btn btn-danger", onClick (PreviousQuestion prompt) ] [ text "Previous" ]
         ]
       Nothing ->
-        div [] [ text "Nothing to see here." ]
+        div [] [ div [] [ text ( String.fromInt (model.results)) ]
+          , button [ class "btn btn-primary", onClick ResetQuiz ] [ text "Reset" ] ]
 
 
 

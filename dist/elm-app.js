@@ -3923,7 +3923,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.aG,
 		impl.aE,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.B && impl.B(sendToApp)
+			var divertHrefToApp = impl.C && impl.C(sendToApp)
 			var view = impl.aI;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -3998,7 +3998,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		B: function(sendToApp)
+		C: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4400,9 +4400,9 @@ var elm$core$Set$toList = function (_n0) {
 var author$project$Main$promptBuilder = F2(
 	function (index, question) {
 		return {
-			G: index,
-			H: question,
-			I: _List_fromArray(
+			H: index,
+			I: question,
+			J: _List_fromArray(
 				[1, 0, 2, 3, 4]),
 			h: elm$core$Maybe$Nothing
 		};
@@ -4478,7 +4478,7 @@ var author$project$Main$init = {
 	q: A2(elm$core$List$indexedMap, author$project$Main$promptBuilder, author$project$Main$questionList),
 	ai: _List_fromArray(
 		['double quote', 'proper syntax']),
-	J: 0,
+	B: 0,
 	Q: 0
 };
 var author$project$Main$scoreResponse = function (response) {
@@ -4754,8 +4754,8 @@ var author$project$Main$update = F2(
 					{
 						h: elm$core$Maybe$Just(response)
 					});
-				var beforeIndex = A2(elm$core$List$take, prompt.G, model.q);
-				var afterIndex = A2(elm$core$List$drop, prompt.G + 1, model.q);
+				var beforeIndex = A2(elm$core$List$take, prompt.H, model.q);
+				var afterIndex = A2(elm$core$List$drop, prompt.H + 1, model.q);
 				var updatedPrompts = _Utils_ap(
 					beforeIndex,
 					_Utils_ap(
@@ -4765,7 +4765,7 @@ var author$project$Main$update = F2(
 				var updatedResults = author$project$Main$sumResponse(updatedPrompts);
 				var updatedModel = _Utils_update(
 					model,
-					{q: updatedPrompts, J: updatedResults});
+					{q: updatedPrompts, B: updatedResults});
 				return updatedModel;
 			case 1:
 				return author$project$Main$init;
@@ -5213,53 +5213,73 @@ var author$project$Main$renderResponseList = F3(
 					author$project$Main$convertResponse(response))
 				]));
 	});
+var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$ul = _VirtualDom_node('ul');
-var author$project$Main$renderFirstQuestion = function (maybePrompt) {
-	if (!maybePrompt.$) {
-		var prompt = maybePrompt.a;
-		return A2(
-			elm$html$Html$div,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$class('pt-5 text-light bg-dark')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$p,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('pl-3 font-weight-bold')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text(prompt.H)
-						])),
-					A2(
-					elm$html$Html$ul,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('list-group list-group-horizontal')
-						]),
-					A2(
-						elm$core$List$map,
-						function (x) {
-							return A3(author$project$Main$renderResponseList, x, prompt.h, prompt);
-						},
-						prompt.I))
-				]));
-	} else {
-		return A2(
-			elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					elm$html$Html$text('Nothing to see here.')
-				]));
-	}
-};
+var author$project$Main$renderFirstQuestion = F2(
+	function (model, maybePrompt) {
+		if (!maybePrompt.$) {
+			var prompt = maybePrompt.a;
+			return A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('pt-5 text-light bg-dark')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$p,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('pl-3 font-weight-bold')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(prompt.I)
+							])),
+						A2(
+						elm$html$Html$ul,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('list-group list-group-horizontal')
+							]),
+						A2(
+							elm$core$List$map,
+							function (x) {
+								return A3(author$project$Main$renderResponseList, x, prompt.h, prompt);
+							},
+							prompt.J))
+					]));
+		} else {
+			return A2(
+				elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text(
+								elm$core$String$fromInt(model.B))
+							])),
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('btn btn-primary'),
+								elm$html$Html$Events$onClick(author$project$Main$ResetQuiz)
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('Reset')
+							]))
+					]));
+		}
+	});
 var author$project$Main$renderQuestion = function (prompt) {
 	return A2(
 		elm$html$Html$div,
@@ -5277,7 +5297,7 @@ var author$project$Main$renderQuestion = function (prompt) {
 					]),
 				_List_fromArray(
 					[
-						elm$html$Html$text(prompt.H)
+						elm$html$Html$text(prompt.I)
 					])),
 				A2(
 				elm$html$Html$ul,
@@ -5290,10 +5310,9 @@ var author$project$Main$renderQuestion = function (prompt) {
 					function (x) {
 						return A3(author$project$Main$renderResponseList, x, prompt.h, prompt);
 					},
-					prompt.I))
+					prompt.J))
 			]));
 };
-var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$h1 = _VirtualDom_node('h1');
 var author$project$Main$view = function (model) {
 	var maybeFirstPrompt = author$project$Main$nextUnansweredQuestion(model.q);
@@ -5339,7 +5358,7 @@ var author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								elm$html$Html$text(
-								elm$core$String$fromInt(model.J))
+								elm$core$String$fromInt(model.B))
 							])),
 						A2(
 						elm$html$Html$button,
@@ -5377,7 +5396,7 @@ var author$project$Main$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								author$project$Main$renderFirstQuestion(maybeFirstPrompt)
+								A2(author$project$Main$renderFirstQuestion, model, maybeFirstPrompt)
 							])),
 						A2(
 						elm$html$Html$div,
@@ -5385,19 +5404,7 @@ var author$project$Main$view = function (model) {
 							[
 								elm$html$Html$Attributes$class('d-flexjustify-content-start')
 							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('btn btn-danger')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Previous')
-									]))
-							]))
+						_List_Nil)
 					]));
 	}
 };
