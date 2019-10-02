@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.P.A === region.V.A)
+	if (region.P.B === region.W.B)
 	{
-		return 'on line ' + region.P.A;
+		return 'on line ' + region.P.B;
 	}
-	return 'on lines ' + region.P.A + ' through ' + region.V.A;
+	return 'on lines ' + region.P.B + ' through ' + region.W.B;
 }
 
 
@@ -3923,7 +3923,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.aG,
 		impl.aE,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.C && impl.C(sendToApp)
+			var divertHrefToApp = impl.D && impl.D(sendToApp)
 			var view = impl.aI;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -3998,7 +3998,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		C: function(sendToApp)
+		D: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4014,9 +4014,9 @@ function _Browser_application(impl)
 					var next = elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.ag === next.ag
-							&& curr.Y === next.Y
-							&& curr.ad.a === next.ad.a
+							&& curr.ah === next.ah
+							&& curr.Z === next.Z
+							&& curr.ae.a === next.ae.a
 						)
 							? elm$browser$Browser$Internal(next)
 							: elm$browser$Browser$External(href)
@@ -4317,6 +4317,14 @@ var author$project$Main$Neutral = 2;
 var author$project$Main$StronglyAgree = 1;
 var author$project$Main$StronglyDisagree = 4;
 var elm$core$Maybe$Nothing = {$: 1};
+var elm$core$Tuple$first = function (_n0) {
+	var x = _n0.a;
+	return x;
+};
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
 var elm$core$Basics$EQ = 1;
 var elm$core$Basics$LT = 0;
 var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
@@ -4400,15 +4408,30 @@ var elm$core$Set$toList = function (_n0) {
 var author$project$Main$promptBuilder = F2(
 	function (index, question) {
 		return {
-			H: index,
-			I: question,
+			A: index,
+			I: question.a,
 			J: _List_fromArray(
 				[1, 0, 2, 3, 4]),
-			h: elm$core$Maybe$Nothing
+			h: elm$core$Maybe$Nothing,
+			S: question.b
 		};
 	});
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var author$project$Main$questionList = _List_fromArray(
-	['My team can clearly articulate their goals', 'My team feels recognized for their accomplishments', 'All team members have personal development plans and see regular progress towards their goals', 'My team feels empowered to make decisions', 'My team is more efficient when I’m not there', 'My team has productive meetings that everyone is involved in (but only when necessary)', 'Team members will openly express their opinions and concerns', 'Other people want to be on our team', 'My team has created their own set of operating guidelines and practices which they are fully bought into', 'All team members hold each other, including me, accountable for outcomes']);
+	[
+		_Utils_Tuple2('My team can clearly articulate their goals', 1),
+		_Utils_Tuple2('My team feels recognized for their accomplishments', 1),
+		_Utils_Tuple2('All team members have personal development plans and see regular progress towards their goals', 1),
+		_Utils_Tuple2('My team feels empowered to make decisions', 1),
+		_Utils_Tuple2('My team is more efficient when I’m not there', -1),
+		_Utils_Tuple2('My team has productive meetings that everyone is involved in (but only when necessary)', 1),
+		_Utils_Tuple2('Team members will openly express their opinions and concerns', 1),
+		_Utils_Tuple2('Other people want to be on our team', 1),
+		_Utils_Tuple2('My team has created their own set of operating guidelines and practices which they are fully bought into', 1),
+		_Utils_Tuple2('All team members hold each other, including me, accountable for outcomes', 1)
+	]);
 var elm$core$Basics$sub = _Basics_sub;
 var elm$core$Basics$add = _Basics_add;
 var elm$core$List$foldl = F3(
@@ -4476,23 +4499,21 @@ var elm$core$List$indexedMap = F2(
 	});
 var author$project$Main$init = {
 	q: A2(elm$core$List$indexedMap, author$project$Main$promptBuilder, author$project$Main$questionList),
-	ai: _List_fromArray(
-		['double quote', 'proper syntax']),
-	B: 0,
+	C: 0,
 	Q: 0
 };
 var author$project$Main$scoreResponse = function (response) {
 	switch (response) {
 		case 1:
-			return 5;
-		case 0:
-			return 4;
-		case 2:
-			return 3;
-		case 3:
 			return 2;
-		default:
+		case 0:
 			return 1;
+		case 2:
+			return 0;
+		case 3:
+			return -1;
+		default:
+			return -2;
 	}
 };
 var author$project$Main$selectedResponseOrZero = function (maybeResponse) {
@@ -4507,6 +4528,7 @@ var elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
 	});
+var elm$core$Basics$mul = _Basics_mul;
 var elm$core$Basics$gt = _Utils_gt;
 var elm$core$List$reverse = function (list) {
 	return A3(elm$core$List$foldl, elm$core$List$cons, _List_Nil, list);
@@ -4588,7 +4610,7 @@ var author$project$Main$sumResponse = function (prompts) {
 		A2(
 			elm$core$List$map,
 			function (prompt) {
-				return author$project$Main$selectedResponseOrZero(prompt.h);
+				return author$project$Main$selectedResponseOrZero(prompt.h) * prompt.S;
 			},
 			prompts));
 };
@@ -4754,8 +4776,8 @@ var author$project$Main$update = F2(
 					{
 						h: elm$core$Maybe$Just(response)
 					});
-				var beforeIndex = A2(elm$core$List$take, prompt.H, model.q);
-				var afterIndex = A2(elm$core$List$drop, prompt.H + 1, model.q);
+				var beforeIndex = A2(elm$core$List$take, prompt.A, model.q);
+				var afterIndex = A2(elm$core$List$drop, prompt.A + 1, model.q);
 				var updatedPrompts = _Utils_ap(
 					beforeIndex,
 					_Utils_ap(
@@ -4765,7 +4787,7 @@ var author$project$Main$update = F2(
 				var updatedResults = author$project$Main$sumResponse(updatedPrompts);
 				var updatedModel = _Utils_update(
 					model,
-					{q: updatedPrompts, B: updatedResults});
+					{q: updatedPrompts, C: updatedResults});
 				return updatedModel;
 			case 1:
 				return author$project$Main$init;
@@ -4883,10 +4905,6 @@ var elm$core$Array$compressNodes = F2(
 			}
 		}
 	});
-var elm$core$Tuple$first = function (_n0) {
-	var x = _n0.a;
-	return x;
-};
 var elm$core$Array$treeFromBuilder = F2(
 	function (nodeList, nodeListSize) {
 		treeFromBuilder:
@@ -4912,7 +4930,6 @@ var elm$core$Basics$max = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) > 0) ? x : y;
 	});
-var elm$core$Basics$mul = _Basics_mul;
 var elm$core$Elm$JsArray$length = _JsArray_length;
 var elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
@@ -5203,7 +5220,7 @@ var author$project$Main$renderResponseList = F3(
 			elm$html$Html$li,
 			_List_fromArray(
 				[
-					elm$html$Html$Attributes$class('list-group-item list-group-item-dark list-group-item-action' + maybeActive),
+					elm$html$Html$Attributes$class('list-group-item list-group-item-action inactive-button' + maybeActive),
 					elm$html$Html$Events$onClick(
 					A2(author$project$Main$SelectResponse, response, prompt))
 				]),
@@ -5225,10 +5242,18 @@ var author$project$Main$renderFirstQuestion = F2(
 				elm$html$Html$div,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$class('pt-5 text-light bg-dark')
+						elm$html$Html$Attributes$class('pt-5')
 					]),
 				_List_fromArray(
 					[
+						A2(
+						elm$html$Html$p,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text(
+								elm$core$String$fromInt(prompt.A + 1))
+							])),
 						A2(
 						elm$html$Html$p,
 						_List_fromArray(
@@ -5264,7 +5289,7 @@ var author$project$Main$renderFirstQuestion = F2(
 						_List_fromArray(
 							[
 								elm$html$Html$text(
-								elm$core$String$fromInt(model.B))
+								elm$core$String$fromInt(model.C))
 							])),
 						A2(
 						elm$html$Html$button,
@@ -5358,7 +5383,7 @@ var author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								elm$html$Html$text(
-								elm$core$String$fromInt(model.B))
+								elm$core$String$fromInt(model.C))
 							])),
 						A2(
 						elm$html$Html$button,
@@ -5528,7 +5553,7 @@ var elm$core$String$contains = _String_contains;
 var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {X: fragment, Y: host, ab: path, ad: port_, ag: protocol, ah: query};
+		return {Y: fragment, Z: host, ac: path, ae: port_, ah: protocol, ai: query};
 	});
 var elm$url$Url$chompBeforePath = F5(
 	function (protocol, path, params, frag, str) {

@@ -20,8 +20,7 @@ type Msg
 
 
 type alias Model =
-  { questions: List String
-  , prompts: List Prompt
+  { prompts: List Prompt
   , state: ModelState
   , results: Int
   }
@@ -35,46 +34,46 @@ type ModelState
 
 init : Model
 init =
-  { questions = ["double quote","proper syntax"]
-  , prompts = (List.indexedMap promptBuilder questionList)
+  { prompts = (List.indexedMap promptBuilder questionList )
   , state = AnsweringQuestions
   , results = 0
   }
 
 
 
-promptBuilder : Int -> String -> Prompt
+promptBuilder : Int -> (String, Int) -> Prompt
 promptBuilder index question =
 
-      { question = question
+      { question = Tuple.first question
       , responseOptions = [ StronglyAgree, Agree , Neutral , Disagree, StronglyDisagree ]
       , selectedResponse =  Nothing
+      , variable = Tuple.second question
       , index = index
     }
 
 
-questionList : List String
+questionList : List ( String, Int )
 questionList =
   [
-    "My team can clearly articulate their goals"
+    ("My team can clearly articulate their goals", 1 )
     ,
-    "My team feels recognized for their accomplishments"
+    ("My team feels recognized for their accomplishments", 1)
     ,
-    "All team members have personal development plans and see regular progress towards their goals"
+    ("All team members have personal development plans and see regular progress towards their goals", 1)
     ,
-    "My team feels empowered to make decisions"
+    ("My team feels empowered to make decisions", 1)
     ,
-    "My team is more efficient when I’m not there"
+    ("My team is more efficient when I’m not there", -1)
     ,
-    "My team has productive meetings that everyone is involved in (but only when necessary)"
+    ("My team has productive meetings that everyone is involved in (but only when necessary)", 1)
     ,
-    "Team members will openly express their opinions and concerns"
+    ("Team members will openly express their opinions and concerns", 1)
     ,
-    "Other people want to be on our team"
+    ("Other people want to be on our team", 1)
     ,
-    "My team has created their own set of operating guidelines and practices which they are fully bought into"
+    ("My team has created their own set of operating guidelines and practices which they are fully bought into", 1)
     ,
-    "All team members hold each other, including me, accountable for outcomes"
+    ("All team members hold each other, including me, accountable for outcomes", 1)
   ]
 
 
@@ -88,6 +87,7 @@ type Response
 
 type alias Prompt =
   { question: String
+  , variable: Int
   , responseOptions: List Response
   , selectedResponse: Maybe Response
   , index: Int
@@ -244,11 +244,11 @@ findLastAnswered prompts =
 scoreResponse : Response -> Int
 scoreResponse response =
         case response of
-          StronglyAgree -> 5
-          Agree -> 4
-          Neutral -> 3
-          Disagree -> 2
-          StronglyDisagree -> 1
+          StronglyAgree -> 2
+          Agree -> 1
+          Neutral -> 0
+          Disagree -> -1
+          StronglyDisagree -> -2
 
 
 
@@ -264,7 +264,7 @@ selectedResponseOrZero maybeResponse =
 
 sumResponse : List Prompt -> Int
 sumResponse prompts =
-      List.map (\ prompt -> selectedResponseOrZero prompt.selectedResponse) prompts
+      List.map (\ prompt -> selectedResponseOrZero prompt.selectedResponse * prompt.variable ) prompts
         |> List.sum
 
 
@@ -283,8 +283,9 @@ renderFirstQuestion : Model -> Maybe Prompt -> Html Msg
 renderFirstQuestion model maybePrompt =
     case maybePrompt of
       Just prompt ->
-        div [ class "pt-5 text-light bg-dark" ]
-        [  p [ class "pl-3 font-weight-bold" ] [ text prompt.question ]
+        div [ class "pt-5" ]
+        [ p [] [ text (String.fromInt (prompt.index + 1)) ]
+        , p [ class "pl-3 font-weight-bold" ] [ text prompt.question ]
         , ul [ class "list-group list-group-horizontal" ] ( List.map
         (\ x -> renderResponseList x prompt.selectedResponse prompt) prompt.responseOptions )
         -- , button [ class "btn btn-danger", onClick (PreviousQuestion prompt) ] [ text "Previous" ]
@@ -327,6 +328,6 @@ renderResponseList response maybeSelectedResponse prompt =
     in
 
     li
-      [ class ( "list-group-item list-group-item-dark list-group-item-action" ++ maybeActive )
+      [ class ( "list-group-item list-group-item-action inactive-button" ++ maybeActive )
       , onClick ( SelectResponse response prompt )
       ] [ text ( convertResponse response )]
