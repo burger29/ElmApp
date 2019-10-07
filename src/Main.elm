@@ -1,9 +1,9 @@
 module Main exposing (Msg(..), main, update, view)
 
 import Browser
-import Html exposing (Html, button, div, text, p, ul, li, h1 )
+import Html exposing (Html, button, div, text, p, ul, li, h1, img )
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, src, height, width)
 import Array
 
 
@@ -15,7 +15,7 @@ main =
 type Msg
     = SelectResponse Response Prompt
     | ResetQuiz
-    | PreviousQuestion
+
 
 
 
@@ -29,7 +29,7 @@ type alias Model =
 type ModelState
   = AnsweringQuestions
   | ShowingResults
-  | AllQuestions
+  -- | AllQuestions
 
 
 init : Model
@@ -138,29 +138,6 @@ update msg model =
         ResetQuiz ->
             init
 
-        PreviousQuestion ->
-            init
-            -- let
-            --
-            --   updatedSelect =
-            --     { prompt | selectedResponse = Nothing }
-            --
-            --   updatedPrompt =
-            --     List.singleton updatedSelect
-            --
-            --   updatedPrompts =
-            --     updatedPrompt ++ model.prompts
-            --
-            --   updatedModel =
-            --     { model | prompts = updatedPrompts }
-            --
-            -- in
-            --
-            -- case findLastAnswered model.prompts of
-            --   Just prompts ->
-            --     updatedModel
-            --   Nothing ->
-            --     init
 
 
 view : Model -> Html Msg
@@ -171,29 +148,42 @@ view model =
     in
     case model.state of
 
-      AllQuestions ->
-          div [ class "container" ]
-            [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
-            , div [] ( List.map renderQuestion model.prompts )
-            , div [] []
-            ]
+      -- AllQuestions ->
+      --     div [ class "container" ]
+      --       [ h1 [ class "question" ] [ text "Rate Your Team" ]
+      --       , div [] ( List.map renderQuestion model.prompts )
+      --       , div [] []
+      --       ]
 
       ShowingResults ->
           div [ class "container" ]
-           [ div [] [ text ( String.fromInt (model.results)) ]
-           , button [ class "btn btn-primary", onClick ResetQuiz ] [ text "Reset" ]
+           [
+           -- div [] [ text ( String.fromInt (model.results)) ]
+           button [ class "button-responses", onClick ResetQuiz ] [ text "Reset" ]
            ]
 
       AnsweringQuestions ->
-          div [ class "container" ]
-            [ h1 [ class "text-body" ] [ text "Grade Your Team" ]
-            , div [] [ renderFirstQuestion model maybeFirstPrompt ]
-            , div [ class "d-flexjustify-content-start" ] [
-                -- button [ class "btn btn-danger" ] [ text "Previous" ]
-                -- , button [ class "btn btn-primary", onClick NextQuestion ] [ text "Next" ]
-                  ]
-            ]
-
+        div []
+          [
+            div [ class "container-fluid" ]
+              [
+              div []
+                [
+                img [ class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png"] []
+                ]
+              ]
+            ,
+            div [ class "container" ]
+              [
+              div [ class "intro"]
+                [
+                text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                ]
+                , div [] [ text "video will go here"]
+                , div [] [ renderFirstQuestion model maybeFirstPrompt ]
+                , div [ class "d-flexjustify-content-start" ] []
+              ]
+          ]
 
 nextUnansweredQuestion : List Prompt -> Maybe Prompt
 nextUnansweredQuestion prompts =
@@ -273,7 +263,7 @@ renderQuestion : Prompt -> Html Msg
 renderQuestion prompt =
         div [ class "pt-5 text-light bg-dark" ]
         [  p [ class "pl-3 font-weight-bold" ] [ text prompt.question ]
-        , ul [ class "list-group list-group-horizontal" ] ( List.map
+        , ul [ class "list-group list-group-horizontal-sm" ] ( List.map
         (\ x -> renderResponseList x prompt.selectedResponse prompt) prompt.responseOptions )
         ]
 
@@ -284,15 +274,17 @@ renderFirstQuestion model maybePrompt =
     case maybePrompt of
       Just prompt ->
         div [ class "pt-5" ]
-        [ p [] [ text (String.fromInt (prompt.index + 1)) ]
-        , p [ class "pl-3 font-weight-bold" ] [ text prompt.question ]
-        , ul [ class "list-group list-group-horizontal" ] ( List.map
+        [ p [ class "question-number" ] [ text (String.fromInt (prompt.index + 1) ++ ".") ]
+        , p [ class "question" ] [ text prompt.question ]
+        , ul [ class "list-group list-group-horizontal-sm" ] ( List.map
         (\ x -> renderResponseList x prompt.selectedResponse prompt) prompt.responseOptions )
-        -- , button [ class "btn btn-danger", onClick (PreviousQuestion prompt) ] [ text "Previous" ]
         ]
       Nothing ->
-        div [] [ div [] [ text ( String.fromInt (model.results)) ]
-          , button [ class "btn btn-primary", onClick ResetQuiz ] [ text "Reset" ] ]
+        div []
+          [
+          -- div [] [ text ( String.fromInt (model.results)) ]
+          button [ class "button-reset", onClick ResetQuiz ] [ text "Reset" ] 
+          ]
 
 
 
@@ -300,15 +292,15 @@ convertResponse : Response -> String
 convertResponse someResponse =
       case someResponse of
 
-        Agree -> "Agree"
+        Agree -> "AGREE"
 
-        Neutral -> "Neutral"
+        Neutral -> "NEUTRAL"
 
-        Disagree -> "Disagree"
+        Disagree -> "DISAGREE"
 
-        StronglyAgree -> "Strongly Agree"
+        StronglyAgree -> "STRONGLY AGREE"
 
-        StronglyDisagree -> "Strongly Disagree"
+        StronglyDisagree -> "STRONGLY DISAGREE"
 
 
 renderResponseList : Response -> Maybe Response -> Prompt -> Html Msg
@@ -328,6 +320,6 @@ renderResponseList response maybeSelectedResponse prompt =
     in
 
     li
-      [ class ( "list-group-item list-group-item-action inactive-button" ++ maybeActive )
+      [ class ( "button-responses list-group-item flex-fill" ++ maybeActive )
       , onClick ( SelectResponse response prompt )
       ] [ text ( convertResponse response )]

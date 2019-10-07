@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.P.A === region.W.A)
+	if (region.P.B === region.W.B)
 	{
-		return 'on line ' + region.P.A;
+		return 'on line ' + region.P.B;
 	}
-	return 'on lines ' + region.P.A + ' through ' + region.W.A;
+	return 'on lines ' + region.P.B + ' through ' + region.W.B;
 }
 
 
@@ -3923,7 +3923,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.aG,
 		impl.aE,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.C && impl.C(sendToApp)
+			var divertHrefToApp = impl.D && impl.D(sendToApp)
 			var view = impl.aI;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -3998,7 +3998,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		C: function(sendToApp)
+		D: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4408,7 +4408,7 @@ var elm$core$Set$toList = function (_n0) {
 var author$project$Main$promptBuilder = F2(
 	function (index, question) {
 		return {
-			H: index,
+			A: index,
 			I: question.a,
 			J: _List_fromArray(
 				[1, 0, 2, 3, 4]),
@@ -4499,7 +4499,7 @@ var elm$core$List$indexedMap = F2(
 	});
 var author$project$Main$init = {
 	q: A2(elm$core$List$indexedMap, author$project$Main$promptBuilder, author$project$Main$questionList),
-	B: 0,
+	C: 0,
 	Q: 0
 };
 var author$project$Main$scoreResponse = function (response) {
@@ -4767,32 +4767,29 @@ var elm$core$Maybe$Just = function (a) {
 };
 var author$project$Main$update = F2(
 	function (msg, model) {
-		switch (msg.$) {
-			case 0:
-				var response = msg.a;
-				var prompt = msg.b;
-				var updatedPrompt = _Utils_update(
-					prompt,
-					{
-						h: elm$core$Maybe$Just(response)
-					});
-				var beforeIndex = A2(elm$core$List$take, prompt.H, model.q);
-				var afterIndex = A2(elm$core$List$drop, prompt.H + 1, model.q);
-				var updatedPrompts = _Utils_ap(
-					beforeIndex,
-					_Utils_ap(
-						_List_fromArray(
-							[updatedPrompt]),
-						afterIndex));
-				var updatedResults = author$project$Main$sumResponse(updatedPrompts);
-				var updatedModel = _Utils_update(
-					model,
-					{q: updatedPrompts, B: updatedResults});
-				return updatedModel;
-			case 1:
-				return author$project$Main$init;
-			default:
-				return author$project$Main$init;
+		if (!msg.$) {
+			var response = msg.a;
+			var prompt = msg.b;
+			var updatedPrompt = _Utils_update(
+				prompt,
+				{
+					h: elm$core$Maybe$Just(response)
+				});
+			var beforeIndex = A2(elm$core$List$take, prompt.A, model.q);
+			var afterIndex = A2(elm$core$List$drop, prompt.A + 1, model.q);
+			var updatedPrompts = _Utils_ap(
+				beforeIndex,
+				_Utils_ap(
+					_List_fromArray(
+						[updatedPrompt]),
+					afterIndex));
+			var updatedResults = author$project$Main$sumResponse(updatedPrompts);
+			var updatedModel = _Utils_update(
+				model,
+				{q: updatedPrompts, C: updatedResults});
+			return updatedModel;
+		} else {
+			return author$project$Main$init;
 		}
 	});
 var author$project$Main$ResetQuiz = {$: 1};
@@ -5220,7 +5217,7 @@ var author$project$Main$renderResponseList = F3(
 			elm$html$Html$li,
 			_List_fromArray(
 				[
-					elm$html$Html$Attributes$class('list-group-item list-group-item-dark list-group-item-action' + maybeActive),
+					elm$html$Html$Attributes$class('list-group-item list-group-item-action inactive-button' + maybeActive),
 					elm$html$Html$Events$onClick(
 					A2(author$project$Main$SelectResponse, response, prompt))
 				]),
@@ -5242,7 +5239,7 @@ var author$project$Main$renderFirstQuestion = F2(
 				elm$html$Html$div,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$class('pt-5 text-light bg-dark')
+						elm$html$Html$Attributes$class('pt-5')
 					]),
 				_List_fromArray(
 					[
@@ -5250,7 +5247,18 @@ var author$project$Main$renderFirstQuestion = F2(
 						elm$html$Html$p,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('pl-3 font-weight-bold')
+								elm$html$Html$Attributes$class('question-number')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(
+								elm$core$String$fromInt(prompt.A + 1))
+							])),
+						A2(
+						elm$html$Html$p,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('pl-3')
 							]),
 						_List_fromArray(
 							[
@@ -5281,7 +5289,7 @@ var author$project$Main$renderFirstQuestion = F2(
 						_List_fromArray(
 							[
 								elm$html$Html$text(
-								elm$core$String$fromInt(model.B))
+								elm$core$String$fromInt(model.C))
 							])),
 						A2(
 						elm$html$Html$button,
@@ -5352,7 +5360,7 @@ var author$project$Main$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('Grade Your Team')
+								elm$html$Html$text('Rate Your Team')
 							])),
 						A2(
 						elm$html$Html$div,
@@ -5375,7 +5383,7 @@ var author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								elm$html$Html$text(
-								elm$core$String$fromInt(model.B))
+								elm$core$String$fromInt(model.C))
 							])),
 						A2(
 						elm$html$Html$button,
@@ -5402,7 +5410,7 @@ var author$project$Main$view = function (model) {
 						elm$html$Html$h1,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('text-body')
+								elm$html$Html$Attributes$class('header-div')
 							]),
 						_List_fromArray(
 							[
