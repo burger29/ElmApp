@@ -1,2 +1,2 @@
 # elm-QA
-# i am happy now
+# How to rate your team
