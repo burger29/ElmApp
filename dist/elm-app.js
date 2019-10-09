@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.T.B === region.Z.B)
+	if (region.U.C === region.Z.C)
 	{
-		return 'on line ' + region.T.B;
+		return 'on line ' + region.U.C;
 	}
-	return 'on lines ' + region.T.B + ' through ' + region.Z.B;
+	return 'on lines ' + region.U.C + ' through ' + region.Z.C;
 }
 
 
@@ -853,6 +853,53 @@ var _Basics_xor = F2(function(a, b) { return a !== b; });
 
 
 
+function _Char_toCode(char)
+{
+	var code = char.charCodeAt(0);
+	if (0xD800 <= code && code <= 0xDBFF)
+	{
+		return (code - 0xD800) * 0x400 + char.charCodeAt(1) - 0xDC00 + 0x10000
+	}
+	return code;
+}
+
+function _Char_fromCode(code)
+{
+	return _Utils_chr(
+		(code < 0 || 0x10FFFF < code)
+			? '\uFFFD'
+			:
+		(code <= 0xFFFF)
+			? String.fromCharCode(code)
+			:
+		(code -= 0x10000,
+			String.fromCharCode(Math.floor(code / 0x400) + 0xD800, code % 0x400 + 0xDC00)
+		)
+	);
+}
+
+function _Char_toUpper(char)
+{
+	return _Utils_chr(char.toUpperCase());
+}
+
+function _Char_toLower(char)
+{
+	return _Utils_chr(char.toLowerCase());
+}
+
+function _Char_toLocaleUpper(char)
+{
+	return _Utils_chr(char.toLocaleUpperCase());
+}
+
+function _Char_toLocaleLower(char)
+{
+	return _Utils_chr(char.toLocaleLowerCase());
+}
+
+
+
 var _String_cons = F2(function(chr, str)
 {
 	return chr + str;
@@ -1162,53 +1209,6 @@ function _String_fromList(chars)
 	return _List_toArray(chars).join('');
 }
 
-
-
-
-function _Char_toCode(char)
-{
-	var code = char.charCodeAt(0);
-	if (0xD800 <= code && code <= 0xDBFF)
-	{
-		return (code - 0xD800) * 0x400 + char.charCodeAt(1) - 0xDC00 + 0x10000
-	}
-	return code;
-}
-
-function _Char_fromCode(code)
-{
-	return _Utils_chr(
-		(code < 0 || 0x10FFFF < code)
-			? '\uFFFD'
-			:
-		(code <= 0xFFFF)
-			? String.fromCharCode(code)
-			:
-		(code -= 0x10000,
-			String.fromCharCode(Math.floor(code / 0x400) + 0xD800, code % 0x400 + 0xDC00)
-		)
-	);
-}
-
-function _Char_toUpper(char)
-{
-	return _Utils_chr(char.toUpperCase());
-}
-
-function _Char_toLower(char)
-{
-	return _Utils_chr(char.toLowerCase());
-}
-
-function _Char_toLocaleUpper(char)
-{
-	return _Utils_chr(char.toLocaleUpperCase());
-}
-
-function _Char_toLocaleLower(char)
-{
-	return _Utils_chr(char.toLocaleLowerCase());
-}
 
 
 
@@ -2660,8 +2660,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		l: func(record.l),
-		U: record.U,
-		P: record.P
+		V: record.V,
+		R: record.R
 	}
 });
 
@@ -2930,10 +2930,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.l;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.U;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.V;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.P) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.R) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3923,7 +3923,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.aL,
 		impl.aJ,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.D && impl.D(sendToApp)
+			var divertHrefToApp = impl.F && impl.F(sendToApp)
 			var view = impl.aN;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -3998,7 +3998,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		D: function(sendToApp)
+		F: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4189,8 +4189,8 @@ function _Browser_getViewport()
 	return {
 		ap: _Browser_getScene(),
 		at: {
-			L: _Browser_window.pageXOffset,
-			M: _Browser_window.pageYOffset,
+			M: _Browser_window.pageXOffset,
+			N: _Browser_window.pageYOffset,
 			z: _Browser_doc.documentElement.clientWidth,
 			u: _Browser_doc.documentElement.clientHeight
 		}
@@ -4231,8 +4231,8 @@ function _Browser_getViewportOf(id)
 				u: node.scrollHeight
 			},
 			at: {
-				L: node.scrollLeft,
-				M: node.scrollTop,
+				M: node.scrollLeft,
+				N: node.scrollTop,
 				z: node.clientWidth,
 				u: node.clientHeight
 			}
@@ -4266,14 +4266,14 @@ function _Browser_getElement(id)
 		return {
 			ap: _Browser_getScene(),
 			at: {
-				L: x,
-				M: y,
+				M: x,
+				N: y,
 				z: _Browser_doc.documentElement.clientWidth,
 				u: _Browser_doc.documentElement.clientHeight
 			},
 			ay: {
-				L: x + rect.left,
-				M: y + rect.top,
+				M: x + rect.left,
+				N: y + rect.top,
 				z: rect.width,
 				u: rect.height
 			}
@@ -4422,7 +4422,7 @@ var author$project$Types$Disagree = 3;
 var author$project$Types$Neutral = 2;
 var author$project$Types$Results = F4(
 	function (sc, am, cl, cc) {
-		return {W: am, s: cc, I: cl, K: sc};
+		return {O: am, o: cc, B: cl, E: sc};
 	});
 var author$project$Types$StronglyAgree = 1;
 var author$project$Types$StronglyDisagree = 4;
@@ -4502,10 +4502,10 @@ var author$project$Main$init = function () {
 					var i = _n0.b;
 					var pc = _n0.c;
 					return {
-						J: index,
+						K: index,
 						ak: pc,
-						Q: s,
-						R: _List_fromArray(
+						S: s,
+						T: _List_fromArray(
 							[1, 0, 2, 3, 4]),
 						d: elm$core$Maybe$Nothing,
 						j: i
@@ -4514,8 +4514,8 @@ var author$project$Main$init = function () {
 			listQuestions);
 	};
 	return {
-		C: newPrompts(author$project$Data$questionList),
-		S: A4(author$project$Types$Results, 0, 0, 0, 0),
+		D: newPrompts(author$project$Data$questionList),
+		L: A4(author$project$Types$Results, 0, 0, 0, 0),
 		aq: 0
 	};
 }();
@@ -4707,7 +4707,7 @@ var author$project$Main$update = F2(
 				{
 					d: elm$core$Maybe$Just(response)
 				});
-			var currentResults = model.S;
+			var currentResults = model.L;
 			var updatedResults = function () {
 				var _n1 = updatedPrompt.ak;
 				switch (_n1) {
@@ -4715,44 +4715,44 @@ var author$project$Main$update = F2(
 						return _Utils_update(
 							currentResults,
 							{
-								K: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.K
+								E: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.E
 							});
 					case 1:
 						return _Utils_update(
 							currentResults,
 							{
-								W: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.W
+								O: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.O
 							});
 					case 2:
 						return _Utils_update(
 							currentResults,
 							{
-								I: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.I
+								B: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.B
 							});
 					case 3:
 						return _Utils_update(
 							currentResults,
 							{
-								s: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.s
+								o: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.o
 							});
 					case 5:
 						return _Utils_update(
 							currentResults,
 							{
-								s: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.s,
-								K: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.K
+								o: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.o,
+								E: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.E
 							});
 					default:
 						return _Utils_update(
 							currentResults,
 							{
-								s: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.s,
-								I: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.I
+								o: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.o,
+								B: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.B
 							});
 				}
 			}();
-			var beforeIndex = A2(elm$core$List$take, prompt.J, model.C);
-			var afterIndex = A2(elm$core$List$drop, prompt.J + 1, model.C);
+			var beforeIndex = A2(elm$core$List$take, prompt.K, model.D);
+			var afterIndex = A2(elm$core$List$drop, prompt.K + 1, model.D);
 			var updatedPrompts = _Utils_ap(
 				beforeIndex,
 				_Utils_ap(
@@ -4761,7 +4761,7 @@ var author$project$Main$update = F2(
 					afterIndex));
 			var updatedModel = _Utils_update(
 				model,
-				{C: updatedPrompts, S: updatedResults});
+				{D: updatedPrompts, L: updatedResults});
 			return updatedModel;
 		} else {
 			return author$project$Main$init;
@@ -4861,7 +4861,6 @@ var author$project$Main$nextUnansweredQuestion = function (prompts) {
 	return elm$core$List$head(
 		A2(elm$core$List$filter, author$project$Main$filterOutUnanswered, prompts));
 };
-var elm$core$String$fromInt = _String_fromNumber;
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -5055,6 +5054,7 @@ var elm$core$Char$isAlphaNum = function (_char) {
 	return elm$core$Char$isLower(_char) || (elm$core$Char$isUpper(_char) || elm$core$Char$isDigit(_char));
 };
 var elm$core$String$all = _String_all;
+var elm$core$String$fromInt = _String_fromNumber;
 var elm$core$String$join = F2(
 	function (sep, chunks) {
 		return A2(
@@ -5193,6 +5193,56 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
+var elm$html$Html$iframe = _VirtualDom_node('iframe');
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var elm$html$Html$Attributes$height = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'height',
+		elm$core$String$fromInt(n));
+};
+var elm$virtual_dom$VirtualDom$property = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_property,
+			_VirtualDom_noInnerHtmlOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var elm$html$Html$Attributes$property = elm$virtual_dom$VirtualDom$property;
+var elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
+var elm$html$Html$Attributes$width = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'width',
+		elm$core$String$fromInt(n));
+};
+var author$project$Data$videoframe = A2(
+	elm$html$Html$iframe,
+	_List_fromArray(
+		[
+			elm$html$Html$Attributes$width(560),
+			elm$html$Html$Attributes$height(315),
+			elm$html$Html$Attributes$src('https://www.youtube.com/embed/YihH5Gs1V9Q'),
+			A2(
+			elm$html$Html$Attributes$property,
+			'allowfullscreen',
+			elm$json$Json$Encode$string('true')),
+			elm$html$Html$Attributes$class('embed-responsive-item')
+		]),
+	_List_Nil);
 var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var elm$svg$Svg$g = elm$svg$Svg$trustedNode('g');
 var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
@@ -5212,7 +5262,7 @@ var author$project$GraphElements$bar = function (barHeight) {
 				elm$svg$Svg$Attributes$x('0px'),
 				elm$svg$Svg$Attributes$y('0px'),
 				elm$svg$Svg$Attributes$viewBox(
-				'0 0 175 ' + elm$core$String$fromInt(barHeight)),
+				'0 0 100 ' + elm$core$String$fromInt(barHeight)),
 				elm$svg$Svg$Attributes$style('enable-background:new 0 0 175 400;')
 			]),
 		_List_fromArray(
@@ -5227,8 +5277,9 @@ var author$project$GraphElements$bar = function (barHeight) {
 						_List_fromArray(
 							[
 								elm$svg$Svg$Attributes$x('0.5'),
+								elm$svg$Svg$Attributes$y('0'),
 								elm$svg$Svg$Attributes$class('st0'),
-								elm$svg$Svg$Attributes$width('175'),
+								elm$svg$Svg$Attributes$width('100'),
 								elm$svg$Svg$Attributes$height(
 								elm$core$String$fromInt(barHeight))
 							]),
@@ -5257,15 +5308,6 @@ var author$project$Types$SelectResponse = F2(
 var elm$html$Html$li = _VirtualDom_node('li');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
@@ -5328,6 +5370,7 @@ var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$ul = _VirtualDom_node('ul');
 var author$project$Main$renderFirstQuestion = F2(
 	function (model, maybePrompt) {
+		var barheight = model.L;
 		if (!maybePrompt.$) {
 			var prompt = maybePrompt.a;
 			return A2(
@@ -5342,29 +5385,39 @@ var author$project$Main$renderFirstQuestion = F2(
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('intro')
+								elm$html$Html$Attributes$class('intro container')
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.')
+								elm$html$Html$text('Intro text goes here')
 							])),
 						A2(
 						elm$html$Html$div,
-						_List_Nil,
 						_List_fromArray(
 							[
-								elm$html$Html$text('video will go here')
+								elm$html$Html$Attributes$class('pt-5 row justify-content-center')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('pt-5 embed-responsive embed-responsive-16by9 video-div col-8')
+									]),
+								_List_fromArray(
+									[author$project$Data$videoframe]))
 							])),
 						A2(
 						elm$html$Html$p,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('question-number')
+								elm$html$Html$Attributes$class('question-number pt-5')
 							]),
 						_List_fromArray(
 							[
 								elm$html$Html$text(
-								elm$core$String$fromInt(prompt.J + 1) + '.')
+								elm$core$String$fromInt(prompt.K + 1) + '.')
 							])),
 						A2(
 						elm$html$Html$p,
@@ -5374,20 +5427,20 @@ var author$project$Main$renderFirstQuestion = F2(
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text(prompt.Q)
+								elm$html$Html$text(prompt.S)
 							])),
 						A2(
 						elm$html$Html$ul,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('list-group list-group-horizontal-sm')
+								elm$html$Html$Attributes$class('list-group list-group-horizontal-sm response-list')
 							]),
 						A2(
 							elm$core$List$map,
 							function (x) {
 								return A3(author$project$Main$renderResponseList, x, prompt.d, prompt);
 							},
-							prompt.R))
+							prompt.T))
 					]));
 		} else {
 			return A2(
@@ -5402,7 +5455,7 @@ var author$project$Main$renderFirstQuestion = F2(
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('row align-items-end')
+								elm$html$Html$Attributes$class('row align-items-end pt-5')
 							]),
 						_List_fromArray(
 							[
@@ -5414,7 +5467,7 @@ var author$project$Main$renderFirstQuestion = F2(
 									]),
 								_List_fromArray(
 									[
-										author$project$GraphElements$bar(30),
+										author$project$GraphElements$bar((barheight.E + 6) * 25),
 										elm$html$Html$text('Safety Culture')
 									])),
 								A2(
@@ -5425,7 +5478,7 @@ var author$project$Main$renderFirstQuestion = F2(
 									]),
 								_List_fromArray(
 									[
-										author$project$GraphElements$bar(60),
+										author$project$GraphElements$bar((barheight.O + 6) * 25),
 										elm$html$Html$text('Agile Mindset')
 									])),
 								A2(
@@ -5436,7 +5489,7 @@ var author$project$Main$renderFirstQuestion = F2(
 									]),
 								_List_fromArray(
 									[
-										author$project$GraphElements$bar(30),
+										author$project$GraphElements$bar((barheight.B + 6) * 25),
 										elm$html$Html$text('Coaching Leadership')
 									])),
 								A2(
@@ -5447,7 +5500,7 @@ var author$project$Main$renderFirstQuestion = F2(
 									]),
 								_List_fromArray(
 									[
-										author$project$GraphElements$bar(90),
+										author$project$GraphElements$bar((barheight.o + 6) * 25),
 										elm$html$Html$text('Collaborative Culture')
 									]))
 							])),
@@ -5466,14 +5519,8 @@ var author$project$Main$renderFirstQuestion = F2(
 		}
 	});
 var elm$html$Html$img = _VirtualDom_node('img');
-var elm$html$Html$Attributes$src = function (url) {
-	return A2(
-		elm$html$Html$Attributes$stringProperty,
-		'src',
-		_VirtualDom_noJavaScriptOrHtmlUri(url));
-};
 var author$project$Main$view = function (model) {
-	var maybeFirstPrompt = author$project$Main$nextUnansweredQuestion(model.C);
+	var maybeFirstPrompt = author$project$Main$nextUnansweredQuestion(model.D);
 	var _n0 = model.aq;
 	if (_n0 === 1) {
 		return A2(

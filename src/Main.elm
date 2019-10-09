@@ -5,11 +5,12 @@ import Html exposing (Html, button, div, text, p, ul, li, h1, img )
 import Html.Events exposing (onClick)
 import Html.Attributes as A exposing (class, src, height, width, cols)
 import Array as Array
-import Data exposing (questionList)
+import Data exposing (questionList, videoframe)
 import Types exposing (PromptCategory(..), Question(..), Msg(..), Prompt, Response(..), Model, ModelState(..), HighOrLow(..), Results)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import GraphElements exposing (bar)
+import Json.Encode
 
 
 
@@ -199,6 +200,8 @@ selectedResponseOrZero maybeResponse =
             0
 
 
+
+
 --VIEW AND HTML MSGS
 
 view : Model -> Html Msg
@@ -237,35 +240,37 @@ renderQuestion prompt =
 
 renderFirstQuestion : Model -> Maybe Prompt -> Html Msg
 renderFirstQuestion model maybePrompt =
+    let
+      barheight =
+        model.results
+    in
     case maybePrompt of
       Just prompt ->
         Html.div [ A.class "pt-5" ]
-        [ Html.div [ A.class "intro"]
-          [ Html.text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-          ]
-        , Html.div [] [ Html.text "video will go here"]
-        , p [ A.class "question-number" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
+        [ Html.div [ A.class "intro container"][ Html.text "Intro text goes here" ]
+        , Html.div [ A.class "pt-5 row justify-content-center" ] [ Html.div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ]]
+        , p [ A.class "question-number pt-5" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
         , p [ A.class "question" ] [ Html.text prompt.question ]
-        , ul [ A.class "list-group list-group-horizontal-sm" ] ( List.map
+        , ul [ A.class "list-group list-group-horizontal-sm response-list" ] ( List.map
         (\ x -> renderResponseList x prompt.selectedResponse prompt) prompt.responseOptions )
         ]
       Nothing ->
         Html.div [ A.class "container" ]
-          [ Html.div [ A.class "row align-items-end" ]
+          [ Html.div [ A.class "row align-items-end pt-5" ]
               [ Html.div [ A.class "col-3 text-center"]
-                [ bar 30
+                [ bar ((barheight.sc + 6) * 25)
                 , Html.text "Safety Culture"
                 ]
               , Html.div [ A.class "col-3 text-center"]
-                [ bar 60
+                [ bar ((barheight.am + 6) * 25)
                 , Html.text "Agile Mindset"
                 ]
               , Html.div [ A.class "col-3 text-center"]
-                [ bar 30
+                [ bar ((barheight.cl + 6) * 25)
                 , Html.text "Coaching Leadership"
                 ]
               , Html.div [ A.class "col-3 text-center"]
-                [ bar 90
+                [ bar ((barheight.cc + 6) * 25)
                 , Html.text "Collaborative Culture"
                 ]
               ]
