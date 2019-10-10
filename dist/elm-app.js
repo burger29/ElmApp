@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.U.C === region.Z.C)
+	if (region.U.D === region.Z.D)
 	{
-		return 'on line ' + region.U.C;
+		return 'on line ' + region.U.D;
 	}
-	return 'on lines ' + region.U.C + ' through ' + region.Z.C;
+	return 'on lines ' + region.U.D + ' through ' + region.Z.D;
 }
 
 
@@ -4189,10 +4189,10 @@ function _Browser_getViewport()
 	return {
 		ap: _Browser_getScene(),
 		at: {
-			M: _Browser_window.pageXOffset,
-			N: _Browser_window.pageYOffset,
-			z: _Browser_doc.documentElement.clientWidth,
-			u: _Browser_doc.documentElement.clientHeight
+			N: _Browser_window.pageXOffset,
+			O: _Browser_window.pageYOffset,
+			B: _Browser_doc.documentElement.clientWidth,
+			w: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4202,8 +4202,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		z: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		u: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		B: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		w: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4227,14 +4227,14 @@ function _Browser_getViewportOf(id)
 	{
 		return {
 			ap: {
-				z: node.scrollWidth,
-				u: node.scrollHeight
+				B: node.scrollWidth,
+				w: node.scrollHeight
 			},
 			at: {
-				M: node.scrollLeft,
-				N: node.scrollTop,
-				z: node.clientWidth,
-				u: node.clientHeight
+				N: node.scrollLeft,
+				O: node.scrollTop,
+				B: node.clientWidth,
+				w: node.clientHeight
 			}
 		};
 	});
@@ -4266,16 +4266,16 @@ function _Browser_getElement(id)
 		return {
 			ap: _Browser_getScene(),
 			at: {
-				M: x,
-				N: y,
-				z: _Browser_doc.documentElement.clientWidth,
-				u: _Browser_doc.documentElement.clientHeight
+				N: x,
+				O: y,
+				B: _Browser_doc.documentElement.clientWidth,
+				w: _Browser_doc.documentElement.clientHeight
 			},
 			ay: {
-				M: x + rect.left,
-				N: y + rect.top,
-				z: rect.width,
-				u: rect.height
+				N: x + rect.left,
+				O: y + rect.top,
+				B: rect.width,
+				w: rect.height
 			}
 		};
 	});
@@ -4422,7 +4422,7 @@ var author$project$Types$Disagree = 3;
 var author$project$Types$Neutral = 2;
 var author$project$Types$Results = F4(
 	function (sc, am, cl, cc) {
-		return {O: am, o: cc, B: cl, E: sc};
+		return {K: am, o: cc, u: cl, s: sc};
 	});
 var author$project$Types$StronglyAgree = 1;
 var author$project$Types$StronglyDisagree = 4;
@@ -4502,7 +4502,7 @@ var author$project$Main$init = function () {
 					var i = _n0.b;
 					var pc = _n0.c;
 					return {
-						K: index,
+						L: index,
 						ak: pc,
 						S: s,
 						T: _List_fromArray(
@@ -4514,8 +4514,8 @@ var author$project$Main$init = function () {
 			listQuestions);
 	};
 	return {
-		D: newPrompts(author$project$Data$questionList),
-		L: A4(author$project$Types$Results, 0, 0, 0, 0),
+		E: newPrompts(author$project$Data$questionList),
+		M: A4(author$project$Types$Results, 0, 0, 0, 0),
 		aq: 0
 	};
 }();
@@ -4707,7 +4707,7 @@ var author$project$Main$update = F2(
 				{
 					d: elm$core$Maybe$Just(response)
 				});
-			var currentResults = model.L;
+			var currentResults = model.M;
 			var updatedResults = function () {
 				var _n1 = updatedPrompt.ak;
 				switch (_n1) {
@@ -4715,19 +4715,19 @@ var author$project$Main$update = F2(
 						return _Utils_update(
 							currentResults,
 							{
-								E: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.E
+								s: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.s
 							});
 					case 1:
 						return _Utils_update(
 							currentResults,
 							{
-								O: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.O
+								K: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.K
 							});
 					case 2:
 						return _Utils_update(
 							currentResults,
 							{
-								B: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.B
+								u: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.u
 							});
 					case 3:
 						return _Utils_update(
@@ -4740,19 +4740,19 @@ var author$project$Main$update = F2(
 							currentResults,
 							{
 								o: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.o,
-								E: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.E
+								s: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.s
 							});
 					default:
 						return _Utils_update(
 							currentResults,
 							{
 								o: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.o,
-								B: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.B
+								u: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.u
 							});
 				}
 			}();
-			var beforeIndex = A2(elm$core$List$take, prompt.K, model.D);
-			var afterIndex = A2(elm$core$List$drop, prompt.K + 1, model.D);
+			var beforeIndex = A2(elm$core$List$take, prompt.L, model.E);
+			var afterIndex = A2(elm$core$List$drop, prompt.L + 1, model.E);
 			var updatedPrompts = _Utils_ap(
 				beforeIndex,
 				_Utils_ap(
@@ -4761,7 +4761,7 @@ var author$project$Main$update = F2(
 					afterIndex));
 			var updatedModel = _Utils_update(
 				model,
-				{D: updatedPrompts, L: updatedResults});
+				{E: updatedPrompts, M: updatedResults});
 			return updatedModel;
 		} else {
 			return author$project$Main$init;
@@ -5262,7 +5262,7 @@ var author$project$GraphElements$bar = function (barHeight) {
 				elm$svg$Svg$Attributes$x('0px'),
 				elm$svg$Svg$Attributes$y('0px'),
 				elm$svg$Svg$Attributes$viewBox(
-				'0 0 100 ' + elm$core$String$fromInt(barHeight)),
+				'-25 0 100 ' + elm$core$String$fromInt(barHeight)),
 				elm$svg$Svg$Attributes$style('enable-background:new 0 0 175 400;')
 			]),
 		_List_fromArray(
@@ -5279,13 +5279,25 @@ var author$project$GraphElements$bar = function (barHeight) {
 								elm$svg$Svg$Attributes$x('0.5'),
 								elm$svg$Svg$Attributes$y('0'),
 								elm$svg$Svg$Attributes$class('st0'),
-								elm$svg$Svg$Attributes$width('100'),
+								elm$svg$Svg$Attributes$width('50'),
 								elm$svg$Svg$Attributes$height(
 								elm$core$String$fromInt(barHeight))
 							]),
 						_List_Nil)
 					]))
 			]));
+};
+var elm$core$Basics$ge = _Utils_ge;
+var author$project$Main$createResultsParagraph = function (value) {
+	var sentenceTwo = (value.K >= 1) ? 'String 3' : 'String 4';
+	var sentenceThree = (value.u >= 1) ? 'String 5' : 'String 6';
+	var sentenceOne = (value.s >= 1) ? 'String 1' : 'String 2';
+	var sentenceFour = (value.s >= 1) ? 'String 7' : 'String 8';
+	return A2(
+		elm$core$String$join,
+		' ',
+		_List_fromArray(
+			[sentenceOne, sentenceTwo, sentenceThree, sentenceFour]));
 };
 var author$project$Main$convertResponse = function (someResponse) {
 	switch (someResponse) {
@@ -5370,7 +5382,7 @@ var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$ul = _VirtualDom_node('ul');
 var author$project$Main$renderFirstQuestion = F2(
 	function (model, maybePrompt) {
-		var barheight = model.L;
+		var exposeResults = model.M;
 		if (!maybePrompt.$) {
 			var prompt = maybePrompt.a;
 			return A2(
@@ -5417,7 +5429,7 @@ var author$project$Main$renderFirstQuestion = F2(
 						_List_fromArray(
 							[
 								elm$html$Html$text(
-								elm$core$String$fromInt(prompt.K + 1) + '.')
+								elm$core$String$fromInt(prompt.L + 1) + '.')
 							])),
 						A2(
 						elm$html$Html$p,
@@ -5463,44 +5475,44 @@ var author$project$Main$renderFirstQuestion = F2(
 								elm$html$Html$div,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$class('col-3 text-center')
+										elm$html$Html$Attributes$class('col-3 text-center bar-style')
 									]),
 								_List_fromArray(
 									[
-										author$project$GraphElements$bar((barheight.E + 6) * 25),
+										author$project$GraphElements$bar((exposeResults.s + 6) * 25),
 										elm$html$Html$text('Safety Culture')
 									])),
 								A2(
 								elm$html$Html$div,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$class('col-3 text-center')
+										elm$html$Html$Attributes$class('col-3 text-center bar-style')
 									]),
 								_List_fromArray(
 									[
-										author$project$GraphElements$bar((barheight.O + 6) * 25),
+										author$project$GraphElements$bar((exposeResults.K + 6) * 25),
 										elm$html$Html$text('Agile Mindset')
 									])),
 								A2(
 								elm$html$Html$div,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$class('col-3 text-center')
+										elm$html$Html$Attributes$class('col-3 text-center bar-style')
 									]),
 								_List_fromArray(
 									[
-										author$project$GraphElements$bar((barheight.B + 6) * 25),
+										author$project$GraphElements$bar((exposeResults.u + 6) * 25),
 										elm$html$Html$text('Coaching Leadership')
 									])),
 								A2(
 								elm$html$Html$div,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$class('col-3 text-center')
+										elm$html$Html$Attributes$class('col-3 text-center bar-style')
 									]),
 								_List_fromArray(
 									[
-										author$project$GraphElements$bar((barheight.o + 6) * 25),
+										author$project$GraphElements$bar((exposeResults.o + 6) * 25),
 										elm$html$Html$text('Collaborative Culture')
 									]))
 							])),
@@ -5514,13 +5526,21 @@ var author$project$Main$renderFirstQuestion = F2(
 						_List_fromArray(
 							[
 								elm$html$Html$text('Reset')
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text(
+								author$project$Main$createResultsParagraph(exposeResults))
 							]))
 					]));
 		}
 	});
 var elm$html$Html$img = _VirtualDom_node('img');
 var author$project$Main$view = function (model) {
-	var maybeFirstPrompt = author$project$Main$nextUnansweredQuestion(model.D);
+	var maybeFirstPrompt = author$project$Main$nextUnansweredQuestion(model.E);
 	var _n0 = model.aq;
 	if (_n0 === 1) {
 		return A2(

@@ -5,8 +5,8 @@ import Html exposing (Html, button, div, text, p, ul, li, h1, img )
 import Html.Events exposing (onClick)
 import Html.Attributes as A exposing (class, src, height, width, cols)
 import Array as Array
-import Data exposing (questionList, videoframe)
-import Types exposing (PromptCategory(..), Question(..), Msg(..), Prompt, Response(..), Model, ModelState(..), HighOrLow(..), Results)
+import Data exposing (questionList, videoframe, resultsParagraphList)
+import Types exposing (PromptCategory(..), Question(..), Msg(..), Prompt, Response(..), Model, ModelState(..), Results)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import GraphElements exposing (bar)
@@ -199,6 +199,36 @@ selectedResponseOrZero maybeResponse =
           Nothing ->
             0
 
+createResultsParagraph : Results -> String
+createResultsParagraph value =
+    let
+      sentenceOne =
+        if value.sc >= 1 then
+          "String 1"
+        else
+          "String 2"
+
+      sentenceTwo =
+        if value.am >= 1 then
+          "String 3"
+        else
+          "String 4"
+
+      sentenceThree =
+        if value.cl >= 1 then
+          "String 5"
+        else
+          "String 6"
+
+      sentenceFour =
+        if value.sc >= 1 then
+          "String 7"
+        else
+          "String 8"
+    in
+    String.join " " [sentenceOne, sentenceTwo, sentenceThree, sentenceFour]
+
+
 
 
 
@@ -241,8 +271,9 @@ renderQuestion prompt =
 renderFirstQuestion : Model -> Maybe Prompt -> Html Msg
 renderFirstQuestion model maybePrompt =
     let
-      barheight =
+      exposeResults =
         model.results
+
     in
     case maybePrompt of
       Just prompt ->
@@ -257,24 +288,25 @@ renderFirstQuestion model maybePrompt =
       Nothing ->
         Html.div [ A.class "container" ]
           [ Html.div [ A.class "row align-items-end pt-5" ]
-              [ Html.div [ A.class "col-3 text-center"]
-                [ bar ((barheight.sc + 6) * 25)
+              [ Html.div [ A.class "col-3 text-center bar-style"]
+                [ bar ((exposeResults.sc + 6) * 25)
                 , Html.text "Safety Culture"
                 ]
-              , Html.div [ A.class "col-3 text-center"]
-                [ bar ((barheight.am + 6) * 25)
+              , Html.div [ A.class "col-3 text-center bar-style"]
+                [ bar ((exposeResults.am + 6) * 25)
                 , Html.text "Agile Mindset"
                 ]
-              , Html.div [ A.class "col-3 text-center"]
-                [ bar ((barheight.cl + 6) * 25)
+              , Html.div [ A.class "col-3 text-center bar-style"]
+                [ bar ((exposeResults.cl + 6) * 25)
                 , Html.text "Coaching Leadership"
                 ]
-              , Html.div [ A.class "col-3 text-center"]
-                [ bar ((barheight.cc + 6) * 25)
+              , Html.div [ A.class "col-3 text-center bar-style"]
+                [ bar ((exposeResults.cc + 6) * 25)
                 , Html.text "Collaborative Culture"
                 ]
               ]
           , button [ A.class "button-reset", onClick ResetQuiz ] [ Html.text "Reset" ]
+          , Html.div [] [ Html.text (createResultsParagraph exposeResults) ]
           ]
 
 
