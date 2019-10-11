@@ -228,7 +228,34 @@ createResultsParagraph value =
     in
     String.join " " [sentenceOne, sentenceTwo, sentenceThree, sentenceFour]
 
+createListCourses : Results -> String
+createListCourses value =
+    let
+      sentenceOne =
+        if value.sc >= 1 then
+          "String 1"
+        else
+          "String 2"
 
+      sentenceTwo =
+        if value.am >= 1 then
+          "String 3"
+        else
+          "String 4"
+
+      sentenceThree =
+        if value.cl >= 1 then
+          "String 5"
+        else
+          "String 6"
+
+      sentenceFour =
+        if value.sc >= 1 then
+          "String 7"
+        else
+          "String 8"
+    in
+    String.join " " [sentenceOne, sentenceTwo, sentenceThree, sentenceFour]
 
 
 
@@ -247,7 +274,7 @@ view model =
 
       AnsweringQuestions ->
         Html.div []
-          [ Html.div [ A.class "container-fluid" ]
+          [ Html.div [ A.class "container-fluid p-0" ]
               [ Html.div []
                 [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png"] []
                 ]
@@ -278,35 +305,42 @@ renderFirstQuestion model maybePrompt =
     case maybePrompt of
       Just prompt ->
         Html.div [ A.class "pt-5" ]
-        [ Html.div [ A.class "intro container"][ Html.text "Intro text goes here" ]
+        [ Html.div [ A.class "intro container"][ Html.text "How well do you think your team is performing? Harvard instructor and project management master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert." ]
         , Html.div [ A.class "pt-5 row justify-content-center" ] [ Html.div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ]]
         , p [ A.class "question-number pt-5" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
         , p [ A.class "question" ] [ Html.text prompt.question ]
         , ul [ A.class "list-group list-group-horizontal-sm response-list" ] ( List.map
         (\ x -> renderResponseList x prompt.selectedResponse prompt) prompt.responseOptions )
         ]
+
       Nothing ->
         Html.div [ A.class "container" ]
-          [ Html.div [ A.class "row align-items-end pt-5" ]
-              [ Html.div [ A.class "col-3 text-center bar-style"]
-                [ bar ((exposeResults.sc + 6) * 25)
-                , Html.text "Safety Culture"
-                ]
-              , Html.div [ A.class "col-3 text-center bar-style"]
-                [ bar ((exposeResults.am + 6) * 25)
-                , Html.text "Agile Mindset"
-                ]
-              , Html.div [ A.class "col-3 text-center bar-style"]
-                [ bar ((exposeResults.cl + 6) * 25)
-                , Html.text "Coaching Leadership"
-                ]
-              , Html.div [ A.class "col-3 text-center bar-style"]
-                [ bar ((exposeResults.cc + 6) * 25)
-                , Html.text "Collaborative Culture"
+          [ Html.div [ A.class "row pt-5" ]
+              [ Html.div [ A.class "col-12 col-md-8 offset-md-2" ]
+                [ Html.div [ A.class "row align-items-end justify-content-md-center" ]
+                  [ Html.div [ A.class "col-3 text-center bar-style"]
+                    [ bar ((exposeResults.sc + 6) * 12)
+                    , Html.div [ A.class "bar-label" ] [ Html.text "Safety Culture" ]
+                    ]
+                  , Html.div [ A.class "col-3 text-center bar-style"]
+                    [ bar ((exposeResults.am + 6) * 12)
+                    , Html.div [ A.class "bar-label" ] [ Html.text "Agile Mindset" ]
+                    ]
+                  , Html.div [ A.class "col-3 text-center bar-style"]
+                    [ bar ((exposeResults.cl + 6) * 12)
+                    , Html.div [ A.class "bar-label" ] [ Html.text "Coaching Leadership" ]
+                    ]
+                  , Html.div [ A.class "col-3 text-center bar-style"]
+                    [ bar ((exposeResults.cc + 6) * 12)
+                    , Html.div [ A.class "bar-label" ] [ Html.text "Collaborative Culture" ]
+                    ]
+                  ]
                 ]
               ]
-          , button [ A.class "button-reset", onClick ResetQuiz ] [ Html.text "Reset" ]
-          , Html.div [] [ Html.text (createResultsParagraph exposeResults) ]
+          -- , button [ A.class "button-reset", onClick ResetQuiz ] [ Html.text "Reset" ]
+          , Html.div [ A.class "response-header" ] [ Html.text "More about your team" ]
+          , Html.div [ A.class "response-style" ] [ Html.text (createResultsParagraph exposeResults) ]
+          , Html.div [ A.class "list-courses" ] [ Html.text (createListCourses exposeResults) ]
           ]
 
 

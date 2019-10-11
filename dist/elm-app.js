@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.U.D === region.Z.D)
+	if (region.U.E === region.Z.E)
 	{
-		return 'on line ' + region.U.D;
+		return 'on line ' + region.U.E;
 	}
-	return 'on lines ' + region.U.D + ' through ' + region.Z.D;
+	return 'on lines ' + region.U.E + ' through ' + region.Z.E;
 }
 
 
@@ -2659,7 +2659,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		l: func(record.l),
+		m: func(record.m),
 		V: record.V,
 		R: record.R
 	}
@@ -2929,7 +2929,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.l;
+		var message = !tag ? value : tag < 3 ? value.a : value.m;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.V;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -3923,7 +3923,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.aL,
 		impl.aJ,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.F && impl.F(sendToApp)
+			var divertHrefToApp = impl.G && impl.G(sendToApp)
 			var view = impl.aN;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -3998,7 +3998,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		F: function(sendToApp)
+		G: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4422,7 +4422,7 @@ var author$project$Types$Disagree = 3;
 var author$project$Types$Neutral = 2;
 var author$project$Types$Results = F4(
 	function (sc, am, cl, cc) {
-		return {K: am, o: cc, u: cl, s: sc};
+		return {D: am, p: cc, q: cl, i: sc};
 	});
 var author$project$Types$StronglyAgree = 1;
 var author$project$Types$StronglyDisagree = 4;
@@ -4508,13 +4508,13 @@ var author$project$Main$init = function () {
 						T: _List_fromArray(
 							[1, 0, 2, 3, 4]),
 						d: elm$core$Maybe$Nothing,
-						j: i
+						k: i
 					};
 				}),
 			listQuestions);
 	};
 	return {
-		E: newPrompts(author$project$Data$questionList),
+		F: newPrompts(author$project$Data$questionList),
 		M: A4(author$project$Types$Results, 0, 0, 0, 0),
 		aq: 0
 	};
@@ -4715,44 +4715,44 @@ var author$project$Main$update = F2(
 						return _Utils_update(
 							currentResults,
 							{
-								s: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.s
+								i: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.i
 							});
 					case 1:
 						return _Utils_update(
 							currentResults,
 							{
-								K: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.K
+								D: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.D
 							});
 					case 2:
 						return _Utils_update(
 							currentResults,
 							{
-								u: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.u
+								q: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.q
 							});
 					case 3:
 						return _Utils_update(
 							currentResults,
 							{
-								o: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.o
+								p: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p
 							});
 					case 5:
 						return _Utils_update(
 							currentResults,
 							{
-								o: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.o,
-								s: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.s
+								p: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p,
+								i: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.i
 							});
 					default:
 						return _Utils_update(
 							currentResults,
 							{
-								o: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.o,
-								u: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.j) + currentResults.u
+								p: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p,
+								q: (author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.q
 							});
 				}
 			}();
-			var beforeIndex = A2(elm$core$List$take, prompt.L, model.E);
-			var afterIndex = A2(elm$core$List$drop, prompt.L + 1, model.E);
+			var beforeIndex = A2(elm$core$List$take, prompt.L, model.F);
+			var afterIndex = A2(elm$core$List$drop, prompt.L + 1, model.F);
 			var updatedPrompts = _Utils_ap(
 				beforeIndex,
 				_Utils_ap(
@@ -4761,7 +4761,7 @@ var author$project$Main$update = F2(
 					afterIndex));
 			var updatedModel = _Utils_update(
 				model,
-				{E: updatedPrompts, M: updatedResults});
+				{F: updatedPrompts, M: updatedResults});
 			return updatedModel;
 		} else {
 			return author$project$Main$init;
@@ -5288,11 +5288,22 @@ var author$project$GraphElements$bar = function (barHeight) {
 			]));
 };
 var elm$core$Basics$ge = _Utils_ge;
+var author$project$Main$createListCourses = function (value) {
+	var sentenceTwo = (value.D >= 1) ? 'String 3' : 'String 4';
+	var sentenceThree = (value.q >= 1) ? 'String 5' : 'String 6';
+	var sentenceOne = (value.i >= 1) ? 'String 1' : 'String 2';
+	var sentenceFour = (value.i >= 1) ? 'String 7' : 'String 8';
+	return A2(
+		elm$core$String$join,
+		' ',
+		_List_fromArray(
+			[sentenceOne, sentenceTwo, sentenceThree, sentenceFour]));
+};
 var author$project$Main$createResultsParagraph = function (value) {
-	var sentenceTwo = (value.K >= 1) ? 'String 3' : 'String 4';
-	var sentenceThree = (value.u >= 1) ? 'String 5' : 'String 6';
-	var sentenceOne = (value.s >= 1) ? 'String 1' : 'String 2';
-	var sentenceFour = (value.s >= 1) ? 'String 7' : 'String 8';
+	var sentenceTwo = (value.D >= 1) ? 'String 3' : 'String 4';
+	var sentenceThree = (value.q >= 1) ? 'String 5' : 'String 6';
+	var sentenceOne = (value.i >= 1) ? 'String 1' : 'String 2';
+	var sentenceFour = (value.i >= 1) ? 'String 7' : 'String 8';
 	return A2(
 		elm$core$String$join,
 		' ',
@@ -5361,7 +5372,6 @@ var author$project$Main$renderResponseList = F3(
 					author$project$Main$convertResponse(response))
 				]));
 	});
-var author$project$Types$ResetQuiz = {$: 1};
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5376,7 +5386,6 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$ul = _VirtualDom_node('ul');
@@ -5401,7 +5410,7 @@ var author$project$Main$renderFirstQuestion = F2(
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('Intro text goes here')
+								elm$html$Html$text('How well do you think your team is performing? Harvard instructor and project management master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert.')
 							])),
 						A2(
 						elm$html$Html$div,
@@ -5467,7 +5476,7 @@ var author$project$Main$renderFirstQuestion = F2(
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('row align-items-end pt-5')
+								elm$html$Html$Attributes$class('row pt-5')
 							]),
 						_List_fromArray(
 							[
@@ -5475,72 +5484,139 @@ var author$project$Main$renderFirstQuestion = F2(
 								elm$html$Html$div,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$class('col-3 text-center bar-style')
+										elm$html$Html$Attributes$class('col-12 col-md-8 offset-md-2')
 									]),
 								_List_fromArray(
 									[
-										author$project$GraphElements$bar((exposeResults.s + 6) * 25),
-										elm$html$Html$text('Safety Culture')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('col-3 text-center bar-style')
-									]),
-								_List_fromArray(
-									[
-										author$project$GraphElements$bar((exposeResults.K + 6) * 25),
-										elm$html$Html$text('Agile Mindset')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('col-3 text-center bar-style')
-									]),
-								_List_fromArray(
-									[
-										author$project$GraphElements$bar((exposeResults.u + 6) * 25),
-										elm$html$Html$text('Coaching Leadership')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('col-3 text-center bar-style')
-									]),
-								_List_fromArray(
-									[
-										author$project$GraphElements$bar((exposeResults.o + 6) * 25),
-										elm$html$Html$text('Collaborative Culture')
+										A2(
+										elm$html$Html$div,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('row align-items-end justify-content-md-center')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$div,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('col-3 text-center bar-style')
+													]),
+												_List_fromArray(
+													[
+														author$project$GraphElements$bar((exposeResults.i + 6) * 12),
+														A2(
+														elm$html$Html$div,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('bar-label')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Safety Culture')
+															]))
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('col-3 text-center bar-style')
+													]),
+												_List_fromArray(
+													[
+														author$project$GraphElements$bar((exposeResults.D + 6) * 12),
+														A2(
+														elm$html$Html$div,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('bar-label')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Agile Mindset')
+															]))
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('col-3 text-center bar-style')
+													]),
+												_List_fromArray(
+													[
+														author$project$GraphElements$bar((exposeResults.q + 6) * 12),
+														A2(
+														elm$html$Html$div,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('bar-label')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Coaching Leadership')
+															]))
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('col-3 text-center bar-style')
+													]),
+												_List_fromArray(
+													[
+														author$project$GraphElements$bar((exposeResults.p + 6) * 12),
+														A2(
+														elm$html$Html$div,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('bar-label')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Collaborative Culture')
+															]))
+													]))
+											]))
 									]))
 							])),
 						A2(
-						elm$html$Html$button,
+						elm$html$Html$div,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('button-reset'),
-								elm$html$Html$Events$onClick(author$project$Types$ResetQuiz)
+								elm$html$Html$Attributes$class('response-header')
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('Reset')
+								elm$html$Html$text('More about your team')
 							])),
 						A2(
 						elm$html$Html$div,
-						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('response-style')
+							]),
 						_List_fromArray(
 							[
 								elm$html$Html$text(
 								author$project$Main$createResultsParagraph(exposeResults))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('list-courses')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(
+								author$project$Main$createListCourses(exposeResults))
 							]))
 					]));
 		}
 	});
 var elm$html$Html$img = _VirtualDom_node('img');
 var author$project$Main$view = function (model) {
-	var maybeFirstPrompt = author$project$Main$nextUnansweredQuestion(model.E);
+	var maybeFirstPrompt = author$project$Main$nextUnansweredQuestion(model.F);
 	var _n0 = model.aq;
 	if (_n0 === 1) {
 		return A2(
@@ -5560,7 +5636,7 @@ var author$project$Main$view = function (model) {
 					elm$html$Html$div,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$class('container-fluid')
+							elm$html$Html$Attributes$class('container-fluid p-0')
 						]),
 					_List_fromArray(
 						[
