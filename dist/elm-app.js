@@ -5387,6 +5387,7 @@ var elm$core$List$map = F2(
 			xs);
 	});
 var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$h4 = _VirtualDom_node('h4');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$ul = _VirtualDom_node('ul');
 var author$project$Main$renderFirstQuestion = F2(
@@ -5476,7 +5477,7 @@ var author$project$Main$renderFirstQuestion = F2(
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('row pt-5')
+								elm$html$Html$Attributes$class('row pt-5 align-items-end no-gutters')
 							]),
 						_List_fromArray(
 							[
@@ -5484,98 +5485,125 @@ var author$project$Main$renderFirstQuestion = F2(
 								elm$html$Html$div,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$class('col-12 col-md-8 offset-md-2')
+										elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 bar-style')
+									]),
+								_List_fromArray(
+									[
+										author$project$GraphElements$bar((exposeResults.i + 6) * 12)
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+									]),
+								_List_fromArray(
+									[
+										author$project$GraphElements$bar((exposeResults.D + 6) * 12)
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+									]),
+								_List_fromArray(
+									[
+										author$project$GraphElements$bar((exposeResults.q + 6) * 12)
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+									]),
+								_List_fromArray(
+									[
+										author$project$GraphElements$bar((exposeResults.p + 6) * 12)
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('row align-items-start no-gutters')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 bar-style')
 									]),
 								_List_fromArray(
 									[
 										A2(
-										elm$html$Html$div,
+										elm$html$Html$h4,
 										_List_fromArray(
 											[
-												elm$html$Html$Attributes$class('row align-items-end justify-content-md-center')
+												elm$html$Html$Attributes$class('bar-label text-center')
 											]),
 										_List_fromArray(
 											[
-												A2(
-												elm$html$Html$div,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('col-3 text-center bar-style')
-													]),
-												_List_fromArray(
-													[
-														author$project$GraphElements$bar((exposeResults.i + 6) * 12),
-														A2(
-														elm$html$Html$div,
-														_List_fromArray(
-															[
-																elm$html$Html$Attributes$class('bar-label')
-															]),
-														_List_fromArray(
-															[
-																elm$html$Html$text('Safety Culture')
-															]))
-													])),
-												A2(
-												elm$html$Html$div,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('col-3 text-center bar-style')
-													]),
-												_List_fromArray(
-													[
-														author$project$GraphElements$bar((exposeResults.D + 6) * 12),
-														A2(
-														elm$html$Html$div,
-														_List_fromArray(
-															[
-																elm$html$Html$Attributes$class('bar-label')
-															]),
-														_List_fromArray(
-															[
-																elm$html$Html$text('Agile Mindset')
-															]))
-													])),
-												A2(
-												elm$html$Html$div,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('col-3 text-center bar-style')
-													]),
-												_List_fromArray(
-													[
-														author$project$GraphElements$bar((exposeResults.q + 6) * 12),
-														A2(
-														elm$html$Html$div,
-														_List_fromArray(
-															[
-																elm$html$Html$Attributes$class('bar-label')
-															]),
-														_List_fromArray(
-															[
-																elm$html$Html$text('Coaching Leadership')
-															]))
-													])),
-												A2(
-												elm$html$Html$div,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('col-3 text-center bar-style')
-													]),
-												_List_fromArray(
-													[
-														author$project$GraphElements$bar((exposeResults.p + 6) * 12),
-														A2(
-														elm$html$Html$div,
-														_List_fromArray(
-															[
-																elm$html$Html$Attributes$class('bar-label')
-															]),
-														_List_fromArray(
-															[
-																elm$html$Html$text('Collaborative Culture')
-															]))
-													]))
+												elm$html$Html$text('Safety Culture')
+											]))
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$h4,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('bar-label text-center')
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('Agile Mindset')
+											]))
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$h4,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('bar-label text-center')
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('Coaching Leadership')
+											]))
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$h4,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('bar-label text-center')
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('Collaborative Culture')
 											]))
 									]))
 							])),
