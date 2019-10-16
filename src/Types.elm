@@ -33,7 +33,7 @@ type Response
 
 type Msg
     = SelectResponse Response Prompt
-    | ResetQuiz
+    | ChangeModelState
 
 type PromptCategory
     = SafetyCulture

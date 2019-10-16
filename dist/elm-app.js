@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.U.E === region.Z.E)
+	if (region.U.E === region._.E)
 	{
 		return 'on line ' + region.U.E;
 	}
-	return 'on lines ' + region.U.E + ' through ' + region.Z.E;
+	return 'on lines ' + region.U.E + ' through ' + region._.E;
 }
 
 
@@ -853,53 +853,6 @@ var _Basics_xor = F2(function(a, b) { return a !== b; });
 
 
 
-function _Char_toCode(char)
-{
-	var code = char.charCodeAt(0);
-	if (0xD800 <= code && code <= 0xDBFF)
-	{
-		return (code - 0xD800) * 0x400 + char.charCodeAt(1) - 0xDC00 + 0x10000
-	}
-	return code;
-}
-
-function _Char_fromCode(code)
-{
-	return _Utils_chr(
-		(code < 0 || 0x10FFFF < code)
-			? '\uFFFD'
-			:
-		(code <= 0xFFFF)
-			? String.fromCharCode(code)
-			:
-		(code -= 0x10000,
-			String.fromCharCode(Math.floor(code / 0x400) + 0xD800, code % 0x400 + 0xDC00)
-		)
-	);
-}
-
-function _Char_toUpper(char)
-{
-	return _Utils_chr(char.toUpperCase());
-}
-
-function _Char_toLower(char)
-{
-	return _Utils_chr(char.toLowerCase());
-}
-
-function _Char_toLocaleUpper(char)
-{
-	return _Utils_chr(char.toLocaleUpperCase());
-}
-
-function _Char_toLocaleLower(char)
-{
-	return _Utils_chr(char.toLocaleLowerCase());
-}
-
-
-
 var _String_cons = F2(function(chr, str)
 {
 	return chr + str;
@@ -1209,6 +1162,53 @@ function _String_fromList(chars)
 	return _List_toArray(chars).join('');
 }
 
+
+
+
+function _Char_toCode(char)
+{
+	var code = char.charCodeAt(0);
+	if (0xD800 <= code && code <= 0xDBFF)
+	{
+		return (code - 0xD800) * 0x400 + char.charCodeAt(1) - 0xDC00 + 0x10000
+	}
+	return code;
+}
+
+function _Char_fromCode(code)
+{
+	return _Utils_chr(
+		(code < 0 || 0x10FFFF < code)
+			? '\uFFFD'
+			:
+		(code <= 0xFFFF)
+			? String.fromCharCode(code)
+			:
+		(code -= 0x10000,
+			String.fromCharCode(Math.floor(code / 0x400) + 0xD800, code % 0x400 + 0xDC00)
+		)
+	);
+}
+
+function _Char_toUpper(char)
+{
+	return _Utils_chr(char.toUpperCase());
+}
+
+function _Char_toLower(char)
+{
+	return _Utils_chr(char.toLowerCase());
+}
+
+function _Char_toLocaleUpper(char)
+{
+	return _Utils_chr(char.toLocaleUpperCase());
+}
+
+function _Char_toLocaleLower(char)
+{
+	return _Utils_chr(char.toLocaleLowerCase());
+}
 
 
 
@@ -2660,7 +2660,7 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		m: func(record.m),
-		V: record.V,
+		W: record.W,
 		R: record.R
 	}
 });
@@ -2930,7 +2930,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.m;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.V;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.W;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
 			(tag == 2 ? value.b : tag == 3 && value.R) && event.preventDefault(),
@@ -3923,7 +3923,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.aL,
 		impl.aJ,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.G && impl.G(sendToApp)
+			var divertHrefToApp = impl.H && impl.H(sendToApp)
 			var view = impl.aN;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -3998,7 +3998,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		G: function(sendToApp)
+		H: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4014,9 +4014,9 @@ function _Browser_application(impl)
 					var next = elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.al === next.al
-							&& curr.ab === next.ab
-							&& curr.ah.a === next.ah.a
+							&& curr.am === next.am
+							&& curr.ac === next.ac
+							&& curr.ai.a === next.ai.a
 						)
 							? elm$browser$Browser$Internal(next)
 							: elm$browser$Browser$External(href)
@@ -4187,7 +4187,7 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		ap: _Browser_getScene(),
+		aq: _Browser_getScene(),
 		at: {
 			N: _Browser_window.pageXOffset,
 			O: _Browser_window.pageYOffset,
@@ -4226,7 +4226,7 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			ap: {
+			aq: {
 				B: node.scrollWidth,
 				w: node.scrollHeight
 			},
@@ -4264,7 +4264,7 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			ap: _Browser_getScene(),
+			aq: _Browser_getScene(),
 			at: {
 				N: x,
 				O: y,
@@ -4502,8 +4502,8 @@ var author$project$Main$init = function () {
 					var i = _n0.b;
 					var pc = _n0.c;
 					return {
-						L: index,
-						ak: pc,
+						M: index,
+						al: pc,
 						S: s,
 						T: _List_fromArray(
 							[1, 0, 2, 3, 4]),
@@ -4515,8 +4515,8 @@ var author$project$Main$init = function () {
 	};
 	return {
 		F: newPrompts(author$project$Data$questionList),
-		M: A4(author$project$Types$Results, 0, 0, 0, 0),
-		aq: 0
+		G: A4(author$project$Types$Results, 0, 0, 0, 0),
+		V: 0
 	};
 }();
 var author$project$Main$scoreResponse = function (response) {
@@ -4541,6 +4541,7 @@ var author$project$Main$selectedResponseOrZero = function (maybeResponse) {
 		return 0;
 	}
 };
+var author$project$Types$ShowingResults = 1;
 var elm$core$Basics$append = _Utils_append;
 var elm$core$Basics$mul = _Basics_mul;
 var elm$core$List$drop = F2(
@@ -4707,9 +4708,9 @@ var author$project$Main$update = F2(
 				{
 					d: elm$core$Maybe$Just(response)
 				});
-			var currentResults = model.M;
+			var currentResults = model.G;
 			var updatedResults = function () {
-				var _n1 = updatedPrompt.ak;
+				var _n1 = updatedPrompt.al;
 				switch (_n1) {
 					case 0:
 						return _Utils_update(
@@ -4751,8 +4752,8 @@ var author$project$Main$update = F2(
 							});
 				}
 			}();
-			var beforeIndex = A2(elm$core$List$take, prompt.L, model.F);
-			var afterIndex = A2(elm$core$List$drop, prompt.L + 1, model.F);
+			var beforeIndex = A2(elm$core$List$take, prompt.M, model.F);
+			var afterIndex = A2(elm$core$List$drop, prompt.M + 1, model.F);
 			var updatedPrompts = _Utils_ap(
 				beforeIndex,
 				_Utils_ap(
@@ -4761,109 +4762,21 @@ var author$project$Main$update = F2(
 					afterIndex));
 			var updatedModel = _Utils_update(
 				model,
-				{F: updatedPrompts, M: updatedResults});
+				{F: updatedPrompts, G: updatedResults});
 			return updatedModel;
 		} else {
-			return author$project$Main$init;
+			var updatedModelState = _Utils_update(
+				model,
+				{V: 1});
+			return updatedModelState;
 		}
 	});
-var elm$core$Basics$False = 1;
-var elm$core$Basics$True = 0;
-var author$project$Main$filterOutUnanswered = function (prompt) {
-	var _n0 = prompt.d;
-	if (!_n0.$) {
-		var selectedResponse = _n0.a;
-		return false;
-	} else {
-		return true;
-	}
-};
-var elm$core$Basics$apR = F2(
-	function (x, f) {
-		return f(x);
-	});
-var elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							elm$core$List$foldl,
-							fn,
-							acc,
-							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
-var elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var author$project$Main$nextUnansweredQuestion = function (prompts) {
-	return elm$core$List$head(
-		A2(elm$core$List$filter, author$project$Main$filterOutUnanswered, prompts));
-};
+var elm$core$String$fromInt = _String_fromNumber;
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
+var elm$core$Basics$False = 1;
+var elm$core$Basics$True = 0;
 var elm$core$Result$isOk = function (result) {
 	if (!result.$) {
 		return true;
@@ -4915,6 +4828,10 @@ var elm$core$Array$compressNodes = F2(
 				continue compressNodes;
 			}
 		}
+	});
+var elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
 	});
 var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Tuple$first = function (_n0) {
@@ -5054,7 +4971,6 @@ var elm$core$Char$isAlphaNum = function (_char) {
 	return elm$core$Char$isLower(_char) || (elm$core$Char$isUpper(_char) || elm$core$Char$isDigit(_char));
 };
 var elm$core$String$all = _String_all;
-var elm$core$String$fromInt = _String_fromNumber;
 var elm$core$String$join = F2(
 	function (sep, chunks) {
 		return A2(
@@ -5193,56 +5109,6 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
-var elm$html$Html$iframe = _VirtualDom_node('iframe');
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var elm$html$Html$Attributes$height = function (n) {
-	return A2(
-		_VirtualDom_attribute,
-		'height',
-		elm$core$String$fromInt(n));
-};
-var elm$virtual_dom$VirtualDom$property = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_property,
-			_VirtualDom_noInnerHtmlOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
-var elm$html$Html$Attributes$property = elm$virtual_dom$VirtualDom$property;
-var elm$html$Html$Attributes$src = function (url) {
-	return A2(
-		elm$html$Html$Attributes$stringProperty,
-		'src',
-		_VirtualDom_noJavaScriptOrHtmlUri(url));
-};
-var elm$html$Html$Attributes$width = function (n) {
-	return A2(
-		_VirtualDom_attribute,
-		'width',
-		elm$core$String$fromInt(n));
-};
-var author$project$Data$videoframe = A2(
-	elm$html$Html$iframe,
-	_List_fromArray(
-		[
-			elm$html$Html$Attributes$width(560),
-			elm$html$Html$Attributes$height(315),
-			elm$html$Html$Attributes$src('https://www.youtube.com/embed/YihH5Gs1V9Q'),
-			A2(
-			elm$html$Html$Attributes$property,
-			'allowfullscreen',
-			elm$json$Json$Encode$string('true')),
-			elm$html$Html$Attributes$class('embed-responsive-item')
-		]),
-	_List_Nil);
 var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var elm$svg$Svg$g = elm$svg$Svg$trustedNode('g');
 var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
@@ -5310,6 +5176,156 @@ var author$project$Main$createResultsParagraph = function (value) {
 		_List_fromArray(
 			[sentenceOne, sentenceTwo, sentenceThree, sentenceFour]));
 };
+var author$project$Main$filterOutUnanswered = function (prompt) {
+	var _n0 = prompt.d;
+	if (!_n0.$) {
+		var selectedResponse = _n0.a;
+		return false;
+	} else {
+		return true;
+	}
+};
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var author$project$Main$nextUnansweredQuestion = function (prompts) {
+	return elm$core$List$head(
+		A2(elm$core$List$filter, author$project$Main$filterOutUnanswered, prompts));
+};
+var elm$html$Html$iframe = _VirtualDom_node('iframe');
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var elm$html$Html$Attributes$height = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'height',
+		elm$core$String$fromInt(n));
+};
+var elm$virtual_dom$VirtualDom$property = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_property,
+			_VirtualDom_noInnerHtmlOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var elm$html$Html$Attributes$property = elm$virtual_dom$VirtualDom$property;
+var elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
+var elm$html$Html$Attributes$width = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'width',
+		elm$core$String$fromInt(n));
+};
+var author$project$Data$videoframe = A2(
+	elm$html$Html$iframe,
+	_List_fromArray(
+		[
+			elm$html$Html$Attributes$width(560),
+			elm$html$Html$Attributes$height(315),
+			elm$html$Html$Attributes$src('https://www.youtube.com/embed/YihH5Gs1V9Q'),
+			A2(
+			elm$html$Html$Attributes$property,
+			'allowfullscreen',
+			elm$json$Json$Encode$string('true')),
+			elm$html$Html$Attributes$class('embed-responsive-item')
+		]),
+	_List_Nil);
+var elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var elm$html$Html$Attributes$attribute = elm$virtual_dom$VirtualDom$attribute;
+var author$project$Main$ariaCustom = F2(
+	function (name, value) {
+		return A2(elm$html$Html$Attributes$attribute, 'aria-' + name, value);
+	});
 var author$project$Main$convertResponse = function (someResponse) {
 	switch (someResponse) {
 		case 0:
@@ -5372,6 +5388,7 @@ var author$project$Main$renderResponseList = F3(
 					author$project$Main$convertResponse(response))
 				]));
 	});
+var author$project$Types$ChangeModelState = {$: 1};
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5386,13 +5403,15 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
+var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
-var elm$html$Html$h4 = _VirtualDom_node('h4');
+var elm$html$Html$h5 = _VirtualDom_node('h5');
 var elm$html$Html$p = _VirtualDom_node('p');
+var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$ul = _VirtualDom_node('ul');
 var author$project$Main$renderFirstQuestion = F2(
 	function (model, maybePrompt) {
-		var exposeResults = model.M;
+		var exposeResults = model.G;
 		if (!maybePrompt.$) {
 			var prompt = maybePrompt.a;
 			return A2(
@@ -5439,7 +5458,7 @@ var author$project$Main$renderFirstQuestion = F2(
 						_List_fromArray(
 							[
 								elm$html$Html$text(
-								elm$core$String$fromInt(prompt.L + 1) + '.')
+								elm$core$String$fromInt(prompt.M + 1) + '.')
 							])),
 						A2(
 						elm$html$Html$p,
@@ -5462,7 +5481,123 @@ var author$project$Main$renderFirstQuestion = F2(
 							function (x) {
 								return A3(author$project$Main$renderResponseList, x, prompt.d, prompt);
 							},
-							prompt.T))
+							prompt.T)),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('modal'),
+								A2(elm$html$Html$Attributes$attribute, 'role', 'dialog'),
+								A2(elm$html$Html$Attributes$attribute, 'tabindex', '-1')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('modal-dialog'),
+										A2(elm$html$Html$Attributes$attribute, 'role', 'document')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$div,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('modal-content')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$div,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('modal-header')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$h5,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('modal-title')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('To Continue')
+															])),
+														A2(
+														elm$html$Html$button,
+														_List_fromArray(
+															[
+																A2(author$project$Main$ariaCustom, 'label', 'Close'),
+																elm$html$Html$Attributes$class('close'),
+																A2(elm$html$Html$Attributes$attribute, 'data-dismiss', 'modal')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$span,
+																_List_fromArray(
+																	[
+																		A2(author$project$Main$ariaCustom, 'hidden', 'true')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('×')
+																	]))
+															]))
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('modal-body')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$p,
+														_List_Nil,
+														_List_fromArray(
+															[
+																elm$html$Html$text('Pardot form')
+															]))
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('modal-footer')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$button,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('btn btn-secondary'),
+																A2(elm$html$Html$Attributes$attribute, 'data-dismiss', 'modal')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Close')
+															])),
+														A2(
+														elm$html$Html$button,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('btn btn-primary')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Submit')
+															]))
+													]))
+											]))
+									]))
+							]))
 					]));
 		} else {
 			return A2(
@@ -5477,7 +5612,9 @@ var author$project$Main$renderFirstQuestion = F2(
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('row pt-5 align-items-end no-gutters')
+								elm$html$Html$Attributes$class('modal'),
+								A2(elm$html$Html$Attributes$attribute, 'role', 'dialog'),
+								A2(elm$html$Html$Attributes$attribute, 'tabindex', '-1')
 							]),
 						_List_fromArray(
 							[
@@ -5485,176 +5622,130 @@ var author$project$Main$renderFirstQuestion = F2(
 								elm$html$Html$div,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 bar-style')
-									]),
-								_List_fromArray(
-									[
-										author$project$GraphElements$bar((exposeResults.i + 6) * 12)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
-									]),
-								_List_fromArray(
-									[
-										author$project$GraphElements$bar((exposeResults.D + 6) * 12)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
-									]),
-								_List_fromArray(
-									[
-										author$project$GraphElements$bar((exposeResults.q + 6) * 12)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
-									]),
-								_List_fromArray(
-									[
-										author$project$GraphElements$bar((exposeResults.p + 6) * 12)
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('row align-items-start no-gutters')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 bar-style')
+										elm$html$Html$Attributes$class('modal-dialog'),
+										A2(elm$html$Html$Attributes$attribute, 'role', 'document')
 									]),
 								_List_fromArray(
 									[
 										A2(
-										elm$html$Html$h4,
+										elm$html$Html$div,
 										_List_fromArray(
 											[
-												elm$html$Html$Attributes$class('bar-label text-center')
+												elm$html$Html$Attributes$class('modal-content')
 											]),
 										_List_fromArray(
 											[
-												elm$html$Html$text('Safety Culture')
-											]))
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$h4,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('bar-label text-center')
-											]),
-										_List_fromArray(
-											[
-												elm$html$Html$text('Agile Mindset')
-											]))
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$h4,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('bar-label text-center')
-											]),
-										_List_fromArray(
-											[
-												elm$html$Html$text('Coaching Leadership')
-											]))
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$h4,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('bar-label text-center')
-											]),
-										_List_fromArray(
-											[
-												elm$html$Html$text('Collaborative Culture')
+												A2(
+												elm$html$Html$div,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('modal-header')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$h5,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('modal-title')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('To Continue')
+															])),
+														A2(
+														elm$html$Html$button,
+														_List_fromArray(
+															[
+																A2(author$project$Main$ariaCustom, 'label', 'Close'),
+																elm$html$Html$Attributes$class('close'),
+																A2(elm$html$Html$Attributes$attribute, 'data-dismiss', 'modal')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$span,
+																_List_fromArray(
+																	[
+																		A2(author$project$Main$ariaCustom, 'hidden', 'true')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('×')
+																	]))
+															]))
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('modal-body')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$p,
+														_List_Nil,
+														_List_fromArray(
+															[
+																elm$html$Html$text('Pardot form')
+															]))
+													])),
+												A2(
+												elm$html$Html$div,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('modal-footer')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$button,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('btn btn-secondary'),
+																A2(elm$html$Html$Attributes$attribute, 'data-dismiss', 'modal')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Close')
+															])),
+														A2(
+														elm$html$Html$button,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('btn btn-primary'),
+																elm$html$Html$Events$onClick(author$project$Types$ChangeModelState)
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Submit')
+															]))
+													]))
 											]))
 									]))
 							])),
 						A2(
-						elm$html$Html$div,
+						elm$html$Html$button,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('response-header')
+								elm$html$Html$Attributes$class('btn btn-primary'),
+								elm$html$Html$Events$onClick(author$project$Types$ChangeModelState)
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('More about your team')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('response-style')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(
-								author$project$Main$createResultsParagraph(exposeResults))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('list-courses')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(
-								author$project$Main$createListCourses(exposeResults))
+								elm$html$Html$text('Submit')
 							]))
 					]));
 		}
 	});
+var elm$html$Html$h4 = _VirtualDom_node('h4');
 var elm$html$Html$img = _VirtualDom_node('img');
 var author$project$Main$view = function (model) {
 	var maybeFirstPrompt = author$project$Main$nextUnansweredQuestion(model.F);
-	var _n0 = model.aq;
-	if (_n0 === 1) {
-		return A2(
-			elm$html$Html$div,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$class('container')
-				]),
-			_List_Nil);
-	} else {
+	var exposeResults = model.G;
+	var _n0 = model.V;
+	if (!_n0) {
 		return A2(
 			elm$html$Html$div,
 			_List_Nil,
@@ -5705,6 +5796,211 @@ var author$project$Main$view = function (model) {
 									elm$html$Html$Attributes$class('d-flexjustify-content-start')
 								]),
 							_List_Nil)
+						]))
+				]));
+	} else {
+		return A2(
+			elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('container-fluid p-0')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$img,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('img-fluid'),
+											elm$html$Html$Attributes$src('https://assets.itpro.tv/go/RateYourTeam/mockup.png')
+										]),
+									_List_Nil)
+								]))
+						])),
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('container')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('row pt-5 align-items-end no-gutters')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 bar-style')
+										]),
+									_List_fromArray(
+										[
+											author$project$GraphElements$bar((exposeResults.i + 6) * 12)
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+										]),
+									_List_fromArray(
+										[
+											author$project$GraphElements$bar((exposeResults.D + 6) * 12)
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+										]),
+									_List_fromArray(
+										[
+											author$project$GraphElements$bar((exposeResults.q + 6) * 12)
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+										]),
+									_List_fromArray(
+										[
+											author$project$GraphElements$bar((exposeResults.p + 6) * 12)
+										]))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('row align-items-start no-gutters')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 bar-style')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$h4,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('bar-label text-center')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('Safety Culture')
+												]))
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$h4,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('bar-label text-center')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('Agile Mindset')
+												]))
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$h4,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('bar-label text-center')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('Coaching Leadership')
+												]))
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$h4,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('bar-label text-center')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('Collaborative Culture')
+												]))
+										]))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('response-header')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('More about your team')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('response-style')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(
+									author$project$Main$createResultsParagraph(exposeResults))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('list-courses')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(
+									author$project$Main$createListCourses(exposeResults))
+								]))
 						]))
 				]));
 	}
@@ -5829,7 +6125,7 @@ var elm$core$String$contains = _String_contains;
 var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {aa: fragment, ab: host, af: path, ah: port_, al: protocol, am: query};
+		return {ab: fragment, ac: host, ag: path, ai: port_, am: protocol, an: query};
 	});
 var elm$url$Url$chompBeforePath = F5(
 	function (protocol, path, params, frag, str) {

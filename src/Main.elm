@@ -4,8 +4,8 @@ import Array as Array
 import Browser
 import Data exposing (questionList, resultsParagraphList, videoframe)
 import GraphElements exposing (bar)
-import Html exposing (Html, button, div, h1, h3, img, li, p, text, ul)
-import Html.Attributes as A exposing (class, cols, height, src, width)
+import Html exposing (Html, button, div, h1, h3, h5, img, li, p, text, ul, span)
+import Html.Attributes as A exposing (class, cols, height, src, width, attribute)
 import Html.Events exposing (onClick)
 import Json.Encode
 import Svg exposing (..)
@@ -104,9 +104,12 @@ update msg model =
             in
             updatedModel
 
-        ResetQuiz ->
-            init
-
+        ChangeModelState ->
+            let
+              updatedModelState =
+                  { model | state = ShowingResults }
+            in
+            updatedModelState
 
 convertResponse : Response -> String
 convertResponse someResponse =
@@ -281,6 +284,10 @@ createListCourses value =
     in
     String.join " " [ sentenceOne, sentenceTwo, sentenceThree, sentenceFour ]
 
+ariaCustom : String -> String -> Attribute msg
+ariaCustom name value =
+    A.attribute ("aria-" ++ name) value
+
 
 
 --VIEW AND HTML MSGS
@@ -291,11 +298,11 @@ view model =
     let
         maybeFirstPrompt =
             nextUnansweredQuestion model.prompts
+
+        exposeResults =
+            model.results
     in
     case model.state of
-        ShowingResults ->
-            Html.div [ A.class "container" ] []
-
         AnsweringQuestions ->
             Html.div []
                 [ Html.div [ A.class "container-fluid p-0" ]
@@ -309,6 +316,47 @@ view model =
                     ]
                 ]
 
+        ShowingResults ->
+          Html.div []
+              [ Html.div [ A.class "container-fluid p-0" ]
+                  [ Html.div []
+                      [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
+                      ]
+                  ]
+              , Html.div [ A.class "container" ]
+                    [ Html.div [ A.class "row pt-5 align-items-end no-gutters" ]
+                        [ Html.div [ A.class "col-3 offset-0 col-md-2 offset-md-2 bar-style" ]
+                            [ bar ((exposeResults.sc + 6) * 12)
+                            ]
+                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ bar ((exposeResults.am + 6) * 12)
+                            ]
+                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ bar ((exposeResults.cl + 6) * 12)
+                            ]
+                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ bar ((exposeResults.cc + 6) * 12)
+                            ]
+                        ]
+                    , Html.div [ A.class "row align-items-start no-gutters" ]
+                        [ Html.div [ A.class "col-3 offset-0 col-md-2 offset-md-2 bar-style" ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Safety Culture" ]
+                            ]
+                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Agile Mindset" ]
+                            ]
+                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Coaching Leadership" ]
+                            ]
+                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
+                            ]
+                        ]
+                    , Html.div [ A.class "response-header" ] [ Html.text "More about your team" ]
+                    , Html.div [ A.class "response-style" ] [ Html.text (createResultsParagraph exposeResults) ]
+                    , Html.div [ A.class "list-courses" ] [ Html.text (createListCourses exposeResults) ]
+                    ]
+                ]
 
 renderQuestion : Prompt -> Html Msg
 renderQuestion prompt =
@@ -340,43 +388,60 @@ renderFirstQuestion model maybePrompt =
                         (\x -> renderResponseList x prompt.selectedResponse prompt)
                         prompt.responseOptions
                     )
+                , Html.div [ A.class "modal", A.attribute "role" "dialog", A.attribute "tabindex" "-1" ]
+                  [ Html.div [ A.class "modal-dialog", A.attribute "role" "document" ]
+                      [ Html.div [ A.class "modal-content" ]
+                          [ Html.div [ A.class "modal-header" ]
+                              [ Html.h5 [ A.class "modal-title" ]
+                                  [ Html.text "To Continue" ]
+                              , Html.button [ ariaCustom "label" "Close", A.class "close", A.attribute "data-dismiss" "modal" ]
+                                  [ Html.span [ ariaCustom "hidden" "true" ]
+                                    [ Html.text "×" ]
+                                  ]
+                              ]
+                          , Html.div [ A.class "modal-body" ]
+                              [ p []
+                                  [ Html.text "Pardot form" ]
+                              ]
+                          , Html.div [ A.class "modal-footer" ]
+                              [ Html.button [ A.class "btn btn-secondary", A.attribute "data-dismiss" "modal" ]
+                                  [ Html.text "Close" ]
+                              , Html.button [ A.class "btn btn-primary" ]
+                                  [ Html.text "Submit" ]
+                              ]
+                          ]
+                      ]
+                  ]
                 ]
 
         Nothing ->
             Html.div [ A.class "container" ]
-                [ Html.div [ A.class "row pt-5 align-items-end no-gutters" ]
-                    [ Html.div [ A.class "col-3 offset-0 col-md-2 offset-md-2 bar-style" ]
-                        [ bar ((exposeResults.sc + 6) * 12)
-                        ]
-                    , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                        [ bar ((exposeResults.am + 6) * 12)
-                        ]
-                    , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                        [ bar ((exposeResults.cl + 6) * 12)
-                        ]
-                    , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                        [ bar ((exposeResults.cc + 6) * 12)
-                        ]
-                    ]
-                , Html.div [ A.class "row align-items-start no-gutters" ]
-                    [ Html.div [ A.class "col-3 offset-0 col-md-2 offset-md-2 bar-style" ]
-                        [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Safety Culture" ]
-                        ]
-                    , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                        [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Agile Mindset" ]
-                        ]
-                    , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                        [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Coaching Leadership" ]
-                        ]
-                    , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                        [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
-                        ]
-                    ]
-
-                -- , button [ A.class "button-reset", onClick ResetQuiz ] [ Html.text "Reset" ]
-                , Html.div [ A.class "response-header" ] [ Html.text "More about your team" ]
-                , Html.div [ A.class "response-style" ] [ Html.text (createResultsParagraph exposeResults) ]
-                , Html.div [ A.class "list-courses" ] [ Html.text (createListCourses exposeResults) ]
+                [ Html.div [ A.class "modal", A.attribute "role" "dialog", A.attribute "tabindex" "-1" ]
+                  [ Html.div [ A.class "modal-dialog", A.attribute "role" "document" ]
+                      [ Html.div [ A.class "modal-content" ]
+                          [ Html.div [ A.class "modal-header" ]
+                              [ Html.h5 [ A.class "modal-title" ]
+                                  [ Html.text "To Continue" ]
+                              , Html.button [ ariaCustom "label" "Close", A.class "close", A.attribute "data-dismiss" "modal" ]
+                                  [ Html.span [ ariaCustom "hidden" "true" ]
+                                    [ Html.text "×" ]
+                                  ]
+                              ]
+                          , Html.div [ A.class "modal-body" ]
+                              [ p []
+                                  [ Html.text "Pardot form" ]
+                              ]
+                          , Html.div [ A.class "modal-footer" ]
+                              [ Html.button [ A.class "btn btn-secondary", A.attribute "data-dismiss" "modal" ]
+                                  [ Html.text "Close" ]
+                              , Html.button [ A.class "btn btn-primary", onClick ChangeModelState ]
+                                  [ Html.text "Submit"  ]
+                              ]
+                          ]
+                      ]
+                  ]
+                , Html.button [ A.class "btn btn-primary", onClick ChangeModelState ]
+                    [ Html.text "Submit"  ]
                 ]
 
 
