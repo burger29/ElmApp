@@ -4417,8 +4417,11 @@ var author$project$Data$questionList = _List_fromArray(
 		A3(author$project$Types$Question, 'All team members hold each other, including me, accountable for outcomes', 1, 1)
 	]);
 var author$project$Types$Agree = 0;
-var author$project$Types$AnsweringQuestions = 0;
+var author$project$Types$AnsweringQuestions = function (a) {
+	return {$: 0, a: a};
+};
 var author$project$Types$Disagree = 3;
+var author$project$Types$ModalClosed = 0;
 var author$project$Types$Neutral = 2;
 var author$project$Types$Results = F4(
 	function (sc, am, cl, cc) {
@@ -4516,7 +4519,7 @@ var author$project$Main$init = function () {
 	return {
 		F: newPrompts(author$project$Data$questionList),
 		G: A4(author$project$Types$Results, 0, 0, 0, 0),
-		V: 0
+		V: author$project$Types$AnsweringQuestions(0)
 	};
 }();
 var author$project$Main$scoreResponse = function (response) {
@@ -4541,7 +4544,7 @@ var author$project$Main$selectedResponseOrZero = function (maybeResponse) {
 		return 0;
 	}
 };
-var author$project$Types$ShowingResults = 1;
+var author$project$Types$ShowingResults = {$: 1};
 var elm$core$Basics$append = _Utils_append;
 var elm$core$Basics$mul = _Basics_mul;
 var elm$core$List$drop = F2(
@@ -4767,7 +4770,7 @@ var author$project$Main$update = F2(
 		} else {
 			var updatedModelState = _Utils_update(
 				model,
-				{V: 1});
+				{V: author$project$Types$ShowingResults});
 			return updatedModelState;
 		}
 	});
@@ -5409,7 +5412,7 @@ var elm$html$Html$h5 = _VirtualDom_node('h5');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$ul = _VirtualDom_node('ul');
-var author$project$Main$renderFirstQuestion = F2(
+var author$project$Main$renderNextQuestion = F2(
 	function (model, maybePrompt) {
 		var exposeResults = model.G;
 		if (!maybePrompt.$) {
@@ -5481,123 +5484,7 @@ var author$project$Main$renderFirstQuestion = F2(
 							function (x) {
 								return A3(author$project$Main$renderResponseList, x, prompt.d, prompt);
 							},
-							prompt.T)),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('modal'),
-								A2(elm$html$Html$Attributes$attribute, 'role', 'dialog'),
-								A2(elm$html$Html$Attributes$attribute, 'tabindex', '-1')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('modal-dialog'),
-										A2(elm$html$Html$Attributes$attribute, 'role', 'document')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$div,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('modal-content')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												elm$html$Html$div,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('modal-header')
-													]),
-												_List_fromArray(
-													[
-														A2(
-														elm$html$Html$h5,
-														_List_fromArray(
-															[
-																elm$html$Html$Attributes$class('modal-title')
-															]),
-														_List_fromArray(
-															[
-																elm$html$Html$text('To Continue')
-															])),
-														A2(
-														elm$html$Html$button,
-														_List_fromArray(
-															[
-																A2(author$project$Main$ariaCustom, 'label', 'Close'),
-																elm$html$Html$Attributes$class('close'),
-																A2(elm$html$Html$Attributes$attribute, 'data-dismiss', 'modal')
-															]),
-														_List_fromArray(
-															[
-																A2(
-																elm$html$Html$span,
-																_List_fromArray(
-																	[
-																		A2(author$project$Main$ariaCustom, 'hidden', 'true')
-																	]),
-																_List_fromArray(
-																	[
-																		elm$html$Html$text('×')
-																	]))
-															]))
-													])),
-												A2(
-												elm$html$Html$div,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('modal-body')
-													]),
-												_List_fromArray(
-													[
-														A2(
-														elm$html$Html$p,
-														_List_Nil,
-														_List_fromArray(
-															[
-																elm$html$Html$text('Pardot form')
-															]))
-													])),
-												A2(
-												elm$html$Html$div,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('modal-footer')
-													]),
-												_List_fromArray(
-													[
-														A2(
-														elm$html$Html$button,
-														_List_fromArray(
-															[
-																elm$html$Html$Attributes$class('btn btn-secondary'),
-																A2(elm$html$Html$Attributes$attribute, 'data-dismiss', 'modal')
-															]),
-														_List_fromArray(
-															[
-																elm$html$Html$text('Close')
-															])),
-														A2(
-														elm$html$Html$button,
-														_List_fromArray(
-															[
-																elm$html$Html$Attributes$class('btn btn-primary')
-															]),
-														_List_fromArray(
-															[
-																elm$html$Html$text('Submit')
-															]))
-													]))
-											]))
-									]))
-							]))
+							prompt.T))
 					]));
 		} else {
 			return A2(
@@ -5612,7 +5499,7 @@ var author$project$Main$renderFirstQuestion = F2(
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('modal'),
+								elm$html$Html$Attributes$class('modal fade show'),
 								A2(elm$html$Html$Attributes$attribute, 'role', 'dialog'),
 								A2(elm$html$Html$Attributes$attribute, 'tabindex', '-1')
 							]),
@@ -5745,7 +5632,8 @@ var author$project$Main$view = function (model) {
 	var maybeFirstPrompt = author$project$Main$nextUnansweredQuestion(model.F);
 	var exposeResults = model.G;
 	var _n0 = model.V;
-	if (!_n0) {
+	if (!_n0.$) {
+		var modalState = _n0.a;
 		return A2(
 			elm$html$Html$div,
 			_List_Nil,
@@ -5787,7 +5675,7 @@ var author$project$Main$view = function (model) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									A2(author$project$Main$renderFirstQuestion, model, maybeFirstPrompt)
+									A2(author$project$Main$renderNextQuestion, model, maybeFirstPrompt)
 								])),
 							A2(
 							elm$html$Html$div,

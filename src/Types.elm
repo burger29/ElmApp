@@ -1,4 +1,4 @@
-module Types exposing (PromptCategory(..), Question(..), Msg (..), Response(..), Prompt, Model, ModelState(..), Results)
+module Types exposing (PromptCategory(..), Question(..), Msg (..), Response(..), Prompt, Model, ModelState(..), Results, ModalState(..))
 
 
 type alias Model =
@@ -47,5 +47,9 @@ type Question
     = Question String Int PromptCategory
 
 type ModelState
-  = AnsweringQuestions
+  = AnsweringQuestions ModalState
   | ShowingResults
+
+type ModalState
+  = ModalClosed
+  | ModalOpen

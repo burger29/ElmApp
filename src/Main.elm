@@ -10,7 +10,7 @@ import Html.Events exposing (onClick)
 import Json.Encode
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Types exposing (Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results)
+import Types exposing (Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results, ModalState(..))
 
 
 main =
@@ -35,7 +35,7 @@ init =
                 listQuestions
     in
     { prompts = newPrompts questionList
-    , state = AnsweringQuestions
+    , state = AnsweringQuestions ModalClosed
     , results = Results 0 0 0 0
     }
 
@@ -303,7 +303,7 @@ view model =
             model.results
     in
     case model.state of
-        AnsweringQuestions ->
+        AnsweringQuestions modalState ->
             Html.div []
                 [ Html.div [ A.class "container-fluid p-0" ]
                     [ Html.div []
@@ -311,7 +311,7 @@ view model =
                         ]
                     ]
                 , Html.div [ A.class "container" ]
-                    [ Html.div [] [ renderFirstQuestion model maybeFirstPrompt ]
+                    [ Html.div [] [ renderNextQuestion model maybeFirstPrompt ]
                     , Html.div [ A.class "d-flexjustify-content-start" ] []
                     ]
                 ]
@@ -370,8 +370,8 @@ renderQuestion prompt =
         ]
 
 
-renderFirstQuestion : Model -> Maybe Prompt -> Html Msg
-renderFirstQuestion model maybePrompt =
+renderNextQuestion : Model -> Maybe Prompt -> Html Msg
+renderNextQuestion model maybePrompt =
     let
         exposeResults =
             model.results
@@ -388,35 +388,11 @@ renderFirstQuestion model maybePrompt =
                         (\x -> renderResponseList x prompt.selectedResponse prompt)
                         prompt.responseOptions
                     )
-                , Html.div [ A.class "modal", A.attribute "role" "dialog", A.attribute "tabindex" "-1" ]
-                  [ Html.div [ A.class "modal-dialog", A.attribute "role" "document" ]
-                      [ Html.div [ A.class "modal-content" ]
-                          [ Html.div [ A.class "modal-header" ]
-                              [ Html.h5 [ A.class "modal-title" ]
-                                  [ Html.text "To Continue" ]
-                              , Html.button [ ariaCustom "label" "Close", A.class "close", A.attribute "data-dismiss" "modal" ]
-                                  [ Html.span [ ariaCustom "hidden" "true" ]
-                                    [ Html.text "×" ]
-                                  ]
-                              ]
-                          , Html.div [ A.class "modal-body" ]
-                              [ p []
-                                  [ Html.text "Pardot form" ]
-                              ]
-                          , Html.div [ A.class "modal-footer" ]
-                              [ Html.button [ A.class "btn btn-secondary", A.attribute "data-dismiss" "modal" ]
-                                  [ Html.text "Close" ]
-                              , Html.button [ A.class "btn btn-primary" ]
-                                  [ Html.text "Submit" ]
-                              ]
-                          ]
-                      ]
-                  ]
                 ]
 
         Nothing ->
             Html.div [ A.class "container" ]
-                [ Html.div [ A.class "modal", A.attribute "role" "dialog", A.attribute "tabindex" "-1" ]
+                [ Html.div [ A.class "modal fade show", A.attribute "role" "dialog", A.attribute "tabindex" "-1" ]
                   [ Html.div [ A.class "modal-dialog", A.attribute "role" "document" ]
                       [ Html.div [ A.class "modal-content" ]
                           [ Html.div [ A.class "modal-header" ]
