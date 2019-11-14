@@ -10,7 +10,7 @@ import Html.Events exposing (onClick)
 import Json.Encode
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Types exposing (Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results, ModalState(..))
+import Types exposing (Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results)
 
 
 main =
@@ -20,25 +20,35 @@ main =
 init : Model
 init =
     let
-        newPrompts : List Question -> List Prompt
-        newPrompts listQuestions =
-            List.indexedMap
-                (\index (Question s i pc) ->
-                    { question = s
-                    , responseOptions = [ StronglyAgree, Agree, Neutral, Disagree, StronglyDisagree ]
-                    , selectedResponse = Nothing
-                    , variable = i
-                    , index = index
-                    , promptCategory = pc
-                    }
-                )
-                listQuestions
+      prompts = newPrompts questionList
     in
-    { prompts = newPrompts questionList
-    , state = AnsweringQuestions ModalClosed
-    , results = Results 0 0 0 0
-    }
+      { prompts = prompts
+      , state = selectState prompts
+      , results = Results 0 0 0 0
+      }
 
+newPrompts : List Question -> List Prompt
+newPrompts listQuestions =
+    List.indexedMap
+        (\index (Question s i pc) ->
+            { question = s
+            , responseOptions = [ StronglyAgree, Agree, Neutral, Disagree, StronglyDisagree ]
+            , selectedResponse = Nothing
+            , variable = i
+            , index = index
+            , promptCategory = pc
+            }
+        )
+        listQuestions
+
+selectState : List Prompt -> ModelState
+selectState prompts =
+    case nextUnansweredQuestion prompts of
+        Just prompt ->
+          AnsweringQuestions prompt
+
+        Nothing ->
+          FillingOutForm
 
 update : Msg -> Model -> Model
 update msg model =
@@ -100,7 +110,7 @@ update msg model =
                             }
 
                 updatedModel =
-                    { model | prompts = updatedPrompts, results = updatedResults }
+                    { model | prompts = updatedPrompts, results = updatedResults, state = selectState updatedPrompts }
             in
             updatedModel
 
@@ -284,9 +294,6 @@ createListCourses value =
     in
     String.join " " [ sentenceOne, sentenceTwo, sentenceThree, sentenceFour ]
 
-ariaCustom : String -> String -> Attribute msg
-ariaCustom name value =
-    A.attribute ("aria-" ++ name) value
 
 
 
@@ -295,15 +302,9 @@ ariaCustom name value =
 
 view : Model -> Html Msg
 view model =
-    let
-        maybeFirstPrompt =
-            nextUnansweredQuestion model.prompts
 
-        exposeResults =
-            model.results
-    in
     case model.state of
-        AnsweringQuestions modalState ->
+        AnsweringQuestions prompt ->
             Html.div []
                 [ Html.div [ A.class "container-fluid p-0" ]
                     [ Html.div []
@@ -311,12 +312,32 @@ view model =
                         ]
                     ]
                 , Html.div [ A.class "container" ]
-                    [ Html.div [] [ renderNextQuestion model maybeFirstPrompt ]
-                    , Html.div [ A.class "d-flexjustify-content-start" ] []
+                    [ Html.div [ A.class "intro container" ] [ Html.text "How well do you think your team is performing? Harvard instructor and project management master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert." ]
+                    , Html.div [ A.class "pt-5 row justify-content-center" ] [ Html.div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ] ]
+                    , p [ A.class "question-number pt-5" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
+                    , p [ A.class "question" ] [ Html.text prompt.question ]
+                    , ul [ A.class "list-group list-group-horizontal-sm response-list" ]
+                        (List.map
+                            (\x -> renderResponseList x prompt.selectedResponse prompt)
+                            prompt.responseOptions
+                        )
                     ]
                 ]
 
+        FillingOutForm ->
+            Html.div []
+            [ Html.div [ A.class "container-fluid p-0" ]
+                  [ Html.div []
+                      [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
+                      ]
+                  ]
+            ]
+
         ShowingResults ->
+          let
+              exposeResults =
+                  model.results
+          in
           Html.div []
               [ Html.div [ A.class "container-fluid p-0" ]
                   [ Html.div []
@@ -368,57 +389,6 @@ renderQuestion prompt =
                 prompt.responseOptions
             )
         ]
-
-
-renderNextQuestion : Model -> Maybe Prompt -> Html Msg
-renderNextQuestion model maybePrompt =
-    let
-        exposeResults =
-            model.results
-    in
-    case maybePrompt of
-        Just prompt ->
-            Html.div [ A.class "pt-5" ]
-                [ Html.div [ A.class "intro container" ] [ Html.text "How well do you think your team is performing? Harvard instructor and project management master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert." ]
-                , Html.div [ A.class "pt-5 row justify-content-center" ] [ Html.div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ] ]
-                , p [ A.class "question-number pt-5" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
-                , p [ A.class "question" ] [ Html.text prompt.question ]
-                , ul [ A.class "list-group list-group-horizontal-sm response-list" ]
-                    (List.map
-                        (\x -> renderResponseList x prompt.selectedResponse prompt)
-                        prompt.responseOptions
-                    )
-                ]
-
-        Nothing ->
-            Html.div [ A.class "container" ]
-                [ Html.div [ A.class "modal fade show", A.attribute "role" "dialog", A.attribute "tabindex" "-1" ]
-                  [ Html.div [ A.class "modal-dialog", A.attribute "role" "document" ]
-                      [ Html.div [ A.class "modal-content" ]
-                          [ Html.div [ A.class "modal-header" ]
-                              [ Html.h5 [ A.class "modal-title" ]
-                                  [ Html.text "To Continue" ]
-                              , Html.button [ ariaCustom "label" "Close", A.class "close", A.attribute "data-dismiss" "modal" ]
-                                  [ Html.span [ ariaCustom "hidden" "true" ]
-                                    [ Html.text "×" ]
-                                  ]
-                              ]
-                          , Html.div [ A.class "modal-body" ]
-                              [ p []
-                                  [ Html.text "Pardot form" ]
-                              ]
-                          , Html.div [ A.class "modal-footer" ]
-                              [ Html.button [ A.class "btn btn-secondary", A.attribute "data-dismiss" "modal" ]
-                                  [ Html.text "Close" ]
-                              , Html.button [ A.class "btn btn-primary", onClick ChangeModelState ]
-                                  [ Html.text "Submit"  ]
-                              ]
-                          ]
-                      ]
-                  ]
-                , Html.button [ A.class "btn btn-primary", onClick ChangeModelState ]
-                    [ Html.text "Submit"  ]
-                ]
 
 
 renderResponseList : Response -> Maybe Response -> Prompt -> Html Msg
