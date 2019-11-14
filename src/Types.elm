@@ -1,27 +1,30 @@
-module Types exposing (PromptCategory(..), Question(..), Msg (..), Response(..), Prompt, Model, ModelState(..), Results)
+module Types exposing (Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results, FormData)
 
 
 type alias Model =
-  { prompts: List Prompt
-  , state: ModelState
-  , results: Results
-  }
+    { prompts : List Prompt
+    , state : ModelState
+    , results : Results
+    , formData : FormData
+    }
+
 
 type alias Prompt =
-  { question: String
-  , variable: Int
-  , responseOptions: List Response
-  , selectedResponse: Maybe Response
-  , index: Int
-  , promptCategory: PromptCategory
-  }
+    { question : String
+    , variable : Int
+    , responseOptions : List Response
+    , selectedResponse : Maybe Response
+    , index : Int
+    , promptCategory : PromptCategory
+    }
+
 
 type alias Results =
-  { sc: Int
-  , am: Int
-  , cl: Int
-  , cc: Int
-  }
+    { sc : Int
+    , am : Int
+    , cl : Int
+    , cc : Int
+    }
 
 
 type Response
@@ -31,9 +34,14 @@ type Response
     | Disagree
     | StronglyDisagree
 
+
 type Msg
     = SelectResponse Response Prompt
     | ChangeModelState
+    | UpdateFormFirstName String
+    | UpdateFormLastName String
+    | UpdateFormEmail String
+
 
 type PromptCategory
     = SafetyCulture
@@ -43,10 +51,19 @@ type PromptCategory
     | CCCL
     | SCCC
 
+
 type Question
     = Question String Int PromptCategory
 
+
 type ModelState
-  = AnsweringQuestions Prompt
-  | FillingOutForm
-  | ShowingResults
+    = AnsweringQuestions Prompt
+    | FillingOutForm
+    | ShowingResults
+
+
+type alias FormData =
+    { formFirstName : String
+    , formLastName : String
+    , formEmail : String
+    }

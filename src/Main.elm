@@ -4,13 +4,13 @@ import Array as Array
 import Browser
 import Data exposing (questionList, resultsParagraphList, videoframe)
 import GraphElements exposing (bar)
-import Html exposing (Html, button, div, h1, h3, h5, img, li, p, text, ul, span)
-import Html.Attributes as A exposing (class, cols, height, src, width, attribute)
-import Html.Events exposing (onClick)
+import Html exposing (Html, button, div, form, h1, h3, h5, img, input, label, li, p, span, text, ul)
+import Html.Attributes as A exposing (action, attribute, class, cols, disabled, for, height, id, maxlength, method, minlength, name, placeholder, required, src, type_, value, width)
+import Html.Events exposing (onClick, onInput)
 import Json.Encode
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Types exposing (Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results)
+import Types exposing (FormData, Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results)
 
 
 main =
@@ -20,12 +20,21 @@ main =
 init : Model
 init =
     let
-      prompts = newPrompts questionList
+        prompts =
+            newPrompts questionList
+
+        emptyFormData =
+            { formFirstName = ""
+            , formLastName = ""
+            , formEmail = ""
+            }
     in
-      { prompts = prompts
-      , state = selectState prompts
-      , results = Results 0 0 0 0
-      }
+    { prompts = prompts
+    , state = selectState prompts
+    , results = Results 0 0 0 0
+    , formData = emptyFormData
+    }
+
 
 newPrompts : List Question -> List Prompt
 newPrompts listQuestions =
@@ -41,14 +50,16 @@ newPrompts listQuestions =
         )
         listQuestions
 
+
 selectState : List Prompt -> ModelState
 selectState prompts =
     case nextUnansweredQuestion prompts of
         Just prompt ->
-          AnsweringQuestions prompt
+            AnsweringQuestions prompt
 
         Nothing ->
-          FillingOutForm
+            FillingOutForm
+
 
 update : Msg -> Model -> Model
 update msg model =
@@ -116,10 +127,41 @@ update msg model =
 
         ChangeModelState ->
             let
-              updatedModelState =
-                  { model | state = ShowingResults }
+                updatedModelState =
+                    { model | state = ShowingResults }
             in
             updatedModelState
+
+        UpdateFormFirstName updatedFirstname ->
+            let
+                formData =
+                    model.formData
+
+                updatedFormData =
+                    { formData | formFirstName = updatedFirstname }
+            in
+            { model | formData = updatedFormData }
+
+        UpdateFormLastName updatedLastname ->
+            let
+                formData =
+                    model.formData
+
+                updatedFormData =
+                    { formData | formFirstName = updatedLastname }
+            in
+            { model | formData = updatedFormData }
+
+        UpdateFormEmail updatedEmail ->
+            let
+                formData =
+                    model.formData
+
+                updatedFormData =
+                    { formData | formFirstName = updatedEmail }
+            in
+            { model | formData = updatedFormData }
+
 
 convertResponse : Response -> String
 convertResponse someResponse =
@@ -296,24 +338,22 @@ createListCourses value =
 
 
 
-
 --VIEW AND HTML MSGS
 
 
 view : Model -> Html Msg
 view model =
-
     case model.state of
         AnsweringQuestions prompt ->
-            Html.div []
-                [ Html.div [ A.class "container-fluid p-0" ]
-                    [ Html.div []
+            div []
+                [ div [ A.class "container-fluid p-0" ]
+                    [ div []
                         [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
                         ]
                     ]
-                , Html.div [ A.class "container" ]
-                    [ Html.div [ A.class "intro container" ] [ Html.text "How well do you think your team is performing? Harvard instructor and project management master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert." ]
-                    , Html.div [ A.class "pt-5 row justify-content-center" ] [ Html.div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ] ]
+                , div [ A.class "container" ]
+                    [ div [ A.class "intro container" ] [ Html.text "How well do you think your team is performing? Harvard instructor and project management master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert." ]
+                    , div [ A.class "pt-5 row justify-content-center" ] [ div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ] ]
                     , p [ A.class "question-number pt-5" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
                     , p [ A.class "question" ] [ Html.text prompt.question ]
                     , ul [ A.class "list-group list-group-horizontal-sm response-list" ]
@@ -325,63 +365,112 @@ view model =
                 ]
 
         FillingOutForm ->
-            Html.div []
-            [ Html.div [ A.class "container-fluid p-0" ]
-                  [ Html.div []
-                      [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
-                      ]
-                  ]
-            ]
-
-        ShowingResults ->
-          let
-              exposeResults =
-                  model.results
-          in
-          Html.div []
-              [ Html.div [ A.class "container-fluid p-0" ]
-                  [ Html.div []
-                      [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
-                      ]
-                  ]
-              , Html.div [ A.class "container" ]
-                    [ Html.div [ A.class "row pt-5 align-items-end no-gutters" ]
-                        [ Html.div [ A.class "col-3 offset-0 col-md-2 offset-md-2 bar-style" ]
-                            [ bar ((exposeResults.sc + 6) * 12)
-                            ]
-                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                            [ bar ((exposeResults.am + 6) * 12)
-                            ]
-                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                            [ bar ((exposeResults.cl + 6) * 12)
-                            ]
-                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                            [ bar ((exposeResults.cc + 6) * 12)
+            -- let
+            --   formFirstName =
+            --   model.formData.formFirstName
+            -- in
+            div []
+                [ div [ A.class "container-fluid p-0" ]
+                    [ div []
+                        [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
+                        ]
+                    ]
+                , div [ A.class "container" ]
+                    [ div [ A.class "row justify-content-center" ]
+                        [ div [ A.class "col-6" ]
+                            [ input
+                                [ onInput UpdateFormFirstName
+                                , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                , placeholder "Enter your first name"
+                                , required True
+                                , minlength 2
+                                , maxlength 40
+                                ]
+                                []
                             ]
                         ]
-                    , Html.div [ A.class "row align-items-start no-gutters" ]
-                        [ Html.div [ A.class "col-3 offset-0 col-md-2 offset-md-2 bar-style" ]
-                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Safety Culture" ]
-                            ]
-                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Agile Mindset" ]
-                            ]
-                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Coaching Leadership" ]
-                            ]
-                        , Html.div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
+                    , div [ A.class "row justify-content-center" ]
+                        [ div [ A.class "col-6" ]
+                            [ input
+                                [ onInput UpdateFormLastName
+                                , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                , placeholder "Enter your last name"
+                                , required True
+                                , minlength 2
+                                , maxlength 40
+                                ]
+                                []
                             ]
                         ]
-                    , Html.div [ A.class "response-header" ] [ Html.text "More about your team" ]
-                    , Html.div [ A.class "response-style" ] [ Html.text (createResultsParagraph exposeResults) ]
-                    , Html.div [ A.class "list-courses" ] [ Html.text (createListCourses exposeResults) ]
+                    , div [ A.class "row justify-content-center" ]
+                        [ div [ A.class "col-6" ]
+                            [ input
+                                [ onInput UpdateFormEmail
+                                , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                , placeholder "Enter your email"
+                                , required True
+                                , minlength 2
+                                , maxlength 40
+                                ]
+                                []
+                            ]
+                        ]
+                    , div [ A.class "row justify-content-center pt-4" ]
+                        [ button [ A.class "button-submit", onClick ChangeModelState ] [ Html.text "Submit" ]
+                        ]
                     ]
                 ]
 
+        ShowingResults ->
+            let
+                exposeResults =
+                    model.results
+            in
+            div []
+                [ div [ A.class "container-fluid p-0" ]
+                    [ div []
+                        [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
+                        ]
+                    ]
+                , div [ A.class "container" ]
+                    [ div [ A.class "row pt-5 align-items-end no-gutters" ]
+                        [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 bar-style" ]
+                            [ bar ((exposeResults.sc + 6) * 12)
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ bar ((exposeResults.am + 6) * 12)
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ bar ((exposeResults.cl + 6) * 12)
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ bar ((exposeResults.cc + 6) * 12)
+                            ]
+                        ]
+                    , div [ A.class "row align-items-start no-gutters" ]
+                        [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 bar-style" ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Safety Culture" ]
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Agile Mindset" ]
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Coaching Leadership" ]
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
+                            ]
+                        ]
+                    , div [ A.class "response-header" ] [ Html.text "More about your team" ]
+                    , div [ A.class "response-style" ] [ Html.text (createResultsParagraph exposeResults) ]
+                    , div [ A.class "list-courses" ] [ Html.text (createListCourses exposeResults) ]
+                    ]
+                ]
+
+
 renderQuestion : Prompt -> Html Msg
 renderQuestion prompt =
-    Html.div [ A.class "pt-5 Html.text-light bg-dark" ]
+    div [ A.class "pt-5 Html.text-light bg-dark" ]
         [ p [ A.class "pl-3 font-weight-bold" ] [ Html.text prompt.question ]
         , ul [ A.class "list-group list-group-horizontal-sm" ]
             (List.map

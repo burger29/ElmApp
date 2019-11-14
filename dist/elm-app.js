@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.V.E === region._.E)
+	if (region.X.F === region.ab.F)
 	{
-		return 'on line ' + region.V.E;
+		return 'on line ' + region.X.F;
 	}
-	return 'on lines ' + region.V.E + ' through ' + region._.E;
+	return 'on lines ' + region.X.F + ' through ' + region.ab.F;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aC,
-		impl.aK,
-		impl.aI,
+		impl.aG,
+		impl.aO,
+		impl.aM,
 		function() { return function() {} }
 	);
 });
@@ -2660,8 +2660,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		m: func(record.m),
-		W: record.W,
-		R: record.R
+		Y: record.Y,
+		T: record.T
 	}
 });
 
@@ -2930,10 +2930,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.m;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.W;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Y;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.R) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.T) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3883,11 +3883,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aC,
-		impl.aK,
-		impl.aI,
+		impl.aG,
+		impl.aO,
+		impl.aM,
 		function(sendToApp, initialModel) {
-			var view = impl.aL;
+			var view = impl.aP;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3919,12 +3919,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aC,
-		impl.aK,
-		impl.aI,
+		impl.aG,
+		impl.aO,
+		impl.aM,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.U && impl.U(sendToApp)
-			var view = impl.aL;
+			var divertHrefToApp = impl.W && impl.W(sendToApp)
+			var view = impl.aP;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3932,12 +3932,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aw);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.ay);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aJ) && (_VirtualDom_doc.title = title = doc.aJ);
+				(title !== doc.aN) && (_VirtualDom_doc.title = title = doc.aN);
 			});
 		}
 	);
@@ -3993,12 +3993,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.aE;
-	var onUrlRequest = impl.aF;
+	var onUrlChange = impl.aI;
+	var onUrlRequest = impl.aJ;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		U: function(sendToApp)
+		W: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4014,9 +4014,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.am === next.am
-							&& curr.ac === next.ac
-							&& curr.ai.a === next.ai.a
+							&& curr.ao === next.ao
+							&& curr.ae === next.ae
+							&& curr.ak.a === next.ak.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4024,13 +4024,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		aC: function(flags)
+		aG: function(flags)
 		{
-			return A3(impl.aC, flags, _Browser_getUrl(), key);
+			return A3(impl.aG, flags, _Browser_getUrl(), key);
 		},
-		aL: impl.aL,
-		aK: impl.aK,
-		aI: impl.aI
+		aP: impl.aP,
+		aO: impl.aO,
+		aM: impl.aM
 	});
 }
 
@@ -4096,17 +4096,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aA: 'hidden', ax: 'visibilitychange' }
+		? { aE: 'hidden', az: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aA: 'mozHidden', ax: 'mozvisibilitychange' }
+		? { aE: 'mozHidden', az: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aA: 'msHidden', ax: 'msvisibilitychange' }
+		? { aE: 'msHidden', az: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aA: 'webkitHidden', ax: 'webkitvisibilitychange' }
-		: { aA: 'hidden', ax: 'visibilitychange' };
+		? { aE: 'webkitHidden', az: 'webkitvisibilitychange' }
+		: { aE: 'hidden', az: 'visibilitychange' };
 }
 
 
@@ -4187,12 +4187,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aq: _Browser_getScene(),
-		at: {
-			N: _Browser_window.pageXOffset,
-			O: _Browser_window.pageYOffset,
-			B: _Browser_doc.documentElement.clientWidth,
-			w: _Browser_doc.documentElement.clientHeight
+		as: _Browser_getScene(),
+		av: {
+			P: _Browser_window.pageXOffset,
+			Q: _Browser_window.pageYOffset,
+			C: _Browser_doc.documentElement.clientWidth,
+			x: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4202,8 +4202,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		B: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		w: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		C: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		x: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4226,15 +4226,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aq: {
-				B: node.scrollWidth,
-				w: node.scrollHeight
+			as: {
+				C: node.scrollWidth,
+				x: node.scrollHeight
 			},
-			at: {
-				N: node.scrollLeft,
-				O: node.scrollTop,
-				B: node.clientWidth,
-				w: node.clientHeight
+			av: {
+				P: node.scrollLeft,
+				Q: node.scrollTop,
+				C: node.clientWidth,
+				x: node.clientHeight
 			}
 		};
 	});
@@ -4264,18 +4264,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aq: _Browser_getScene(),
-			at: {
-				N: x,
-				O: y,
-				B: _Browser_doc.documentElement.clientWidth,
-				w: _Browser_doc.documentElement.clientHeight
+			as: _Browser_getScene(),
+			av: {
+				P: x,
+				Q: y,
+				C: _Browser_doc.documentElement.clientWidth,
+				x: _Browser_doc.documentElement.clientHeight
 			},
-			ay: {
-				N: x + rect.left,
-				O: y + rect.top,
-				B: rect.width,
-				w: rect.height
+			aA: {
+				P: x + rect.left,
+				Q: y + rect.top,
+				C: rect.width,
+				x: rect.height
 			}
 		};
 	});
@@ -4312,7 +4312,7 @@ function _Browser_load(url)
 }
 var $author$project$Types$Results = F4(
 	function (sc, am, cl, cc) {
-		return {D: am, p: cc, q: cl, i: sc};
+		return {E: am, p: cc, q: cl, i: sc};
 	});
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
@@ -4474,10 +4474,10 @@ var $author$project$Main$newPrompts = function (listQuestions) {
 				var i = _v0.b;
 				var pc = _v0.c;
 				return {
-					J: index,
-					al: pc,
-					S: s,
-					T: _List_fromArray(
+					L: index,
+					an: pc,
+					U: s,
+					V: _List_fromArray(
 						[1, 0, 2, 3, 4]),
 					d: $elm$core$Maybe$Nothing,
 					k: i
@@ -4627,10 +4627,12 @@ var $author$project$Main$selectState = function (prompts) {
 };
 var $author$project$Main$init = function () {
 	var prompts = $author$project$Main$newPrompts($author$project$Data$questionList);
+	var emptyFormData = {aC: '', K: '', aD: ''};
 	return {
-		K: prompts,
-		L: A4($author$project$Types$Results, 0, 0, 0, 0),
-		M: $author$project$Main$selectState(prompts)
+		r: emptyFormData,
+		M: prompts,
+		N: A4($author$project$Types$Results, 0, 0, 0, 0),
+		O: $author$project$Main$selectState(prompts)
 	};
 }();
 var $elm$core$Result$Err = function (a) {
@@ -4978,7 +4980,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {ab: fragment, ac: host, ag: path, ai: port_, am: protocol, an: query};
+		return {ad: fragment, ae: host, ai: path, ak: port_, ao: protocol, ap: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5208,19 +5210,19 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$browser$Browser$sandbox = function (impl) {
 	return _Browser_element(
 		{
-			aC: function (_v0) {
-				return _Utils_Tuple2(impl.aC, $elm$core$Platform$Cmd$none);
+			aG: function (_v0) {
+				return _Utils_Tuple2(impl.aG, $elm$core$Platform$Cmd$none);
 			},
-			aI: function (_v1) {
+			aM: function (_v1) {
 				return $elm$core$Platform$Sub$none;
 			},
-			aK: F2(
+			aO: F2(
 				function (msg, model) {
 					return _Utils_Tuple2(
-						A2(impl.aK, msg, model),
+						A2(impl.aO, msg, model),
 						$elm$core$Platform$Cmd$none);
 				}),
-			aL: impl.aL
+			aP: impl.aP
 		});
 };
 var $author$project$Types$ShowingResults = {$: 2};
@@ -5395,81 +5397,119 @@ var $elm$core$List$take = F2(
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		if (!msg.$) {
-			var response = msg.a;
-			var prompt = msg.b;
-			var updatedPrompt = _Utils_update(
-				prompt,
-				{
-					d: $elm$core$Maybe$Just(response)
-				});
-			var currentResults = model.L;
-			var updatedResults = function () {
-				var _v1 = updatedPrompt.al;
-				switch (_v1) {
-					case 0:
-						return _Utils_update(
-							currentResults,
-							{
-								i: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.i
-							});
-					case 1:
-						return _Utils_update(
-							currentResults,
-							{
-								D: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.D
-							});
-					case 2:
-						return _Utils_update(
-							currentResults,
-							{
-								q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.q
-							});
-					case 3:
-						return _Utils_update(
-							currentResults,
-							{
-								p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p
-							});
-					case 5:
-						return _Utils_update(
-							currentResults,
-							{
-								p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p,
-								i: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.i
-							});
-					default:
-						return _Utils_update(
-							currentResults,
-							{
-								p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p,
-								q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.q
-							});
-				}
-			}();
-			var beforeIndex = A2($elm$core$List$take, prompt.J, model.K);
-			var afterIndex = A2($elm$core$List$drop, prompt.J + 1, model.K);
-			var updatedPrompts = _Utils_ap(
-				beforeIndex,
-				_Utils_ap(
-					_List_fromArray(
-						[updatedPrompt]),
-					afterIndex));
-			var updatedModel = _Utils_update(
-				model,
-				{
-					K: updatedPrompts,
-					L: updatedResults,
-					M: $author$project$Main$selectState(updatedPrompts)
-				});
-			return updatedModel;
-		} else {
-			var updatedModelState = _Utils_update(
-				model,
-				{M: $author$project$Types$ShowingResults});
-			return updatedModelState;
+		switch (msg.$) {
+			case 0:
+				var response = msg.a;
+				var prompt = msg.b;
+				var updatedPrompt = _Utils_update(
+					prompt,
+					{
+						d: $elm$core$Maybe$Just(response)
+					});
+				var currentResults = model.N;
+				var updatedResults = function () {
+					var _v1 = updatedPrompt.an;
+					switch (_v1) {
+						case 0:
+							return _Utils_update(
+								currentResults,
+								{
+									i: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.i
+								});
+						case 1:
+							return _Utils_update(
+								currentResults,
+								{
+									E: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.E
+								});
+						case 2:
+							return _Utils_update(
+								currentResults,
+								{
+									q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.q
+								});
+						case 3:
+							return _Utils_update(
+								currentResults,
+								{
+									p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p
+								});
+						case 5:
+							return _Utils_update(
+								currentResults,
+								{
+									p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p,
+									i: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.i
+								});
+						default:
+							return _Utils_update(
+								currentResults,
+								{
+									p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p,
+									q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.q
+								});
+					}
+				}();
+				var beforeIndex = A2($elm$core$List$take, prompt.L, model.M);
+				var afterIndex = A2($elm$core$List$drop, prompt.L + 1, model.M);
+				var updatedPrompts = _Utils_ap(
+					beforeIndex,
+					_Utils_ap(
+						_List_fromArray(
+							[updatedPrompt]),
+						afterIndex));
+				var updatedModel = _Utils_update(
+					model,
+					{
+						M: updatedPrompts,
+						N: updatedResults,
+						O: $author$project$Main$selectState(updatedPrompts)
+					});
+				return updatedModel;
+			case 1:
+				var updatedModelState = _Utils_update(
+					model,
+					{O: $author$project$Types$ShowingResults});
+				return updatedModelState;
+			case 2:
+				var updatedFirstname = msg.a;
+				var formData = model.r;
+				var updatedFormData = _Utils_update(
+					formData,
+					{K: updatedFirstname});
+				return _Utils_update(
+					model,
+					{r: updatedFormData});
+			case 3:
+				var updatedLastname = msg.a;
+				var formData = model.r;
+				var updatedFormData = _Utils_update(
+					formData,
+					{K: updatedLastname});
+				return _Utils_update(
+					model,
+					{r: updatedFormData});
+			default:
+				var updatedEmail = msg.a;
+				var formData = model.r;
+				var updatedFormData = _Utils_update(
+					formData,
+					{K: updatedEmail});
+				return _Utils_update(
+					model,
+					{r: updatedFormData});
 		}
 	});
+var $author$project$Types$ChangeModelState = {$: 1};
+var $author$project$Types$UpdateFormEmail = function (a) {
+	return {$: 4, a: a};
+};
+var $author$project$Types$UpdateFormFirstName = function (a) {
+	return {$: 2, a: a};
+};
+var $author$project$Types$UpdateFormLastName = function (a) {
+	return {$: 3, a: a};
+};
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$g = $elm$svg$Svg$trustedNode('g');
@@ -5514,6 +5554,7 @@ var $author$project$GraphElements$bar = function (barHeight) {
 					]))
 			]));
 };
+var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -5525,7 +5566,7 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$core$Basics$ge = _Utils_ge;
 var $author$project$Main$createListCourses = function (value) {
-	var sentenceTwo = (value.D >= 1) ? 'String 3' : 'String 4';
+	var sentenceTwo = (value.E >= 1) ? 'String 3' : 'String 4';
 	var sentenceThree = (value.q >= 1) ? 'String 5' : 'String 6';
 	var sentenceOne = (value.i >= 1) ? 'String 1' : 'String 2';
 	var sentenceFour = (value.i >= 1) ? 'String 7' : 'String 8';
@@ -5536,7 +5577,7 @@ var $author$project$Main$createListCourses = function (value) {
 			[sentenceOne, sentenceTwo, sentenceThree, sentenceFour]));
 };
 var $author$project$Main$createResultsParagraph = function (value) {
-	var sentenceTwo = (value.D >= 1) ? 'String 3' : 'String 4';
+	var sentenceTwo = (value.E >= 1) ? 'String 3' : 'String 4';
 	var sentenceThree = (value.q >= 1) ? 'String 5' : 'String 6';
 	var sentenceOne = (value.i >= 1) ? 'String 1' : 'String 2';
 	var sentenceFour = (value.i >= 1) ? 'String 7' : 'String 8';
@@ -5549,7 +5590,71 @@ var $author$project$Main$createResultsParagraph = function (value) {
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h4 = _VirtualDom_node('h4');
 var $elm$html$Html$img = _VirtualDom_node('img');
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$Attributes$maxlength = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'maxlength',
+		$elm$core$String$fromInt(n));
+};
+var $elm$html$Html$Attributes$minlength = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'minLength',
+		$elm$core$String$fromInt(n));
+};
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
 var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $author$project$Types$SelectResponse = F2(
 	function (a, b) {
 		return {$: 0, a: a, b: b};
@@ -5569,23 +5674,6 @@ var $author$project$Main$convertResponse = function (someResponse) {
 	}
 };
 var $elm$html$Html$li = _VirtualDom_node('li');
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Main$renderResponseList = F3(
@@ -5612,6 +5700,15 @@ var $author$project$Main$renderResponseList = F3(
 					$author$project$Main$convertResponse(response))
 				]));
 	});
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$required = $elm$html$Html$Attributes$boolProperty('required');
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
@@ -5655,7 +5752,7 @@ var $author$project$Data$videoframe = A2(
 		]),
 	_List_Nil);
 var $author$project$Main$view = function (model) {
-	var _v0 = model.M;
+	var _v0 = model.O;
 	switch (_v0.$) {
 		case 0:
 			var prompt = _v0.a;
@@ -5731,7 +5828,7 @@ var $author$project$Main$view = function (model) {
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
-										$elm$core$String$fromInt(prompt.J + 1) + '.')
+										$elm$core$String$fromInt(prompt.L + 1) + '.')
 									])),
 								A2(
 								$elm$html$Html$p,
@@ -5741,7 +5838,7 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(prompt.S)
+										$elm$html$Html$text(prompt.U)
 									])),
 								A2(
 								$elm$html$Html$ul,
@@ -5754,7 +5851,7 @@ var $author$project$Main$view = function (model) {
 									function (x) {
 										return A3($author$project$Main$renderResponseList, x, prompt.d, prompt);
 									},
-									prompt.T))
+									prompt.V))
 							]))
 					]));
 		case 1:
@@ -5785,10 +5882,129 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_Nil)
 									]))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('container')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row justify-content-center')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-6')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onInput($author$project$Types$UpdateFormFirstName),
+														$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
+														$elm$html$Html$Attributes$placeholder('Enter your first name'),
+														$elm$html$Html$Attributes$required(true),
+														$elm$html$Html$Attributes$minlength(2),
+														$elm$html$Html$Attributes$maxlength(40)
+													]),
+												_List_Nil)
+											]))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row justify-content-center')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-6')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onInput($author$project$Types$UpdateFormLastName),
+														$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
+														$elm$html$Html$Attributes$placeholder('Enter your last name'),
+														$elm$html$Html$Attributes$required(true),
+														$elm$html$Html$Attributes$minlength(2),
+														$elm$html$Html$Attributes$maxlength(40)
+													]),
+												_List_Nil)
+											]))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row justify-content-center')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-6')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onInput($author$project$Types$UpdateFormEmail),
+														$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
+														$elm$html$Html$Attributes$placeholder('Enter your email'),
+														$elm$html$Html$Attributes$required(true),
+														$elm$html$Html$Attributes$minlength(2),
+														$elm$html$Html$Attributes$maxlength(40)
+													]),
+												_List_Nil)
+											]))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row justify-content-center pt-4')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('button-submit'),
+												$elm$html$Html$Events$onClick($author$project$Types$ChangeModelState)
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Submit')
+											]))
+									]))
 							]))
 					]));
 		default:
-			var exposeResults = model.L;
+			var exposeResults = model.N;
 			return A2(
 				$elm$html$Html$div,
 				_List_Nil,
@@ -5851,7 +6067,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.D + 6) * 12)
+												$author$project$GraphElements$bar((exposeResults.E + 6) * 12)
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -5996,6 +6212,6 @@ var $author$project$Main$view = function (model) {
 	}
 };
 var $author$project$Main$main = $elm$browser$Browser$sandbox(
-	{aC: $author$project$Main$init, aK: $author$project$Main$update, aL: $author$project$Main$view});
+	{aG: $author$project$Main$init, aO: $author$project$Main$update, aP: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
