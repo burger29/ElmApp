@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.X.F === region.ab.F)
+	if (region.aa.G === region.af.G)
 	{
-		return 'on line ' + region.X.F;
+		return 'on line ' + region.aa.G;
 	}
-	return 'on lines ' + region.X.F + ' through ' + region.ab.F;
+	return 'on lines ' + region.aa.G + ' through ' + region.af.G;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aG,
+		impl.aI,
+		impl.aQ,
 		impl.aO,
-		impl.aM,
 		function() { return function() {} }
 	);
 });
@@ -2659,9 +2659,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		m: func(record.m),
-		Y: record.Y,
-		T: record.T
+		n: func(record.n),
+		ab: record.ab,
+		X: record.X
 	}
 });
 
@@ -2929,11 +2929,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.m;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Y;
+		var message = !tag ? value : tag < 3 ? value.a : value.n;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ab;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.T) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.X) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3883,11 +3883,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aG,
+		impl.aI,
+		impl.aQ,
 		impl.aO,
-		impl.aM,
 		function(sendToApp, initialModel) {
-			var view = impl.aP;
+			var view = impl.aR;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3919,12 +3919,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aG,
+		impl.aI,
+		impl.aQ,
 		impl.aO,
-		impl.aM,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.W && impl.W(sendToApp)
-			var view = impl.aP;
+			var divertHrefToApp = impl._ && impl._(sendToApp)
+			var view = impl.aR;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3932,12 +3932,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.ay);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aC);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aN) && (_VirtualDom_doc.title = title = doc.aN);
+				(title !== doc.aP) && (_VirtualDom_doc.title = title = doc.aP);
 			});
 		}
 	);
@@ -3993,12 +3993,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.aI;
-	var onUrlRequest = impl.aJ;
+	var onUrlChange = impl.aK;
+	var onUrlRequest = impl.aL;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		W: function(sendToApp)
+		_: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4014,9 +4014,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.ao === next.ao
-							&& curr.ae === next.ae
-							&& curr.ak.a === next.ak.a
+							&& curr.as === next.as
+							&& curr.ai === next.ai
+							&& curr.ao.a === next.ao.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4024,13 +4024,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		aG: function(flags)
+		aI: function(flags)
 		{
-			return A3(impl.aG, flags, _Browser_getUrl(), key);
+			return A3(impl.aI, flags, _Browser_getUrl(), key);
 		},
-		aP: impl.aP,
-		aO: impl.aO,
-		aM: impl.aM
+		aR: impl.aR,
+		aQ: impl.aQ,
+		aO: impl.aO
 	});
 }
 
@@ -4096,17 +4096,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aE: 'hidden', az: 'visibilitychange' }
+		? { aG: 'hidden', aD: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aE: 'mozHidden', az: 'mozvisibilitychange' }
+		? { aG: 'mozHidden', aD: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aE: 'msHidden', az: 'msvisibilitychange' }
+		? { aG: 'msHidden', aD: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aE: 'webkitHidden', az: 'webkitvisibilitychange' }
-		: { aE: 'hidden', az: 'visibilitychange' };
+		? { aG: 'webkitHidden', aD: 'webkitvisibilitychange' }
+		: { aG: 'hidden', aD: 'visibilitychange' };
 }
 
 
@@ -4187,12 +4187,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		as: _Browser_getScene(),
-		av: {
-			P: _Browser_window.pageXOffset,
-			Q: _Browser_window.pageYOffset,
-			C: _Browser_doc.documentElement.clientWidth,
-			x: _Browser_doc.documentElement.clientHeight
+		aw: _Browser_getScene(),
+		az: {
+			T: _Browser_window.pageXOffset,
+			U: _Browser_window.pageYOffset,
+			D: _Browser_doc.documentElement.clientWidth,
+			y: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4202,8 +4202,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		C: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		x: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		D: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		y: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4226,15 +4226,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			as: {
-				C: node.scrollWidth,
-				x: node.scrollHeight
+			aw: {
+				D: node.scrollWidth,
+				y: node.scrollHeight
 			},
-			av: {
-				P: node.scrollLeft,
-				Q: node.scrollTop,
-				C: node.clientWidth,
-				x: node.clientHeight
+			az: {
+				T: node.scrollLeft,
+				U: node.scrollTop,
+				D: node.clientWidth,
+				y: node.clientHeight
 			}
 		};
 	});
@@ -4264,18 +4264,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			as: _Browser_getScene(),
-			av: {
-				P: x,
-				Q: y,
-				C: _Browser_doc.documentElement.clientWidth,
-				x: _Browser_doc.documentElement.clientHeight
+			aw: _Browser_getScene(),
+			az: {
+				T: x,
+				U: y,
+				D: _Browser_doc.documentElement.clientWidth,
+				y: _Browser_doc.documentElement.clientHeight
 			},
-			aA: {
-				P: x + rect.left,
-				Q: y + rect.top,
-				C: rect.width,
-				x: rect.height
+			aE: {
+				T: x + rect.left,
+				U: y + rect.top,
+				D: rect.width,
+				y: rect.height
 			}
 		};
 	});
@@ -4310,9 +4310,10 @@ function _Browser_load(url)
 		}
 	}));
 }
+var $elm$core$Basics$False = 1;
 var $author$project$Types$Results = F4(
 	function (sc, am, cl, cc) {
-		return {E: am, p: cc, q: cl, i: sc};
+		return {F: am, q: cc, r: cl, j: sc};
 	});
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
@@ -4474,13 +4475,13 @@ var $author$project$Main$newPrompts = function (listQuestions) {
 				var i = _v0.b;
 				var pc = _v0.c;
 				return {
-					L: index,
-					an: pc,
-					U: s,
-					V: _List_fromArray(
+					P: index,
+					ar: pc,
+					Y: s,
+					Z: _List_fromArray(
 						[1, 0, 2, 3, 4]),
 					d: $elm$core$Maybe$Nothing,
-					k: i
+					l: i
 				};
 			}),
 		listQuestions);
@@ -4589,7 +4590,6 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var $elm$core$Basics$False = 1;
 var $elm$core$Basics$True = 0;
 var $author$project$Main$filterOutUnanswered = function (prompt) {
 	var _v0 = prompt.d;
@@ -4627,12 +4627,13 @@ var $author$project$Main$selectState = function (prompts) {
 };
 var $author$project$Main$init = function () {
 	var prompts = $author$project$Main$newPrompts($author$project$Data$questionList);
-	var emptyFormData = {aC: '', K: '', aD: ''};
+	var emptyFormData = {L: '', M: '', N: '', O: ''};
 	return {
-		r: emptyFormData,
-		M: prompts,
-		N: A4($author$project$Types$Results, 0, 0, 0, 0),
-		O: $author$project$Main$selectState(prompts)
+		w: false,
+		e: emptyFormData,
+		Q: prompts,
+		R: A4($author$project$Types$Results, 0, 0, 0, 0),
+		S: $author$project$Main$selectState(prompts)
 	};
 }();
 var $elm$core$Result$Err = function (a) {
@@ -4980,7 +4981,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {ad: fragment, ae: host, ai: path, ak: port_, ao: protocol, ap: query};
+		return {ah: fragment, ai: host, am: path, ao: port_, as: protocol, at: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5210,22 +5211,86 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$browser$Browser$sandbox = function (impl) {
 	return _Browser_element(
 		{
-			aG: function (_v0) {
-				return _Utils_Tuple2(impl.aG, $elm$core$Platform$Cmd$none);
+			aI: function (_v0) {
+				return _Utils_Tuple2(impl.aI, $elm$core$Platform$Cmd$none);
 			},
-			aM: function (_v1) {
+			aO: function (_v1) {
 				return $elm$core$Platform$Sub$none;
 			},
-			aO: F2(
+			aQ: F2(
 				function (msg, model) {
 					return _Utils_Tuple2(
-						A2(impl.aO, msg, model),
+						A2(impl.aQ, msg, model),
 						$elm$core$Platform$Cmd$none);
 				}),
-			aP: impl.aP
+			aR: impl.aR
 		});
 };
 var $author$project$Types$ShowingResults = {$: 2};
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $elm$core$Basics$not = _Basics_not;
+var $elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			$elm$core$List$any,
+			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
+			list);
+	});
+var $elm$core$String$trim = _String_trim;
+var $author$project$Main$isFieldEmpty = function (field) {
+	return !$elm$core$String$isEmpty(
+		$elm$core$String$trim(field));
+};
+var $author$project$Main$checkToSubmit = function (input) {
+	var listOfFields = _List_Nil;
+	var checkedFirstName = A2(
+		$elm$core$List$cons,
+		$author$project$Main$isFieldEmpty(input.N),
+		listOfFields);
+	var checkedLastName = A2(
+		$elm$core$List$cons,
+		$author$project$Main$isFieldEmpty(input.O),
+		checkedFirstName);
+	var checkedEmail = A2(
+		$elm$core$List$cons,
+		$author$project$Main$isFieldEmpty(input.M),
+		checkedLastName);
+	var checkedCompany = A2(
+		$elm$core$List$cons,
+		$author$project$Main$isFieldEmpty(input.L),
+		checkedEmail);
+	return A2(
+		$elm$core$List$all,
+		function (item) {
+			return item;
+		},
+		checkedCompany);
+};
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -5406,52 +5471,52 @@ var $author$project$Main$update = F2(
 					{
 						d: $elm$core$Maybe$Just(response)
 					});
-				var currentResults = model.N;
+				var currentResults = model.R;
 				var updatedResults = function () {
-					var _v1 = updatedPrompt.an;
+					var _v1 = updatedPrompt.ar;
 					switch (_v1) {
 						case 0:
 							return _Utils_update(
 								currentResults,
 								{
-									i: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.i
+									j: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.j
 								});
 						case 1:
 							return _Utils_update(
 								currentResults,
 								{
-									E: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.E
+									F: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.F
 								});
 						case 2:
 							return _Utils_update(
 								currentResults,
 								{
-									q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.q
+									r: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.r
 								});
 						case 3:
 							return _Utils_update(
 								currentResults,
 								{
-									p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p
+									q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.q
 								});
 						case 5:
 							return _Utils_update(
 								currentResults,
 								{
-									p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p,
-									i: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.i
+									q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.q,
+									j: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.j
 								});
 						default:
 							return _Utils_update(
 								currentResults,
 								{
-									p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p,
-									q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.q
+									q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.q,
+									r: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.r
 								});
 					}
 				}();
-				var beforeIndex = A2($elm$core$List$take, prompt.L, model.M);
-				var afterIndex = A2($elm$core$List$drop, prompt.L + 1, model.M);
+				var beforeIndex = A2($elm$core$List$take, prompt.P, model.Q);
+				var afterIndex = A2($elm$core$List$drop, prompt.P + 1, model.Q);
 				var updatedPrompts = _Utils_ap(
 					beforeIndex,
 					_Utils_ap(
@@ -5461,46 +5526,63 @@ var $author$project$Main$update = F2(
 				var updatedModel = _Utils_update(
 					model,
 					{
-						M: updatedPrompts,
-						N: updatedResults,
-						O: $author$project$Main$selectState(updatedPrompts)
+						Q: updatedPrompts,
+						R: updatedResults,
+						S: $author$project$Main$selectState(updatedPrompts)
 					});
 				return updatedModel;
 			case 1:
 				var updatedModelState = _Utils_update(
 					model,
-					{O: $author$project$Types$ShowingResults});
-				return updatedModelState;
+					{S: $author$project$Types$ShowingResults});
+				var conditional = model.w;
+				return conditional ? updatedModelState : model;
 			case 2:
 				var updatedFirstname = msg.a;
-				var formData = model.r;
+				var formData = model.e;
+				var updatedAllowSubmit = $author$project$Main$checkToSubmit(formData);
 				var updatedFormData = _Utils_update(
 					formData,
-					{K: updatedFirstname});
+					{N: updatedFirstname});
 				return _Utils_update(
 					model,
-					{r: updatedFormData});
+					{w: updatedAllowSubmit, e: updatedFormData});
 			case 3:
 				var updatedLastname = msg.a;
-				var formData = model.r;
+				var formData = model.e;
+				var updatedAllowSubmit = $author$project$Main$checkToSubmit(formData);
 				var updatedFormData = _Utils_update(
 					formData,
-					{K: updatedLastname});
+					{O: updatedLastname});
 				return _Utils_update(
 					model,
-					{r: updatedFormData});
-			default:
+					{w: updatedAllowSubmit, e: updatedFormData});
+			case 4:
 				var updatedEmail = msg.a;
-				var formData = model.r;
+				var formData = model.e;
+				var updatedAllowSubmit = $author$project$Main$checkToSubmit(formData);
 				var updatedFormData = _Utils_update(
 					formData,
-					{K: updatedEmail});
+					{M: updatedEmail});
 				return _Utils_update(
 					model,
-					{r: updatedFormData});
+					{w: updatedAllowSubmit, e: updatedFormData});
+			default:
+				var updatedCompany = msg.a;
+				var formData = model.e;
+				var updatedAllowSubmit = $author$project$Main$checkToSubmit(formData);
+				var updatedFormData = _Utils_update(
+					formData,
+					{L: updatedCompany});
+				return _Utils_update(
+					model,
+					{w: updatedAllowSubmit, e: updatedFormData});
 		}
 	});
 var $author$project$Types$ChangeModelState = {$: 1};
+var $author$project$Types$UpdateFormCompany = function (a) {
+	return {$: 5, a: a};
+};
 var $author$project$Types$UpdateFormEmail = function (a) {
 	return {$: 4, a: a};
 };
@@ -5566,10 +5648,10 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$core$Basics$ge = _Utils_ge;
 var $author$project$Main$createListCourses = function (value) {
-	var sentenceTwo = (value.E >= 1) ? 'String 3' : 'String 4';
-	var sentenceThree = (value.q >= 1) ? 'String 5' : 'String 6';
-	var sentenceOne = (value.i >= 1) ? 'String 1' : 'String 2';
-	var sentenceFour = (value.i >= 1) ? 'String 7' : 'String 8';
+	var sentenceTwo = (value.F >= 1) ? 'String 3' : 'String 4';
+	var sentenceThree = (value.r >= 1) ? 'String 5' : 'String 6';
+	var sentenceOne = (value.j >= 1) ? 'String 1' : 'String 2';
+	var sentenceFour = (value.j >= 1) ? 'String 7' : 'String 8';
 	return A2(
 		$elm$core$String$join,
 		' ',
@@ -5577,10 +5659,10 @@ var $author$project$Main$createListCourses = function (value) {
 			[sentenceOne, sentenceTwo, sentenceThree, sentenceFour]));
 };
 var $author$project$Main$createResultsParagraph = function (value) {
-	var sentenceTwo = (value.E >= 1) ? 'String 3' : 'String 4';
-	var sentenceThree = (value.q >= 1) ? 'String 5' : 'String 6';
-	var sentenceOne = (value.i >= 1) ? 'String 1' : 'String 2';
-	var sentenceFour = (value.i >= 1) ? 'String 7' : 'String 8';
+	var sentenceTwo = (value.F >= 1) ? 'String 3' : 'String 4';
+	var sentenceThree = (value.r >= 1) ? 'String 5' : 'String 6';
+	var sentenceOne = (value.j >= 1) ? 'String 1' : 'String 2';
+	var sentenceFour = (value.j >= 1) ? 'String 7' : 'String 8';
 	return A2(
 		$elm$core$String$join,
 		' ',
@@ -5588,21 +5670,27 @@ var $author$project$Main$createResultsParagraph = function (value) {
 			[sentenceOne, sentenceTwo, sentenceThree, sentenceFour]));
 };
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$h4 = _VirtualDom_node('h4');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$maxlength = function (n) {
 	return A2(
 		_VirtualDom_attribute,
 		'maxlength',
 		$elm$core$String$fromInt(n));
 };
+var $elm$html$Html$Attributes$method = $elm$html$Html$Attributes$stringProperty('method');
 var $elm$html$Html$Attributes$minlength = function (n) {
 	return A2(
 		_VirtualDom_attribute,
 		'minLength',
 		$elm$core$String$fromInt(n));
 };
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
@@ -5715,7 +5803,9 @@ var $elm$html$Html$Attributes$src = function (url) {
 		'src',
 		_VirtualDom_noJavaScriptOrHtmlUri(url));
 };
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $elm$html$Html$Attributes$height = function (n) {
 	return A2(
 		_VirtualDom_attribute,
@@ -5752,7 +5842,11 @@ var $author$project$Data$videoframe = A2(
 		]),
 	_List_Nil);
 var $author$project$Main$view = function (model) {
-	var _v0 = model.O;
+	var formLastName = model.e.O;
+	var formFirstName = model.e.N;
+	var formEmail = model.e.M;
+	var formCompany = model.e.L;
+	var _v0 = model.S;
 	switch (_v0.$) {
 		case 0:
 			var prompt = _v0.a;
@@ -5828,7 +5922,7 @@ var $author$project$Main$view = function (model) {
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
-										$elm$core$String$fromInt(prompt.L + 1) + '.')
+										$elm$core$String$fromInt(prompt.P + 1) + '.')
 									])),
 								A2(
 								$elm$html$Html$p,
@@ -5838,7 +5932,7 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(prompt.U)
+										$elm$html$Html$text(prompt.Y)
 									])),
 								A2(
 								$elm$html$Html$ul,
@@ -5851,7 +5945,7 @@ var $author$project$Main$view = function (model) {
 									function (x) {
 										return A3($author$project$Main$renderResponseList, x, prompt.d, prompt);
 									},
-									prompt.V))
+									prompt.Z))
 							]))
 					]));
 		case 1:
@@ -5895,7 +5989,7 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('row justify-content-center')
+										$elm$html$Html$Attributes$class('row')
 									]),
 								_List_fromArray(
 									[
@@ -5903,108 +5997,191 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-6')
+												$elm$html$Html$Attributes$class('col-12 col-md-6 offset-md-3 justify-content-center unlock-results')
 											]),
 										_List_fromArray(
 											[
+												$elm$html$Html$text('Unlock Your Results!'),
 												A2(
-												$elm$html$Html$input,
+												$elm$html$Html$form,
 												_List_fromArray(
 													[
-														$elm$html$Html$Events$onInput($author$project$Types$UpdateFormFirstName),
-														$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
-														$elm$html$Html$Attributes$placeholder('Enter your first name'),
-														$elm$html$Html$Attributes$required(true),
-														$elm$html$Html$Attributes$minlength(2),
-														$elm$html$Html$Attributes$maxlength(40)
+														$elm$html$Html$Attributes$class('form-group justify-content-center row'),
+														$elm$html$Html$Attributes$method('post')
 													]),
-												_List_Nil)
-											]))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('row justify-content-center')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('col-6')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$input,
 												_List_fromArray(
 													[
-														$elm$html$Html$Events$onInput($author$project$Types$UpdateFormLastName),
-														$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
-														$elm$html$Html$Attributes$placeholder('Enter your last name'),
-														$elm$html$Html$Attributes$required(true),
-														$elm$html$Html$Attributes$minlength(2),
-														$elm$html$Html$Attributes$maxlength(40)
-													]),
-												_List_Nil)
-											]))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('row justify-content-center')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('col-6')
-											]),
-										_List_fromArray(
-											[
+														A2(
+														$elm$html$Html$label,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('sr-only'),
+																$elm$html$Html$Attributes$for('pardot_firstName')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('First Name')
+															])),
+														A2(
+														$elm$html$Html$div,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('col-12')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																$elm$html$Html$input,
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Events$onInput($author$project$Types$UpdateFormFirstName),
+																		$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
+																		$elm$html$Html$Attributes$placeholder('First Name'),
+																		$elm$html$Html$Attributes$id('pardot_firstName'),
+																		$elm$html$Html$Attributes$name('pardot_firstName'),
+																		$elm$html$Html$Attributes$type_('text'),
+																		$elm$html$Html$Attributes$value(formFirstName),
+																		$elm$html$Html$Attributes$required(true),
+																		$elm$html$Html$Attributes$minlength(2),
+																		$elm$html$Html$Attributes$maxlength(40)
+																	]),
+																_List_Nil)
+															])),
+														A2(
+														$elm$html$Html$label,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('sr-only'),
+																$elm$html$Html$Attributes$for('pardot_lastName')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Last Name')
+															])),
+														A2(
+														$elm$html$Html$div,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('col-12')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																$elm$html$Html$input,
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Events$onInput($author$project$Types$UpdateFormLastName),
+																		$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
+																		$elm$html$Html$Attributes$placeholder('Last Name'),
+																		$elm$html$Html$Attributes$id('pardot_lastName'),
+																		$elm$html$Html$Attributes$name('pardot_lastName'),
+																		$elm$html$Html$Attributes$type_('text'),
+																		$elm$html$Html$Attributes$value(formLastName),
+																		$elm$html$Html$Attributes$required(true),
+																		$elm$html$Html$Attributes$minlength(2),
+																		$elm$html$Html$Attributes$maxlength(40)
+																	]),
+																_List_Nil)
+															])),
+														A2(
+														$elm$html$Html$label,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('sr-only'),
+																$elm$html$Html$Attributes$for('pardot_email')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Email')
+															])),
+														A2(
+														$elm$html$Html$div,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('col-12')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																$elm$html$Html$input,
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Events$onInput($author$project$Types$UpdateFormEmail),
+																		$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
+																		$elm$html$Html$Attributes$placeholder('Email'),
+																		$elm$html$Html$Attributes$id('pardot_email'),
+																		$elm$html$Html$Attributes$name('pardot_email'),
+																		$elm$html$Html$Attributes$type_('text'),
+																		$elm$html$Html$Attributes$value(formEmail),
+																		$elm$html$Html$Attributes$required(true),
+																		$elm$html$Html$Attributes$minlength(2),
+																		$elm$html$Html$Attributes$maxlength(40)
+																	]),
+																_List_Nil)
+															])),
+														A2(
+														$elm$html$Html$label,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('sr-only'),
+																$elm$html$Html$Attributes$for('pardot_company')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Company')
+															])),
+														A2(
+														$elm$html$Html$div,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('col-12')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																$elm$html$Html$input,
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Events$onInput($author$project$Types$UpdateFormCompany),
+																		$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
+																		$elm$html$Html$Attributes$placeholder('Company'),
+																		$elm$html$Html$Attributes$id('pardot_company'),
+																		$elm$html$Html$Attributes$name('pardot_company'),
+																		$elm$html$Html$Attributes$type_('text'),
+																		$elm$html$Html$Attributes$value(formCompany),
+																		$elm$html$Html$Attributes$required(true),
+																		$elm$html$Html$Attributes$minlength(2),
+																		$elm$html$Html$Attributes$maxlength(40)
+																	]),
+																_List_Nil)
+															]))
+													])),
 												A2(
-												$elm$html$Html$input,
+												$elm$html$Html$div,
 												_List_fromArray(
 													[
-														$elm$html$Html$Events$onInput($author$project$Types$UpdateFormEmail),
-														$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
-														$elm$html$Html$Attributes$placeholder('Enter your email'),
-														$elm$html$Html$Attributes$required(true),
-														$elm$html$Html$Attributes$minlength(2),
-														$elm$html$Html$Attributes$maxlength(40)
+														$elm$html$Html$Attributes$class('row justify-content-center pt-4')
 													]),
-												_List_Nil)
-											]))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('row justify-content-center pt-4')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$button,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('button-submit'),
-												$elm$html$Html$Events$onClick($author$project$Types$ChangeModelState)
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Submit')
+												_List_fromArray(
+													[
+														A2(
+														$elm$html$Html$button,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('button-submit'),
+																$elm$html$Html$Events$onClick($author$project$Types$ChangeModelState)
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Submit')
+															]))
+													]))
 											]))
 									]))
 							]))
 					]));
 		default:
-			var exposeResults = model.N;
+			var exposeResults = model.R;
 			return A2(
 				$elm$html$Html$div,
 				_List_Nil,
@@ -6057,7 +6234,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.i + 6) * 12)
+												$author$project$GraphElements$bar((exposeResults.j + 6) * 12)
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -6067,7 +6244,17 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.E + 6) * 12)
+												$author$project$GraphElements$bar((exposeResults.F + 6) * 12)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+											]),
+										_List_fromArray(
+											[
+												$author$project$GraphElements$bar((exposeResults.r + 6) * 12)
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -6078,16 +6265,6 @@ var $author$project$Main$view = function (model) {
 										_List_fromArray(
 											[
 												$author$project$GraphElements$bar((exposeResults.q + 6) * 12)
-											])),
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
-											]),
-										_List_fromArray(
-											[
-												$author$project$GraphElements$bar((exposeResults.p + 6) * 12)
 											]))
 									])),
 								A2(
@@ -6212,6 +6389,6 @@ var $author$project$Main$view = function (model) {
 	}
 };
 var $author$project$Main$main = $elm$browser$Browser$sandbox(
-	{aG: $author$project$Main$init, aO: $author$project$Main$update, aP: $author$project$Main$view});
+	{aI: $author$project$Main$init, aQ: $author$project$Main$update, aR: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));

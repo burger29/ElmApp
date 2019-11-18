@@ -27,12 +27,14 @@ init =
             { formFirstName = ""
             , formLastName = ""
             , formEmail = ""
+            , formCompany = ""
             }
     in
     { prompts = prompts
     , state = selectState prompts
     , results = Results 0 0 0 0
     , formData = emptyFormData
+    , allowSubmit = False
     }
 
 
@@ -129,8 +131,15 @@ update msg model =
             let
                 updatedModelState =
                     { model | state = ShowingResults }
+
+                conditional =
+                    model.allowSubmit
             in
-            updatedModelState
+            if conditional then
+                updatedModelState
+
+            else
+                model
 
         UpdateFormFirstName updatedFirstname ->
             let
@@ -139,8 +148,11 @@ update msg model =
 
                 updatedFormData =
                     { formData | formFirstName = updatedFirstname }
+
+                updatedAllowSubmit =
+                    checkToSubmit formData
             in
-            { model | formData = updatedFormData }
+            { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }
 
         UpdateFormLastName updatedLastname ->
             let
@@ -148,9 +160,12 @@ update msg model =
                     model.formData
 
                 updatedFormData =
-                    { formData | formFirstName = updatedLastname }
+                    { formData | formLastName = updatedLastname }
+
+                updatedAllowSubmit =
+                    checkToSubmit formData
             in
-            { model | formData = updatedFormData }
+            { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }
 
         UpdateFormEmail updatedEmail ->
             let
@@ -158,9 +173,25 @@ update msg model =
                     model.formData
 
                 updatedFormData =
-                    { formData | formFirstName = updatedEmail }
+                    { formData | formEmail = updatedEmail }
+
+                updatedAllowSubmit =
+                    checkToSubmit formData
             in
-            { model | formData = updatedFormData }
+            { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }
+
+        UpdateFormCompany updatedCompany ->
+            let
+                formData =
+                    model.formData
+
+                updatedFormData =
+                    { formData | formCompany = updatedCompany }
+
+                updatedAllowSubmit =
+                    checkToSubmit formData
+            in
+            { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }
 
 
 convertResponse : Response -> String
@@ -190,11 +221,6 @@ checkResponses prompt =
 
         Nothing ->
             False
-
-
-allowSubmit : List Prompt -> Bool
-allowSubmit prompts =
-    List.all checkResponses prompts
 
 
 nextUnansweredQuestion : List Prompt -> Maybe Prompt
@@ -337,12 +363,54 @@ createListCourses value =
     String.join " " [ sentenceOne, sentenceTwo, sentenceThree, sentenceFour ]
 
 
+isFieldEmpty : String -> Bool
+isFieldEmpty field =
+    field
+        |> String.trim
+        |> String.isEmpty
+        |> not
+
+
+checkToSubmit : FormData -> Bool
+checkToSubmit input =
+    let
+        listOfFields =
+            []
+
+        checkedFirstName =
+            isFieldEmpty input.formFirstName :: listOfFields
+
+        checkedLastName =
+            isFieldEmpty input.formLastName :: checkedFirstName
+
+        checkedEmail =
+            isFieldEmpty input.formEmail :: checkedLastName
+
+        checkedCompany =
+            isFieldEmpty input.formCompany :: checkedEmail
+    in
+    List.all (\item -> item == True) checkedCompany
+
+
 
 --VIEW AND HTML MSGS
 
 
 view : Model -> Html Msg
 view model =
+    let
+        formFirstName =
+            model.formData.formFirstName
+
+        formLastName =
+            model.formData.formLastName
+
+        formEmail =
+            model.formData.formEmail
+
+        formCompany =
+            model.formData.formCompany
+    in
     case model.state of
         AnsweringQuestions prompt ->
             div []
@@ -365,10 +433,6 @@ view model =
                 ]
 
         FillingOutForm ->
-            -- let
-            --   formFirstName =
-            --   model.formData.formFirstName
-            -- in
             div []
                 [ div [ A.class "container-fluid p-0" ]
                     [ div []
@@ -376,48 +440,83 @@ view model =
                         ]
                     ]
                 , div [ A.class "container" ]
-                    [ div [ A.class "row justify-content-center" ]
-                        [ div [ A.class "col-6" ]
-                            [ input
-                                [ onInput UpdateFormFirstName
-                                , A.class "form-control flex-fill mt-4 mr-sm-2"
-                                , placeholder "Enter your first name"
-                                , required True
-                                , minlength 2
-                                , maxlength 40
+                    [ div [ A.class "row" ]
+                      [ div [ A.class "col-12 col-md-6 offset-md-3 justify-content-center unlock-results" ]
+                        [ Html.text "Unlock Your Results!"
+                        , form
+                            [ A.class "form-group justify-content-center row"
+                            , A.method "post"
+                            ]
+                            [ label [ A.class "sr-only", for "pardot_firstName" ] [ Html.text "First Name" ]
+                            , div [ A.class "col-12" ]
+                                [ input
+                                    [ onInput UpdateFormFirstName
+                                    , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                    , placeholder "First Name"
+                                    , A.id "pardot_firstName"
+                                    , A.name "pardot_firstName"
+                                    , A.type_ "text"
+                                    , A.value formFirstName
+                                    , required True
+                                    , minlength 2
+                                    , maxlength 40
+                                    ]
+                                    []
                                 ]
-                                []
+                            , label [ A.class "sr-only", for "pardot_lastName" ] [ Html.text "Last Name" ]
+                            , div [ A.class "col-12" ]
+                                [ input
+                                    [ onInput UpdateFormLastName
+                                    , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                    , placeholder "Last Name"
+                                    , A.id "pardot_lastName"
+                                    , A.name "pardot_lastName"
+                                    , A.type_ "text"
+                                    , A.value formLastName
+                                    , required True
+                                    , minlength 2
+                                    , maxlength 40
+                                    ]
+                                    []
+                                ]
+                            , label [ A.class "sr-only", for "pardot_email" ] [ Html.text "Email" ]
+                            , div [ A.class "col-12" ]
+                                [ input
+                                    [ onInput UpdateFormEmail
+                                    , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                    , placeholder "Email"
+                                    , A.id "pardot_email"
+                                    , A.name "pardot_email"
+                                    , A.type_ "text"
+                                    , A.value formEmail
+                                    , required True
+                                    , minlength 2
+                                    , maxlength 40
+                                    ]
+                                    []
+                                ]
+                            , label [ A.class "sr-only", for "pardot_company" ] [ Html.text "Company" ]
+                            , div [ A.class "col-12" ]
+                                [ input
+                                    [ onInput UpdateFormCompany
+                                    , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                    , placeholder "Company"
+                                    , A.id "pardot_company"
+                                    , A.name "pardot_company"
+                                    , A.type_ "text"
+                                    , A.value formCompany
+                                    , required True
+                                    , minlength 2
+                                    , maxlength 40
+                                    ]
+                                    []
+                                ]
+                            ]
+                        , div [ A.class "row justify-content-center pt-4" ]
+                            [ button [ A.class "button-submit", onClick ChangeModelState ] [ Html.text "Submit" ]
                             ]
                         ]
-                    , div [ A.class "row justify-content-center" ]
-                        [ div [ A.class "col-6" ]
-                            [ input
-                                [ onInput UpdateFormLastName
-                                , A.class "form-control flex-fill mt-4 mr-sm-2"
-                                , placeholder "Enter your last name"
-                                , required True
-                                , minlength 2
-                                , maxlength 40
-                                ]
-                                []
-                            ]
-                        ]
-                    , div [ A.class "row justify-content-center" ]
-                        [ div [ A.class "col-6" ]
-                            [ input
-                                [ onInput UpdateFormEmail
-                                , A.class "form-control flex-fill mt-4 mr-sm-2"
-                                , placeholder "Enter your email"
-                                , required True
-                                , minlength 2
-                                , maxlength 40
-                                ]
-                                []
-                            ]
-                        ]
-                    , div [ A.class "row justify-content-center pt-4" ]
-                        [ button [ A.class "button-submit", onClick ChangeModelState ] [ Html.text "Submit" ]
-                        ]
+                      ]
                     ]
                 ]
 

@@ -1,4 +1,4 @@
-module Types exposing (Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results, FormData)
+module Types exposing (FormData, Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results)
 
 
 type alias Model =
@@ -6,6 +6,7 @@ type alias Model =
     , state : ModelState
     , results : Results
     , formData : FormData
+    , allowSubmit : Bool
     }
 
 
@@ -41,6 +42,7 @@ type Msg
     | UpdateFormFirstName String
     | UpdateFormLastName String
     | UpdateFormEmail String
+    | UpdateFormCompany String
 
 
 type PromptCategory
@@ -66,4 +68,5 @@ type alias FormData =
     { formFirstName : String
     , formLastName : String
     , formEmail : String
+    , formCompany : String
     }
