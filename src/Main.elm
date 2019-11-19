@@ -2,15 +2,65 @@ module Main exposing (main, update, view)
 
 import Array as Array
 import Browser
-import Data exposing (questionList, resultsParagraphList, videoframe)
+import Data exposing (questionList, videoframe)
 import GraphElements exposing (bar)
-import Html exposing (Html, button, div, form, h1, h3, h5, img, input, label, li, p, span, text, ul)
-import Html.Attributes as A exposing (action, attribute, class, cols, disabled, for, height, id, maxlength, method, minlength, name, placeholder, required, src, type_, value, width)
+import Html
+    exposing
+        ( Html
+        , button
+        , div
+        , form
+        , h1
+        , h3
+        , h5
+        , img
+        , input
+        , label
+        , li
+        , p
+        , span
+        , text
+        , ul
+        )
+import Html.Attributes as A
+    exposing
+        ( action
+        , attribute
+        , class
+        , cols
+        , disabled
+        , for
+        , height
+        , id
+        , maxlength
+        , method
+        , minlength
+        , name
+        , placeholder
+        , required
+        , src
+        , type_
+        , value
+        , width
+        )
 import Html.Events exposing (onClick, onInput)
 import Json.Encode
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Types exposing (FormData, Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results)
+import Types
+    exposing
+        ( Feedback(..)
+        , FormData
+        , Model
+        , ModelState(..)
+        , Msg(..)
+        , Prompt
+        , PromptCategory(..)
+        , Question(..)
+        , Response(..)
+        , Results
+        , unwrapFeedback
+        )
 
 
 main =
@@ -325,8 +375,8 @@ checkToSubmit input =
     List.all (\item -> item == True) checkedCompany
 
 
-feedbackIndex : Response -> Int
-feedbackIndex response =
+feedbackToIndex : Response -> Int
+feedbackToIndex response =
     case response of
         StronglyAgree ->
             2
@@ -344,21 +394,18 @@ feedbackIndex response =
             0
 
 
-selectedFeedbackOrZero : Maybe Response -> Int
-selectedFeedbackOrZero maybeResponse =
-    case maybeResponse of
-        Just response ->
-            feedbackIndex response
+promptToFeedback : Prompt -> Feedback
+promptToFeedback prompt =
+    let
+        feedbackIndex =
+            feedbackToIndex <|
+                Maybe.withDefault Neutral prompt.selectedResponse
+    in
+    Maybe.withDefault (Feedback "No feedback found.") <|
+        Array.get feedbackIndex (Array.fromList prompt.feedbackList)
 
-        Nothing ->
-            0
 
 
-
--- displayFeedback : List String -> Int -> List String
--- displayFeedback feedbackList score =
---     case feedbackList of
---         2 ->
 --
 --
 --VIEW AND HTML MSGS
@@ -388,8 +435,12 @@ view model =
                         ]
                     ]
                 , div [ A.class "container" ]
-                    [ div [ A.class "intro container" ] [ Html.text "How well do you think your team is performing? Harvard instructor and project management master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert." ]
-                    , div [ A.class "pt-5 row justify-content-center" ] [ div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ] ]
+                    [ div [ A.class "intro container" ]
+                        [ Html.text "How well do you think your team is performing? ITIL master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert."
+                        ]
+                    , div [ A.class "pt-5 row justify-content-center" ]
+                        [ div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ] 
+                        ]
                     , p [ A.class "question-number pt-5" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
                     , p [ A.class "question" ] [ Html.text prompt.question ]
                     , ul [ A.class "list-group list-group-horizontal-sm response-list" ]
@@ -535,9 +586,13 @@ view model =
                         [ ul []
                             (List.map
                                 (\prompt ->
-                                    li [] [ Html.text prompt.question ]
+                                    li []
+                                        [ Html.text <|
+                                            unwrapFeedback <|
+                                                promptToFeedback prompt
+                                        ]
                                 )
-                                    model.prompts
+                                model.prompts
                             )
                         ]
                     ]

@@ -1,4 +1,17 @@
-module Types exposing (FormData, Model, ModelState(..), Msg(..), Prompt, PromptCategory(..), Question(..), Response(..), Results)
+module Types
+    exposing
+        (Feedback(..)
+        , FormData
+        , Model
+        , ModelState(..)
+        , Msg(..)
+        , Prompt
+        , PromptCategory(..)
+        , Question(..)
+        , Response(..)
+        , Results
+        , unwrapFeedback
+        )
 
 
 type alias Model =
@@ -17,7 +30,7 @@ type alias Prompt =
     , selectedResponse : Maybe Response
     , index : Int
     , promptCategory : PromptCategory
-    , feedbackList : List String
+    , feedbackList : List Feedback
     }
 
 
@@ -56,13 +69,22 @@ type PromptCategory
 
 
 type Question
-    = Question String Int PromptCategory (List String)
+    = Question String Int PromptCategory (List Feedback)
 
 
 type ModelState
     = AnsweringQuestions Prompt
     | FillingOutForm
     | ShowingResults
+
+
+type Feedback
+    = Feedback String
+
+
+unwrapFeedback : Feedback -> String
+unwrapFeedback (Feedback string) =
+    string
 
 
 type alias FormData =

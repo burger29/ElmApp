@@ -2661,7 +2661,7 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 	return {
 		m: func(record.m),
 		ab: record.ab,
-		Y: record.Y
+		X: record.X
 	}
 });
 
@@ -2933,7 +2933,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ab;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.Y) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.X) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3932,7 +3932,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aC);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aD);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
@@ -4014,9 +4014,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.as === next.as
-							&& curr.ai === next.ai
-							&& curr.ao.a === next.ao.a
+							&& curr.at === next.at
+							&& curr.aj === next.aj
+							&& curr.ap.a === next.ap.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4096,17 +4096,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aH: 'hidden', aD: 'visibilitychange' }
+		? { aH: 'hidden', aE: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aH: 'mozHidden', aD: 'mozvisibilitychange' }
+		? { aH: 'mozHidden', aE: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aH: 'msHidden', aD: 'msvisibilitychange' }
+		? { aH: 'msHidden', aE: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aH: 'webkitHidden', aD: 'webkitvisibilitychange' }
-		: { aH: 'hidden', aD: 'visibilitychange' };
+		? { aH: 'webkitHidden', aE: 'webkitvisibilitychange' }
+		: { aH: 'hidden', aE: 'visibilitychange' };
 }
 
 
@@ -4187,10 +4187,10 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aw: _Browser_getScene(),
-		az: {
-			T: _Browser_window.pageXOffset,
-			U: _Browser_window.pageYOffset,
+		ax: _Browser_getScene(),
+		aA: {
+			S: _Browser_window.pageXOffset,
+			T: _Browser_window.pageYOffset,
 			B: _Browser_doc.documentElement.clientWidth,
 			w: _Browser_doc.documentElement.clientHeight
 		}
@@ -4226,13 +4226,13 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aw: {
+			ax: {
 				B: node.scrollWidth,
 				w: node.scrollHeight
 			},
-			az: {
-				T: node.scrollLeft,
-				U: node.scrollTop,
+			aA: {
+				S: node.scrollLeft,
+				T: node.scrollTop,
 				B: node.clientWidth,
 				w: node.clientHeight
 			}
@@ -4264,16 +4264,16 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aw: _Browser_getScene(),
-			az: {
-				T: x,
-				U: y,
+			ax: _Browser_getScene(),
+			aA: {
+				S: x,
+				T: y,
 				B: _Browser_doc.documentElement.clientWidth,
 				w: _Browser_doc.documentElement.clientHeight
 			},
-			aE: {
-				T: x + rect.left,
-				U: y + rect.top,
+			aF: {
+				S: x + rect.left,
+				T: y + rect.top,
 				B: rect.width,
 				w: rect.height
 			}
@@ -4310,10 +4310,47 @@ function _Browser_load(url)
 		}
 	}));
 }
+
+
+
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
 var $elm$core$Basics$False = 1;
 var $author$project$Types$Results = F4(
 	function (sc, am, cl, cc) {
-		return {V: am, p: cc, D: cl, G: sc};
+		return {U: am, p: cc, D: cl, G: sc};
 	});
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
@@ -4476,10 +4513,10 @@ var $author$project$Main$newPrompts = function (listQuestions) {
 				var pc = _v0.c;
 				var ls = _v0.d;
 				return {
-					aG: ls,
+					ah: ls,
 					P: index,
-					ar: pc,
-					Q: s,
+					as: pc,
+					Y: s,
 					Z: _List_fromArray(
 						[1, 0, 2, 3, 4]),
 					d: $elm$core$Maybe$Nothing,
@@ -4498,90 +4535,10 @@ var $author$project$Types$Question = F4(
 	});
 var $author$project$Types$SCCC = 5;
 var $author$project$Types$SafetyCulture = 0;
-var $elm$core$Basics$negate = function (n) {
-	return -n;
+var $elm$core$Basics$identity = function (x) {
+	return x;
 };
-var $author$project$Data$questionList = _List_fromArray(
-	[
-		A4(
-		$author$project$Types$Question,
-		'My team can clearly articulate their goals',
-		1,
-		1,
-		_List_fromArray(
-			['a', 'b', 'c'])),
-		A4(
-		$author$project$Types$Question,
-		'My team feels recognized for their accomplishments',
-		1,
-		2,
-		_List_fromArray(
-			['a', 'b', 'c'])),
-		A4(
-		$author$project$Types$Question,
-		'All team members have personal development plans and see regular progress towards their goals',
-		1,
-		2,
-		_List_fromArray(
-			['a', 'b', 'c'])),
-		A4(
-		$author$project$Types$Question,
-		'My team feels empowered to make decisions',
-		1,
-		0,
-		_List_fromArray(
-			['a', 'b', 'c'])),
-		A4(
-		$author$project$Types$Question,
-		'My team is more efficient when I’m not there',
-		-1,
-		4,
-		_List_fromArray(
-			['a', 'b', 'c'])),
-		A4(
-		$author$project$Types$Question,
-		'My team has productive meetings that everyone is involved in (but only when necessary)',
-		1,
-		3,
-		_List_fromArray(
-			['a', 'b', 'c'])),
-		A4(
-		$author$project$Types$Question,
-		'Team members will openly express their opinions and concerns',
-		1,
-		5,
-		_List_fromArray(
-			['a', 'b', 'c'])),
-		A4(
-		$author$project$Types$Question,
-		'Other people want to be on our team',
-		1,
-		0,
-		_List_fromArray(
-			['a', 'b', 'c'])),
-		A4(
-		$author$project$Types$Question,
-		'My team has created their own set of operating guidelines and practices which they are fully bought into',
-		1,
-		1,
-		_List_fromArray(
-			['a', 'b', 'c'])),
-		A4(
-		$author$project$Types$Question,
-		'All team members hold each other, including me, accountable for outcomes',
-		1,
-		1,
-		_List_fromArray(
-			['a', 'b', 'c']))
-	]);
-var $author$project$Types$AnsweringQuestions = function (a) {
-	return {$: 0, a: a};
-};
-var $author$project$Types$FillingOutForm = {$: 1};
-var $elm$core$Basics$apR = F2(
-	function (x, f) {
-		return f(x);
-	});
+var $author$project$Types$Feedback = $elm$core$Basics$identity;
 var $elm$core$Basics$gt = _Utils_gt;
 var $elm$core$List$reverse = function (list) {
 	return A3($elm$core$List$foldl, $elm$core$List$cons, _List_Nil, list);
@@ -4641,6 +4598,122 @@ var $elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4($elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
+var $elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						$elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
+var $author$project$Data$feedbackListFromStrings = function (strings) {
+	return A2(
+		$elm$core$List$map,
+		function (s) {
+			return s;
+		},
+		strings);
+};
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $author$project$Data$questionList = _List_fromArray(
+	[
+		A4(
+		$author$project$Types$Question,
+		'My team can clearly articulate their goals',
+		1,
+		1,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Either you are not clear on the goals for your team, or you are struggling to articulate or communicate those goals.', 'Your team have goals, but they are not clear enough for them to achieve. Looks for ways to improve your communication approach.', 'Your communication hits the mark and you encourage collaboration!']))),
+		A4(
+		$author$project$Types$Question,
+		'My team feels recognized for their accomplishments',
+		1,
+		2,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Your team may not be able to deliver expected results and may feel oppressed and invisible.', 'Some accomplishments are recognised and rewarded, but these needs to be a consistent approach to motivate your team.', 'You have a motivated team which leads to high morale. Think about how you can maintain that level.']))),
+		A4(
+		$author$project$Types$Question,
+		'All team members have personal development plans and see regular progress towards their goals',
+		1,
+		2,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Team members do not feel valued. Their skills are not being developed which will have a detrimental effect on team performance and their ability to meet expectations.', 'Development is ADHOC and may be limited to certain individuals or specific topics. Consider how personal development contributes to team achievements.', 'Team members feel valued, and enhancing their skills ensures your team’s bandwidth is continually increasing. Ensure you are prepared for team members to move on in their career and plan for replacements.']))),
+		A4(
+		$author$project$Types$Question,
+		'My team feels empowered to make decisions',
+		1,
+		0,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Decisions are most effective and efficient when made at the point with the most information. Time is wasted on escalating decisions that are able to be made within the team.', 'The team is comfortable with making some decisions, but a lot are unnecessarily escalated. Consider delegating decisions and showing team members that they are entrusted with these.', 'Team members feel trusted and decisions are made at the point where the most knowledge exists.']))),
+		A4(
+		$author$project$Types$Question,
+		'My team is more efficient when I’m not there',
+		-1,
+		4,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Time is wasted escalating concerns and decisions to you that should be managed within the team. Beware of micro-management.', 'The team is comfortable with allocating some of their own workload, but still look to you to confirm decisions and add validate direction.', 'You allow your team the flexibility to collaborate and make appropriate decisions, and rely on expectations being met.']))),
+		A4(
+		$author$project$Types$Question,
+		'My team has productive meetings that everyone is involved in (but only when necessary)',
+		1,
+		3,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Time is wasted in unnecessary meetings, and meetings without purpose or agenda. Be careful to engage in efficient meeting etiquette.', 'You have some unnecessary and unproductive meetings, but your team are learning to embrace new ways of collaboration.', 'You have an environment that doesn’t encourage meetings just for the sake of having a meeting. Collaboration is key skill of your team.']))),
+		A4(
+		$author$project$Types$Question,
+		'Team members will openly express their opinions and concerns',
+		1,
+		5,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Your team may not feel as though their contributions are valued may feel oppressed and invisible.', 'b', 'Team members are confident in your ability to listen and to accept feedback.']))),
+		A4(
+		$author$project$Types$Question,
+		'Other people want to be on our team',
+		1,
+		0,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['People don’t see your team as an aspiration or a career progression.', 'Your team culture is productive, but is not seen as dynamic and a great place to work. Consider and approach to team visibility.', 'Your team feels nurtured and encouraged, whilst having a clear direction. Having the right team culture is important to you and others recognise that.']))),
+		A4(
+		$author$project$Types$Question,
+		'My team has created their own set of operating guidelines and practices which they are fully bought into',
+		1,
+		1,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Your team is in need of processes and controls that they are able and willing to follow.', 'You have processes established within the team, but are still evolving their maturity; a consistency of usage; and a level of flexibility.', 'There is a fine line between having an open and relaxed culture, and having a lack of control. You seem to have found the perfect balance and also understand the emotional impact of too many dictated and rigid controls.']))),
+		A4(
+		$author$project$Types$Question,
+		'All team members hold each other, including me, accountable for outcomes',
+		1,
+		1,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Teams members are more comfortable with rigid rules and guidelines, than are empowered to hold themselves accountable.', 'Team members have explored making some decisions themselves, but are more comfortable with allowing you to make decisions. Explore ways of enforcing decision making control further down the chain of command.', 'You are a true servant leader. Guiding the team from within, so that you are perceived as a truly valuable team member and not a manager.'])))
+	]);
+var $author$project$Types$AnsweringQuestions = function (a) {
+	return {$: 0, a: a};
+};
+var $author$project$Types$FillingOutForm = {$: 1};
+var $elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
+	});
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -4694,8 +4767,8 @@ var $author$project$Main$init = function () {
 		u: false,
 		e: emptyFormData,
 		F: prompts,
-		R: A4($author$project$Types$Results, 0, 0, 0, 0),
-		S: $author$project$Main$selectState(prompts)
+		Q: A4($author$project$Types$Results, 0, 0, 0, 0),
+		R: $author$project$Main$selectState(prompts)
 	};
 }();
 var $elm$core$Result$Err = function (a) {
@@ -5035,15 +5108,12 @@ var $elm$browser$Browser$External = function (a) {
 var $elm$browser$Browser$Internal = function (a) {
 	return {$: 0, a: a};
 };
-var $elm$core$Basics$identity = function (x) {
-	return x;
-};
 var $elm$browser$Browser$Dom$NotFound = $elm$core$Basics$identity;
 var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {ah: fragment, ai: host, am: path, ao: port_, as: protocol, at: query};
+		return {ai: fragment, aj: host, an: path, ap: port_, at: protocol, au: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5180,20 +5250,6 @@ var $elm$core$Basics$never = function (_v0) {
 var $elm$core$Task$Perform = $elm$core$Basics$identity;
 var $elm$core$Task$succeed = _Scheduler_succeed;
 var $elm$core$Task$init = $elm$core$Task$succeed(0);
-var $elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						$elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
 var $elm$core$Task$andThen = _Scheduler_andThen;
 var $elm$core$Task$map = F2(
 	function (func, taskA) {
@@ -5533,9 +5589,9 @@ var $author$project$Main$update = F2(
 					{
 						d: $elm$core$Maybe$Just(response)
 					});
-				var currentResults = model.R;
+				var currentResults = model.Q;
 				var updatedResults = function () {
-					var _v1 = updatedPrompt.ar;
+					var _v1 = updatedPrompt.as;
 					switch (_v1) {
 						case 0:
 							return _Utils_update(
@@ -5547,7 +5603,7 @@ var $author$project$Main$update = F2(
 							return _Utils_update(
 								currentResults,
 								{
-									V: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.V
+									U: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.U
 								});
 						case 2:
 							return _Utils_update(
@@ -5589,14 +5645,14 @@ var $author$project$Main$update = F2(
 					model,
 					{
 						F: updatedPrompts,
-						R: updatedResults,
-						S: $author$project$Main$selectState(updatedPrompts)
+						Q: updatedResults,
+						R: $author$project$Main$selectState(updatedPrompts)
 					});
 				return updatedModel;
 			case 1:
 				var updatedModelState = _Utils_update(
 					model,
-					{S: $author$project$Types$ShowingResults});
+					{R: $author$project$Types$ShowingResults});
 				var conditional = model.u;
 				return conditional ? updatedModelState : model;
 			case 2:
@@ -5783,6 +5839,117 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 };
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $author$project$Main$feedbackToIndex = function (response) {
+	switch (response) {
+		case 1:
+			return 2;
+		case 0:
+			return 2;
+		case 2:
+			return 1;
+		case 3:
+			return 0;
+		default:
+			return 0;
+	}
+};
+var $elm$core$Array$fromListHelp = F3(
+	function (list, nodeList, nodeListSize) {
+		fromListHelp:
+		while (true) {
+			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, list);
+			var jsArray = _v0.a;
+			var remainingItems = _v0.b;
+			if (_Utils_cmp(
+				$elm$core$Elm$JsArray$length(jsArray),
+				$elm$core$Array$branchFactor) < 0) {
+				return A2(
+					$elm$core$Array$builderToArray,
+					true,
+					{c: nodeList, a: nodeListSize, b: jsArray});
+			} else {
+				var $temp$list = remainingItems,
+					$temp$nodeList = A2(
+					$elm$core$List$cons,
+					$elm$core$Array$Leaf(jsArray),
+					nodeList),
+					$temp$nodeListSize = nodeListSize + 1;
+				list = $temp$list;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue fromListHelp;
+			}
+		}
+	});
+var $elm$core$Array$fromList = function (list) {
+	if (!list.b) {
+		return $elm$core$Array$empty;
+	} else {
+		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
+	}
+};
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
+var $elm$core$Array$getHelp = F3(
+	function (shift, index, tree) {
+		getHelp:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (index >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (!_v0.$) {
+				var subTree = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$index = index,
+					$temp$tree = subTree;
+				shift = $temp$shift;
+				index = $temp$index;
+				tree = $temp$tree;
+				continue getHelp;
+			} else {
+				var values = _v0.a;
+				return A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, values);
+			}
+		}
+	});
+var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var $elm$core$Array$tailIndex = function (len) {
+	return (len >>> 5) << 5;
+};
+var $elm$core$Array$get = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? $elm$core$Maybe$Nothing : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? $elm$core$Maybe$Just(
+			A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, tail)) : $elm$core$Maybe$Just(
+			A3($elm$core$Array$getHelp, startShift, index, tree)));
+	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Main$promptToFeedback = function (prompt) {
+	var feedbackIndex = $author$project$Main$feedbackToIndex(
+		A2($elm$core$Maybe$withDefault, 2, prompt.d));
+	return A2(
+		$elm$core$Maybe$withDefault,
+		'No feedback found.',
+		A2(
+			$elm$core$Array$get,
+			feedbackIndex,
+			$elm$core$Array$fromList(prompt.ah)));
+};
 var $author$project$Types$SelectResponse = F2(
 	function (a, b) {
 		return {$: 0, a: a, b: b};
@@ -5844,6 +6011,10 @@ var $elm$html$Html$Attributes$src = function (url) {
 };
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$Types$unwrapFeedback = function (_v0) {
+	var string = _v0;
+	return string;
+};
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $elm$html$Html$Attributes$height = function (n) {
 	return A2(
@@ -5885,7 +6056,7 @@ var $author$project$Main$view = function (model) {
 	var formFirstName = model.e.N;
 	var formEmail = model.e.M;
 	var formCompany = model.e.L;
-	var _v0 = model.S;
+	var _v0 = model.R;
 	switch (_v0.$) {
 		case 0:
 			var prompt = _v0.a;
@@ -5933,7 +6104,7 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('How well do you think your team is performing? Harvard instructor and project management master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert.')
+										$elm$html$Html$text('How well do you think your team is performing? ITIL master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert.')
 									])),
 								A2(
 								$elm$html$Html$div,
@@ -5971,7 +6142,7 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(prompt.Q)
+										$elm$html$Html$text(prompt.Y)
 									])),
 								A2(
 								$elm$html$Html$ul,
@@ -6220,7 +6391,7 @@ var $author$project$Main$view = function (model) {
 							]))
 					]));
 		default:
-			var exposeResults = model.R;
+			var exposeResults = model.Q;
 			return A2(
 				$elm$html$Html$div,
 				_List_Nil,
@@ -6283,7 +6454,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.V + 6) * 12)
+												$author$project$GraphElements$bar((exposeResults.U + 6) * 12)
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -6420,7 +6591,9 @@ var $author$project$Main$view = function (model) {
 													_List_Nil,
 													_List_fromArray(
 														[
-															$elm$html$Html$text(prompt.Q)
+															$elm$html$Html$text(
+															$author$project$Types$unwrapFeedback(
+																$author$project$Main$promptToFeedback(prompt)))
 														]));
 											},
 											model.F))
