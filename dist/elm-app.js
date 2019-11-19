@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.aa.G === region.af.G)
+	if (region.aa.E === region.af.E)
 	{
-		return 'on line ' + region.aa.G;
+		return 'on line ' + region.aa.E;
 	}
-	return 'on lines ' + region.aa.G + ' through ' + region.af.G;
+	return 'on lines ' + region.aa.E + ' through ' + region.af.E;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aI,
-		impl.aQ,
-		impl.aO,
+		impl.aJ,
+		impl.aR,
+		impl.aP,
 		function() { return function() {} }
 	);
 });
@@ -2659,9 +2659,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		n: func(record.n),
+		m: func(record.m),
 		ab: record.ab,
-		X: record.X
+		Y: record.Y
 	}
 });
 
@@ -2929,11 +2929,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.n;
+		var message = !tag ? value : tag < 3 ? value.a : value.m;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ab;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.X) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.Y) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3883,11 +3883,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aI,
-		impl.aQ,
-		impl.aO,
+		impl.aJ,
+		impl.aR,
+		impl.aP,
 		function(sendToApp, initialModel) {
-			var view = impl.aR;
+			var view = impl.aS;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3919,12 +3919,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aI,
-		impl.aQ,
-		impl.aO,
+		impl.aJ,
+		impl.aR,
+		impl.aP,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl._ && impl._(sendToApp)
-			var view = impl.aR;
+			var view = impl.aS;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3937,7 +3937,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aP) && (_VirtualDom_doc.title = title = doc.aP);
+				(title !== doc.aQ) && (_VirtualDom_doc.title = title = doc.aQ);
 			});
 		}
 	);
@@ -3993,8 +3993,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.aK;
-	var onUrlRequest = impl.aL;
+	var onUrlChange = impl.aL;
+	var onUrlRequest = impl.aM;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4024,13 +4024,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		aI: function(flags)
+		aJ: function(flags)
 		{
-			return A3(impl.aI, flags, _Browser_getUrl(), key);
+			return A3(impl.aJ, flags, _Browser_getUrl(), key);
 		},
+		aS: impl.aS,
 		aR: impl.aR,
-		aQ: impl.aQ,
-		aO: impl.aO
+		aP: impl.aP
 	});
 }
 
@@ -4096,17 +4096,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aG: 'hidden', aD: 'visibilitychange' }
+		? { aH: 'hidden', aD: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aG: 'mozHidden', aD: 'mozvisibilitychange' }
+		? { aH: 'mozHidden', aD: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aG: 'msHidden', aD: 'msvisibilitychange' }
+		? { aH: 'msHidden', aD: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aG: 'webkitHidden', aD: 'webkitvisibilitychange' }
-		: { aG: 'hidden', aD: 'visibilitychange' };
+		? { aH: 'webkitHidden', aD: 'webkitvisibilitychange' }
+		: { aH: 'hidden', aD: 'visibilitychange' };
 }
 
 
@@ -4191,8 +4191,8 @@ function _Browser_getViewport()
 		az: {
 			T: _Browser_window.pageXOffset,
 			U: _Browser_window.pageYOffset,
-			D: _Browser_doc.documentElement.clientWidth,
-			y: _Browser_doc.documentElement.clientHeight
+			B: _Browser_doc.documentElement.clientWidth,
+			w: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4202,8 +4202,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		D: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		y: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		B: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		w: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4227,14 +4227,14 @@ function _Browser_getViewportOf(id)
 	{
 		return {
 			aw: {
-				D: node.scrollWidth,
-				y: node.scrollHeight
+				B: node.scrollWidth,
+				w: node.scrollHeight
 			},
 			az: {
 				T: node.scrollLeft,
 				U: node.scrollTop,
-				D: node.clientWidth,
-				y: node.clientHeight
+				B: node.clientWidth,
+				w: node.clientHeight
 			}
 		};
 	});
@@ -4268,14 +4268,14 @@ function _Browser_getElement(id)
 			az: {
 				T: x,
 				U: y,
-				D: _Browser_doc.documentElement.clientWidth,
-				y: _Browser_doc.documentElement.clientHeight
+				B: _Browser_doc.documentElement.clientWidth,
+				w: _Browser_doc.documentElement.clientHeight
 			},
 			aE: {
 				T: x + rect.left,
 				U: y + rect.top,
-				D: rect.width,
-				y: rect.height
+				B: rect.width,
+				w: rect.height
 			}
 		};
 	});
@@ -4313,7 +4313,7 @@ function _Browser_load(url)
 var $elm$core$Basics$False = 1;
 var $author$project$Types$Results = F4(
 	function (sc, am, cl, cc) {
-		return {F: am, q: cc, r: cl, j: sc};
+		return {V: am, p: cc, D: cl, G: sc};
 	});
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
@@ -4474,14 +4474,16 @@ var $author$project$Main$newPrompts = function (listQuestions) {
 				var s = _v0.a;
 				var i = _v0.b;
 				var pc = _v0.c;
+				var ls = _v0.d;
 				return {
+					aG: ls,
 					P: index,
 					ar: pc,
-					Y: s,
+					Q: s,
 					Z: _List_fromArray(
 						[1, 0, 2, 3, 4]),
 					d: $elm$core$Maybe$Nothing,
-					l: i
+					k: i
 				};
 			}),
 		listQuestions);
@@ -4490,9 +4492,9 @@ var $author$project$Types$AgileMindset = 1;
 var $author$project$Types$CCCL = 4;
 var $author$project$Types$CoachingLeadership = 2;
 var $author$project$Types$CollaborativeCulture = 3;
-var $author$project$Types$Question = F3(
-	function (a, b, c) {
-		return {$: 0, a: a, b: b, c: c};
+var $author$project$Types$Question = F4(
+	function (a, b, c, d) {
+		return {$: 0, a: a, b: b, c: c, d: d};
 	});
 var $author$project$Types$SCCC = 5;
 var $author$project$Types$SafetyCulture = 0;
@@ -4501,16 +4503,76 @@ var $elm$core$Basics$negate = function (n) {
 };
 var $author$project$Data$questionList = _List_fromArray(
 	[
-		A3($author$project$Types$Question, 'My team can clearly articulate their goals', 1, 1),
-		A3($author$project$Types$Question, 'My team feels recognized for their accomplishments', 1, 2),
-		A3($author$project$Types$Question, 'All team members have personal development plans and see regular progress towards their goals', 1, 2),
-		A3($author$project$Types$Question, 'My team feels empowered to make decisions', 1, 0),
-		A3($author$project$Types$Question, 'My team is more efficient when I’m not there', -1, 4),
-		A3($author$project$Types$Question, 'My team has productive meetings that everyone is involved in (but only when necessary)', 1, 3),
-		A3($author$project$Types$Question, 'Team members will openly express their opinions and concerns', 1, 5),
-		A3($author$project$Types$Question, 'Other people want to be on our team', 1, 0),
-		A3($author$project$Types$Question, 'My team has created their own set of operating guidelines and practices which they are fully bought into', 1, 1),
-		A3($author$project$Types$Question, 'All team members hold each other, including me, accountable for outcomes', 1, 1)
+		A4(
+		$author$project$Types$Question,
+		'My team can clearly articulate their goals',
+		1,
+		1,
+		_List_fromArray(
+			['a', 'b', 'c'])),
+		A4(
+		$author$project$Types$Question,
+		'My team feels recognized for their accomplishments',
+		1,
+		2,
+		_List_fromArray(
+			['a', 'b', 'c'])),
+		A4(
+		$author$project$Types$Question,
+		'All team members have personal development plans and see regular progress towards their goals',
+		1,
+		2,
+		_List_fromArray(
+			['a', 'b', 'c'])),
+		A4(
+		$author$project$Types$Question,
+		'My team feels empowered to make decisions',
+		1,
+		0,
+		_List_fromArray(
+			['a', 'b', 'c'])),
+		A4(
+		$author$project$Types$Question,
+		'My team is more efficient when I’m not there',
+		-1,
+		4,
+		_List_fromArray(
+			['a', 'b', 'c'])),
+		A4(
+		$author$project$Types$Question,
+		'My team has productive meetings that everyone is involved in (but only when necessary)',
+		1,
+		3,
+		_List_fromArray(
+			['a', 'b', 'c'])),
+		A4(
+		$author$project$Types$Question,
+		'Team members will openly express their opinions and concerns',
+		1,
+		5,
+		_List_fromArray(
+			['a', 'b', 'c'])),
+		A4(
+		$author$project$Types$Question,
+		'Other people want to be on our team',
+		1,
+		0,
+		_List_fromArray(
+			['a', 'b', 'c'])),
+		A4(
+		$author$project$Types$Question,
+		'My team has created their own set of operating guidelines and practices which they are fully bought into',
+		1,
+		1,
+		_List_fromArray(
+			['a', 'b', 'c'])),
+		A4(
+		$author$project$Types$Question,
+		'All team members hold each other, including me, accountable for outcomes',
+		1,
+		1,
+		_List_fromArray(
+			['a', 'b', 'c']))
 	]);
 var $author$project$Types$AnsweringQuestions = function (a) {
 	return {$: 0, a: a};
@@ -4629,9 +4691,9 @@ var $author$project$Main$init = function () {
 	var prompts = $author$project$Main$newPrompts($author$project$Data$questionList);
 	var emptyFormData = {L: '', M: '', N: '', O: ''};
 	return {
-		w: false,
+		u: false,
 		e: emptyFormData,
-		Q: prompts,
+		F: prompts,
 		R: A4($author$project$Types$Results, 0, 0, 0, 0),
 		S: $author$project$Main$selectState(prompts)
 	};
@@ -5211,19 +5273,19 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$browser$Browser$sandbox = function (impl) {
 	return _Browser_element(
 		{
-			aI: function (_v0) {
-				return _Utils_Tuple2(impl.aI, $elm$core$Platform$Cmd$none);
+			aJ: function (_v0) {
+				return _Utils_Tuple2(impl.aJ, $elm$core$Platform$Cmd$none);
 			},
-			aO: function (_v1) {
+			aP: function (_v1) {
 				return $elm$core$Platform$Sub$none;
 			},
-			aQ: F2(
+			aR: F2(
 				function (msg, model) {
 					return _Utils_Tuple2(
-						A2(impl.aQ, msg, model),
+						A2(impl.aR, msg, model),
 						$elm$core$Platform$Cmd$none);
 				}),
-			aR: impl.aR
+			aS: impl.aS
 		});
 };
 var $author$project$Types$ShowingResults = {$: 2};
@@ -5479,44 +5541,44 @@ var $author$project$Main$update = F2(
 							return _Utils_update(
 								currentResults,
 								{
-									j: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.j
+									G: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.G
 								});
 						case 1:
 							return _Utils_update(
 								currentResults,
 								{
-									F: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.F
+									V: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.V
 								});
 						case 2:
 							return _Utils_update(
 								currentResults,
 								{
-									r: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.r
+									D: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.D
 								});
 						case 3:
 							return _Utils_update(
 								currentResults,
 								{
-									q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.q
+									p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p
 								});
 						case 5:
 							return _Utils_update(
 								currentResults,
 								{
-									q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.q,
-									j: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.j
+									p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p,
+									G: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.G
 								});
 						default:
 							return _Utils_update(
 								currentResults,
 								{
-									q: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.q,
-									r: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.l) + currentResults.r
+									p: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.p,
+									D: ($author$project$Main$selectedResponseOrZero(updatedPrompt.d) * updatedPrompt.k) + currentResults.D
 								});
 					}
 				}();
-				var beforeIndex = A2($elm$core$List$take, prompt.P, model.Q);
-				var afterIndex = A2($elm$core$List$drop, prompt.P + 1, model.Q);
+				var beforeIndex = A2($elm$core$List$take, prompt.P, model.F);
+				var afterIndex = A2($elm$core$List$drop, prompt.P + 1, model.F);
 				var updatedPrompts = _Utils_ap(
 					beforeIndex,
 					_Utils_ap(
@@ -5526,7 +5588,7 @@ var $author$project$Main$update = F2(
 				var updatedModel = _Utils_update(
 					model,
 					{
-						Q: updatedPrompts,
+						F: updatedPrompts,
 						R: updatedResults,
 						S: $author$project$Main$selectState(updatedPrompts)
 					});
@@ -5535,7 +5597,7 @@ var $author$project$Main$update = F2(
 				var updatedModelState = _Utils_update(
 					model,
 					{S: $author$project$Types$ShowingResults});
-				var conditional = model.w;
+				var conditional = model.u;
 				return conditional ? updatedModelState : model;
 			case 2:
 				var updatedFirstname = msg.a;
@@ -5546,7 +5608,7 @@ var $author$project$Main$update = F2(
 					{N: updatedFirstname});
 				return _Utils_update(
 					model,
-					{w: updatedAllowSubmit, e: updatedFormData});
+					{u: updatedAllowSubmit, e: updatedFormData});
 			case 3:
 				var updatedLastname = msg.a;
 				var formData = model.e;
@@ -5556,7 +5618,7 @@ var $author$project$Main$update = F2(
 					{O: updatedLastname});
 				return _Utils_update(
 					model,
-					{w: updatedAllowSubmit, e: updatedFormData});
+					{u: updatedAllowSubmit, e: updatedFormData});
 			case 4:
 				var updatedEmail = msg.a;
 				var formData = model.e;
@@ -5566,7 +5628,7 @@ var $author$project$Main$update = F2(
 					{M: updatedEmail});
 				return _Utils_update(
 					model,
-					{w: updatedAllowSubmit, e: updatedFormData});
+					{u: updatedAllowSubmit, e: updatedFormData});
 			default:
 				var updatedCompany = msg.a;
 				var formData = model.e;
@@ -5576,7 +5638,7 @@ var $author$project$Main$update = F2(
 					{L: updatedCompany});
 				return _Utils_update(
 					model,
-					{w: updatedAllowSubmit, e: updatedFormData});
+					{u: updatedAllowSubmit, e: updatedFormData});
 		}
 	});
 var $author$project$Types$ChangeModelState = {$: 1};
@@ -5646,29 +5708,6 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
-var $elm$core$Basics$ge = _Utils_ge;
-var $author$project$Main$createListCourses = function (value) {
-	var sentenceTwo = (value.F >= 1) ? 'String 3' : 'String 4';
-	var sentenceThree = (value.r >= 1) ? 'String 5' : 'String 6';
-	var sentenceOne = (value.j >= 1) ? 'String 1' : 'String 2';
-	var sentenceFour = (value.j >= 1) ? 'String 7' : 'String 8';
-	return A2(
-		$elm$core$String$join,
-		' ',
-		_List_fromArray(
-			[sentenceOne, sentenceTwo, sentenceThree, sentenceFour]));
-};
-var $author$project$Main$createResultsParagraph = function (value) {
-	var sentenceTwo = (value.F >= 1) ? 'String 3' : 'String 4';
-	var sentenceThree = (value.r >= 1) ? 'String 5' : 'String 6';
-	var sentenceOne = (value.j >= 1) ? 'String 1' : 'String 2';
-	var sentenceFour = (value.j >= 1) ? 'String 7' : 'String 8';
-	return A2(
-		$elm$core$String$join,
-		' ',
-		_List_fromArray(
-			[sentenceOne, sentenceTwo, sentenceThree, sentenceFour]));
-};
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$form = _VirtualDom_node('form');
@@ -5677,6 +5716,7 @@ var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id'
 var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$Attributes$maxlength = function (n) {
 	return A2(
 		_VirtualDom_attribute,
@@ -5761,7 +5801,6 @@ var $author$project$Main$convertResponse = function (someResponse) {
 			return 'STRONGLY DISAGREE';
 	}
 };
-var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Main$renderResponseList = F3(
@@ -5932,7 +5971,7 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(prompt.Y)
+										$elm$html$Html$text(prompt.Q)
 									])),
 								A2(
 								$elm$html$Html$ul,
@@ -6234,7 +6273,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.j + 6) * 12)
+												$author$project$GraphElements$bar((exposeResults.G + 6) * 12)
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -6244,7 +6283,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.F + 6) * 12)
+												$author$project$GraphElements$bar((exposeResults.V + 6) * 12)
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -6254,7 +6293,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.r + 6) * 12)
+												$author$project$GraphElements$bar((exposeResults.D + 6) * 12)
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -6264,7 +6303,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.q + 6) * 12)
+												$author$project$GraphElements$bar((exposeResults.p + 6) * 12)
 											]))
 									])),
 								A2(
@@ -6366,29 +6405,31 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('response-style')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text(
-										$author$project$Main$createResultsParagraph(exposeResults))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
 										$elm$html$Html$Attributes$class('list-courses')
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(
-										$author$project$Main$createListCourses(exposeResults))
+										A2(
+										$elm$html$Html$ul,
+										_List_Nil,
+										A2(
+											$elm$core$List$map,
+											function (prompt) {
+												return A2(
+													$elm$html$Html$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$elm$html$Html$text(prompt.Q)
+														]));
+											},
+											model.F))
 									]))
 							]))
 					]));
 	}
 };
 var $author$project$Main$main = $elm$browser$Browser$sandbox(
-	{aI: $author$project$Main$init, aQ: $author$project$Main$update, aR: $author$project$Main$view});
+	{aJ: $author$project$Main$init, aR: $author$project$Main$update, aS: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));

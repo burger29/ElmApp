@@ -41,13 +41,14 @@ init =
 newPrompts : List Question -> List Prompt
 newPrompts listQuestions =
     List.indexedMap
-        (\index (Question s i pc) ->
+        (\index (Question s i pc ls) ->
             { question = s
             , responseOptions = [ StronglyAgree, Agree, Neutral, Disagree, StronglyDisagree ]
             , selectedResponse = Nothing
             , variable = i
             , index = index
             , promptCategory = pc
+            , feedbackList = ls
             }
         )
         listQuestions
@@ -295,74 +296,6 @@ selectedResponseOrZero maybeResponse =
             0
 
 
-createResultsParagraph : Results -> String
-createResultsParagraph value =
-    let
-        sentenceOne =
-            if value.sc >= 1 then
-                "String 1"
-
-            else
-                "String 2"
-
-        sentenceTwo =
-            if value.am >= 1 then
-                "String 3"
-
-            else
-                "String 4"
-
-        sentenceThree =
-            if value.cl >= 1 then
-                "String 5"
-
-            else
-                "String 6"
-
-        sentenceFour =
-            if value.sc >= 1 then
-                "String 7"
-
-            else
-                "String 8"
-    in
-    String.join " " [ sentenceOne, sentenceTwo, sentenceThree, sentenceFour ]
-
-
-createListCourses : Results -> String
-createListCourses value =
-    let
-        sentenceOne =
-            if value.sc >= 1 then
-                "String 1"
-
-            else
-                "String 2"
-
-        sentenceTwo =
-            if value.am >= 1 then
-                "String 3"
-
-            else
-                "String 4"
-
-        sentenceThree =
-            if value.cl >= 1 then
-                "String 5"
-
-            else
-                "String 6"
-
-        sentenceFour =
-            if value.sc >= 1 then
-                "String 7"
-
-            else
-                "String 8"
-    in
-    String.join " " [ sentenceOne, sentenceTwo, sentenceThree, sentenceFour ]
-
-
 isFieldEmpty : String -> Bool
 isFieldEmpty field =
     field
@@ -392,7 +325,42 @@ checkToSubmit input =
     List.all (\item -> item == True) checkedCompany
 
 
+feedbackIndex : Response -> Int
+feedbackIndex response =
+    case response of
+        StronglyAgree ->
+            2
 
+        Agree ->
+            2
+
+        Neutral ->
+            1
+
+        Disagree ->
+            0
+
+        StronglyDisagree ->
+            0
+
+
+selectedFeedbackOrZero : Maybe Response -> Int
+selectedFeedbackOrZero maybeResponse =
+    case maybeResponse of
+        Just response ->
+            feedbackIndex response
+
+        Nothing ->
+            0
+
+
+
+-- displayFeedback : List String -> Int -> List String
+-- displayFeedback feedbackList score =
+--     case feedbackList of
+--         2 ->
+--
+--
 --VIEW AND HTML MSGS
 
 
@@ -441,82 +409,82 @@ view model =
                     ]
                 , div [ A.class "container" ]
                     [ div [ A.class "row" ]
-                      [ div [ A.class "col-12 col-md-6 offset-md-3 justify-content-center unlock-results" ]
-                        [ Html.text "Unlock Your Results!"
-                        , form
-                            [ A.class "form-group justify-content-center row"
-                            , A.method "post"
-                            ]
-                            [ label [ A.class "sr-only", for "pardot_firstName" ] [ Html.text "First Name" ]
-                            , div [ A.class "col-12" ]
-                                [ input
-                                    [ onInput UpdateFormFirstName
-                                    , A.class "form-control flex-fill mt-4 mr-sm-2"
-                                    , placeholder "First Name"
-                                    , A.id "pardot_firstName"
-                                    , A.name "pardot_firstName"
-                                    , A.type_ "text"
-                                    , A.value formFirstName
-                                    , required True
-                                    , minlength 2
-                                    , maxlength 40
-                                    ]
-                                    []
+                        [ div [ A.class "col-12 col-md-6 offset-md-3 justify-content-center unlock-results" ]
+                            [ Html.text "Unlock Your Results!"
+                            , form
+                                [ A.class "form-group justify-content-center row"
+                                , A.method "post"
                                 ]
-                            , label [ A.class "sr-only", for "pardot_lastName" ] [ Html.text "Last Name" ]
-                            , div [ A.class "col-12" ]
-                                [ input
-                                    [ onInput UpdateFormLastName
-                                    , A.class "form-control flex-fill mt-4 mr-sm-2"
-                                    , placeholder "Last Name"
-                                    , A.id "pardot_lastName"
-                                    , A.name "pardot_lastName"
-                                    , A.type_ "text"
-                                    , A.value formLastName
-                                    , required True
-                                    , minlength 2
-                                    , maxlength 40
+                                [ label [ A.class "sr-only", for "pardot_firstName" ] [ Html.text "First Name" ]
+                                , div [ A.class "col-12" ]
+                                    [ input
+                                        [ onInput UpdateFormFirstName
+                                        , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                        , placeholder "First Name"
+                                        , A.id "pardot_firstName"
+                                        , A.name "pardot_firstName"
+                                        , A.type_ "text"
+                                        , A.value formFirstName
+                                        , required True
+                                        , minlength 2
+                                        , maxlength 40
+                                        ]
+                                        []
                                     ]
-                                    []
-                                ]
-                            , label [ A.class "sr-only", for "pardot_email" ] [ Html.text "Email" ]
-                            , div [ A.class "col-12" ]
-                                [ input
-                                    [ onInput UpdateFormEmail
-                                    , A.class "form-control flex-fill mt-4 mr-sm-2"
-                                    , placeholder "Email"
-                                    , A.id "pardot_email"
-                                    , A.name "pardot_email"
-                                    , A.type_ "text"
-                                    , A.value formEmail
-                                    , required True
-                                    , minlength 2
-                                    , maxlength 40
+                                , label [ A.class "sr-only", for "pardot_lastName" ] [ Html.text "Last Name" ]
+                                , div [ A.class "col-12" ]
+                                    [ input
+                                        [ onInput UpdateFormLastName
+                                        , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                        , placeholder "Last Name"
+                                        , A.id "pardot_lastName"
+                                        , A.name "pardot_lastName"
+                                        , A.type_ "text"
+                                        , A.value formLastName
+                                        , required True
+                                        , minlength 2
+                                        , maxlength 40
+                                        ]
+                                        []
                                     ]
-                                    []
-                                ]
-                            , label [ A.class "sr-only", for "pardot_company" ] [ Html.text "Company" ]
-                            , div [ A.class "col-12" ]
-                                [ input
-                                    [ onInput UpdateFormCompany
-                                    , A.class "form-control flex-fill mt-4 mr-sm-2"
-                                    , placeholder "Company"
-                                    , A.id "pardot_company"
-                                    , A.name "pardot_company"
-                                    , A.type_ "text"
-                                    , A.value formCompany
-                                    , required True
-                                    , minlength 2
-                                    , maxlength 40
+                                , label [ A.class "sr-only", for "pardot_email" ] [ Html.text "Email" ]
+                                , div [ A.class "col-12" ]
+                                    [ input
+                                        [ onInput UpdateFormEmail
+                                        , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                        , placeholder "Email"
+                                        , A.id "pardot_email"
+                                        , A.name "pardot_email"
+                                        , A.type_ "text"
+                                        , A.value formEmail
+                                        , required True
+                                        , minlength 2
+                                        , maxlength 40
+                                        ]
+                                        []
                                     ]
-                                    []
+                                , label [ A.class "sr-only", for "pardot_company" ] [ Html.text "Company" ]
+                                , div [ A.class "col-12" ]
+                                    [ input
+                                        [ onInput UpdateFormCompany
+                                        , A.class "form-control flex-fill mt-4 mr-sm-2"
+                                        , placeholder "Company"
+                                        , A.id "pardot_company"
+                                        , A.name "pardot_company"
+                                        , A.type_ "text"
+                                        , A.value formCompany
+                                        , required True
+                                        , minlength 2
+                                        , maxlength 40
+                                        ]
+                                        []
+                                    ]
                                 ]
-                            ]
-                        , div [ A.class "row justify-content-center pt-4" ]
-                            [ button [ A.class "button-submit", onClick ChangeModelState ] [ Html.text "Submit" ]
+                            , div [ A.class "row justify-content-center pt-4" ]
+                                [ button [ A.class "button-submit", onClick ChangeModelState ] [ Html.text "Submit" ]
+                                ]
                             ]
                         ]
-                      ]
                     ]
                 ]
 
@@ -561,8 +529,17 @@ view model =
                             ]
                         ]
                     , div [ A.class "response-header" ] [ Html.text "More about your team" ]
-                    , div [ A.class "response-style" ] [ Html.text (createResultsParagraph exposeResults) ]
-                    , div [ A.class "list-courses" ] [ Html.text (createListCourses exposeResults) ]
+
+                    -- , div [ A.class "response-style" ] []
+                    , div [ A.class "list-courses" ]
+                        [ ul []
+                            (List.map
+                                (\prompt ->
+                                    li [] [ Html.text prompt.question ]
+                                )
+                                    model.prompts
+                            )
+                        ]
                     ]
                 ]
 

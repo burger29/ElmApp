@@ -17,6 +17,7 @@ type alias Prompt =
     , selectedResponse : Maybe Response
     , index : Int
     , promptCategory : PromptCategory
+    , feedbackList : List String
     }
 
 
@@ -55,7 +56,7 @@ type PromptCategory
 
 
 type Question
-    = Question String Int PromptCategory
+    = Question String Int PromptCategory (List String)
 
 
 type ModelState
