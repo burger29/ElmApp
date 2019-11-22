@@ -61,14 +61,20 @@ import Types
         , Results
         , unwrapFeedback
         )
+import Ports exposing (saveResponses)
 
 
 main =
-    Browser.sandbox { init = init, update = update, view = view }
+    Browser.element
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = subscriptions
+        }
 
 
-init : Model
-init =
+init : () -> (Model, Cmd msg)
+init _ =
     let
         prompts =
             newPrompts questionList
@@ -80,12 +86,19 @@ init =
             , formCompany = ""
             }
     in
-    { prompts = prompts
-    , state = selectState prompts
-    , results = Results 0 0 0 0
-    , formData = emptyFormData
-    , allowSubmit = False
-    }
+    ( { prompts = prompts
+      , state = selectState prompts
+      , results = Results 0 0 0 0
+      , formData = emptyFormData
+      , allowSubmit = False
+      }
+    , Cmd.none
+    )
+
+
+subscriptions : Model -> Sub msg
+subscriptions model =
+    Sub.none
 
 
 newPrompts : List Question -> List Prompt
@@ -114,7 +127,7 @@ selectState prompts =
             FillingOutForm
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd msg)
 update msg model =
     case msg of
         SelectResponse response prompt ->
@@ -176,7 +189,7 @@ update msg model =
                 updatedModel =
                     { model | prompts = updatedPrompts, results = updatedResults, state = selectState updatedPrompts }
             in
-            updatedModel
+            (updatedModel, saveResponses [1,2,3])
 
         ChangeModelState ->
             let
@@ -187,10 +200,10 @@ update msg model =
                     model.allowSubmit
             in
             if conditional then
-                updatedModelState
+                (updatedModelState, Cmd.none)
 
             else
-                model
+                (model, Cmd.none)
 
         UpdateFormFirstName updatedFirstname ->
             let
@@ -203,7 +216,7 @@ update msg model =
                 updatedAllowSubmit =
                     checkToSubmit formData
             in
-            { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }
+            ({ model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none)
 
         UpdateFormLastName updatedLastname ->
             let
@@ -216,7 +229,7 @@ update msg model =
                 updatedAllowSubmit =
                     checkToSubmit formData
             in
-            { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }
+            ({ model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none)
 
         UpdateFormEmail updatedEmail ->
             let
@@ -229,7 +242,7 @@ update msg model =
                 updatedAllowSubmit =
                     checkToSubmit formData
             in
-            { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }
+            ({ model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none)
 
         UpdateFormCompany updatedCompany ->
             let
@@ -242,7 +255,7 @@ update msg model =
                 updatedAllowSubmit =
                     checkToSubmit formData
             in
-            { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }
+            ({ model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none)
 
 
 convertResponse : Response -> String
@@ -439,7 +452,7 @@ view model =
                         [ Html.text "How well do you think your team is performing? ITIL master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert."
                         ]
                     , div [ A.class "pt-5 row justify-content-center" ]
-                        [ div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ] 
+                        [ div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ]
                         ]
                     , p [ A.class "question-number pt-5" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
                     , p [ A.class "question" ] [ Html.text prompt.question ]

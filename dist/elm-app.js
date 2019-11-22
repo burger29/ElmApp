@@ -80,6 +80,271 @@ function A9(fun, a, b, c, d, e, f, g, h, i) {
 
 
 
+// EQUALITY
+
+function _Utils_eq(x, y)
+{
+	for (
+		var pair, stack = [], isEqual = _Utils_eqHelp(x, y, 0, stack);
+		isEqual && (pair = stack.pop());
+		isEqual = _Utils_eqHelp(pair.a, pair.b, 0, stack)
+		)
+	{}
+
+	return isEqual;
+}
+
+function _Utils_eqHelp(x, y, depth, stack)
+{
+	if (depth > 100)
+	{
+		stack.push(_Utils_Tuple2(x,y));
+		return true;
+	}
+
+	if (x === y)
+	{
+		return true;
+	}
+
+	if (typeof x !== 'object' || x === null || y === null)
+	{
+		typeof x === 'function' && _Debug_crash(5);
+		return false;
+	}
+
+	/**_UNUSED/
+	if (x.$ === 'Set_elm_builtin')
+	{
+		x = $elm$core$Set$toList(x);
+		y = $elm$core$Set$toList(y);
+	}
+	if (x.$ === 'RBNode_elm_builtin' || x.$ === 'RBEmpty_elm_builtin')
+	{
+		x = $elm$core$Dict$toList(x);
+		y = $elm$core$Dict$toList(y);
+	}
+	//*/
+
+	/**/
+	if (x.$ < 0)
+	{
+		x = $elm$core$Dict$toList(x);
+		y = $elm$core$Dict$toList(y);
+	}
+	//*/
+
+	for (var key in x)
+	{
+		if (!_Utils_eqHelp(x[key], y[key], depth + 1, stack))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+var _Utils_equal = F2(_Utils_eq);
+var _Utils_notEqual = F2(function(a, b) { return !_Utils_eq(a,b); });
+
+
+
+// COMPARISONS
+
+// Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
+// the particular integer values assigned to LT, EQ, and GT.
+
+function _Utils_cmp(x, y, ord)
+{
+	if (typeof x !== 'object')
+	{
+		return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;
+	}
+
+	/**_UNUSED/
+	if (x instanceof String)
+	{
+		var a = x.valueOf();
+		var b = y.valueOf();
+		return a === b ? 0 : a < b ? -1 : 1;
+	}
+	//*/
+
+	/**/
+	if (typeof x.$ === 'undefined')
+	//*/
+	/**_UNUSED/
+	if (x.$[0] === '#')
+	//*/
+	{
+		return (ord = _Utils_cmp(x.a, y.a))
+			? ord
+			: (ord = _Utils_cmp(x.b, y.b))
+				? ord
+				: _Utils_cmp(x.c, y.c);
+	}
+
+	// traverse conses until end of a list or a mismatch
+	for (; x.b && y.b && !(ord = _Utils_cmp(x.a, y.a)); x = x.b, y = y.b) {} // WHILE_CONSES
+	return ord || (x.b ? /*GT*/ 1 : y.b ? /*LT*/ -1 : /*EQ*/ 0);
+}
+
+var _Utils_lt = F2(function(a, b) { return _Utils_cmp(a, b) < 0; });
+var _Utils_le = F2(function(a, b) { return _Utils_cmp(a, b) < 1; });
+var _Utils_gt = F2(function(a, b) { return _Utils_cmp(a, b) > 0; });
+var _Utils_ge = F2(function(a, b) { return _Utils_cmp(a, b) >= 0; });
+
+var _Utils_compare = F2(function(x, y)
+{
+	var n = _Utils_cmp(x, y);
+	return n < 0 ? $elm$core$Basics$LT : n ? $elm$core$Basics$GT : $elm$core$Basics$EQ;
+});
+
+
+// COMMON VALUES
+
+var _Utils_Tuple0 = 0;
+var _Utils_Tuple0_UNUSED = { $: '#0' };
+
+function _Utils_Tuple2(a, b) { return { a: a, b: b }; }
+function _Utils_Tuple2_UNUSED(a, b) { return { $: '#2', a: a, b: b }; }
+
+function _Utils_Tuple3(a, b, c) { return { a: a, b: b, c: c }; }
+function _Utils_Tuple3_UNUSED(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
+
+function _Utils_chr(c) { return c; }
+function _Utils_chr_UNUSED(c) { return new String(c); }
+
+
+// RECORDS
+
+function _Utils_update(oldRecord, updatedFields)
+{
+	var newRecord = {};
+
+	for (var key in oldRecord)
+	{
+		newRecord[key] = oldRecord[key];
+	}
+
+	for (var key in updatedFields)
+	{
+		newRecord[key] = updatedFields[key];
+	}
+
+	return newRecord;
+}
+
+
+// APPEND
+
+var _Utils_append = F2(_Utils_ap);
+
+function _Utils_ap(xs, ys)
+{
+	// append Strings
+	if (typeof xs === 'string')
+	{
+		return xs + ys;
+	}
+
+	// append Lists
+	if (!xs.b)
+	{
+		return ys;
+	}
+	var root = _List_Cons(xs.a, ys);
+	xs = xs.b
+	for (var curr = root; xs.b; xs = xs.b) // WHILE_CONS
+	{
+		curr = curr.b = _List_Cons(xs.a, ys);
+	}
+	return root;
+}
+
+
+
+var _List_Nil = { $: 0 };
+var _List_Nil_UNUSED = { $: '[]' };
+
+function _List_Cons(hd, tl) { return { $: 1, a: hd, b: tl }; }
+function _List_Cons_UNUSED(hd, tl) { return { $: '::', a: hd, b: tl }; }
+
+
+var _List_cons = F2(_List_Cons);
+
+function _List_fromArray(arr)
+{
+	var out = _List_Nil;
+	for (var i = arr.length; i--; )
+	{
+		out = _List_Cons(arr[i], out);
+	}
+	return out;
+}
+
+function _List_toArray(xs)
+{
+	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
+	{
+		out.push(xs.a);
+	}
+	return out;
+}
+
+var _List_map2 = F3(function(f, xs, ys)
+{
+	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
+	{
+		arr.push(A2(f, xs.a, ys.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map3 = F4(function(f, xs, ys, zs)
+{
+	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A3(f, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map4 = F5(function(f, ws, xs, ys, zs)
+{
+	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
+{
+	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_sortBy = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		return _Utils_cmp(f(a), f(b));
+	}));
+});
+
+var _List_sortWith = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		var ord = A2(f, a, b);
+		return ord === $elm$core$Basics$EQ ? 0 : ord === $elm$core$Basics$LT ? -1 : 1;
+	}));
+});
+
+
+
 var _JsArray_empty = [];
 
 function _JsArray_singleton(value)
@@ -525,271 +790,6 @@ function _Debug_regionToString(region)
 	}
 	return 'on lines ' + region.aa.E + ' through ' + region.af.E;
 }
-
-
-
-// EQUALITY
-
-function _Utils_eq(x, y)
-{
-	for (
-		var pair, stack = [], isEqual = _Utils_eqHelp(x, y, 0, stack);
-		isEqual && (pair = stack.pop());
-		isEqual = _Utils_eqHelp(pair.a, pair.b, 0, stack)
-		)
-	{}
-
-	return isEqual;
-}
-
-function _Utils_eqHelp(x, y, depth, stack)
-{
-	if (depth > 100)
-	{
-		stack.push(_Utils_Tuple2(x,y));
-		return true;
-	}
-
-	if (x === y)
-	{
-		return true;
-	}
-
-	if (typeof x !== 'object' || x === null || y === null)
-	{
-		typeof x === 'function' && _Debug_crash(5);
-		return false;
-	}
-
-	/**_UNUSED/
-	if (x.$ === 'Set_elm_builtin')
-	{
-		x = $elm$core$Set$toList(x);
-		y = $elm$core$Set$toList(y);
-	}
-	if (x.$ === 'RBNode_elm_builtin' || x.$ === 'RBEmpty_elm_builtin')
-	{
-		x = $elm$core$Dict$toList(x);
-		y = $elm$core$Dict$toList(y);
-	}
-	//*/
-
-	/**/
-	if (x.$ < 0)
-	{
-		x = $elm$core$Dict$toList(x);
-		y = $elm$core$Dict$toList(y);
-	}
-	//*/
-
-	for (var key in x)
-	{
-		if (!_Utils_eqHelp(x[key], y[key], depth + 1, stack))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-var _Utils_equal = F2(_Utils_eq);
-var _Utils_notEqual = F2(function(a, b) { return !_Utils_eq(a,b); });
-
-
-
-// COMPARISONS
-
-// Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
-// the particular integer values assigned to LT, EQ, and GT.
-
-function _Utils_cmp(x, y, ord)
-{
-	if (typeof x !== 'object')
-	{
-		return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;
-	}
-
-	/**_UNUSED/
-	if (x instanceof String)
-	{
-		var a = x.valueOf();
-		var b = y.valueOf();
-		return a === b ? 0 : a < b ? -1 : 1;
-	}
-	//*/
-
-	/**/
-	if (typeof x.$ === 'undefined')
-	//*/
-	/**_UNUSED/
-	if (x.$[0] === '#')
-	//*/
-	{
-		return (ord = _Utils_cmp(x.a, y.a))
-			? ord
-			: (ord = _Utils_cmp(x.b, y.b))
-				? ord
-				: _Utils_cmp(x.c, y.c);
-	}
-
-	// traverse conses until end of a list or a mismatch
-	for (; x.b && y.b && !(ord = _Utils_cmp(x.a, y.a)); x = x.b, y = y.b) {} // WHILE_CONSES
-	return ord || (x.b ? /*GT*/ 1 : y.b ? /*LT*/ -1 : /*EQ*/ 0);
-}
-
-var _Utils_lt = F2(function(a, b) { return _Utils_cmp(a, b) < 0; });
-var _Utils_le = F2(function(a, b) { return _Utils_cmp(a, b) < 1; });
-var _Utils_gt = F2(function(a, b) { return _Utils_cmp(a, b) > 0; });
-var _Utils_ge = F2(function(a, b) { return _Utils_cmp(a, b) >= 0; });
-
-var _Utils_compare = F2(function(x, y)
-{
-	var n = _Utils_cmp(x, y);
-	return n < 0 ? $elm$core$Basics$LT : n ? $elm$core$Basics$GT : $elm$core$Basics$EQ;
-});
-
-
-// COMMON VALUES
-
-var _Utils_Tuple0 = 0;
-var _Utils_Tuple0_UNUSED = { $: '#0' };
-
-function _Utils_Tuple2(a, b) { return { a: a, b: b }; }
-function _Utils_Tuple2_UNUSED(a, b) { return { $: '#2', a: a, b: b }; }
-
-function _Utils_Tuple3(a, b, c) { return { a: a, b: b, c: c }; }
-function _Utils_Tuple3_UNUSED(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
-
-function _Utils_chr(c) { return c; }
-function _Utils_chr_UNUSED(c) { return new String(c); }
-
-
-// RECORDS
-
-function _Utils_update(oldRecord, updatedFields)
-{
-	var newRecord = {};
-
-	for (var key in oldRecord)
-	{
-		newRecord[key] = oldRecord[key];
-	}
-
-	for (var key in updatedFields)
-	{
-		newRecord[key] = updatedFields[key];
-	}
-
-	return newRecord;
-}
-
-
-// APPEND
-
-var _Utils_append = F2(_Utils_ap);
-
-function _Utils_ap(xs, ys)
-{
-	// append Strings
-	if (typeof xs === 'string')
-	{
-		return xs + ys;
-	}
-
-	// append Lists
-	if (!xs.b)
-	{
-		return ys;
-	}
-	var root = _List_Cons(xs.a, ys);
-	xs = xs.b
-	for (var curr = root; xs.b; xs = xs.b) // WHILE_CONS
-	{
-		curr = curr.b = _List_Cons(xs.a, ys);
-	}
-	return root;
-}
-
-
-
-var _List_Nil = { $: 0 };
-var _List_Nil_UNUSED = { $: '[]' };
-
-function _List_Cons(hd, tl) { return { $: 1, a: hd, b: tl }; }
-function _List_Cons_UNUSED(hd, tl) { return { $: '::', a: hd, b: tl }; }
-
-
-var _List_cons = F2(_List_Cons);
-
-function _List_fromArray(arr)
-{
-	var out = _List_Nil;
-	for (var i = arr.length; i--; )
-	{
-		out = _List_Cons(arr[i], out);
-	}
-	return out;
-}
-
-function _List_toArray(xs)
-{
-	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
-	{
-		out.push(xs.a);
-	}
-	return out;
-}
-
-var _List_map2 = F3(function(f, xs, ys)
-{
-	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
-	{
-		arr.push(A2(f, xs.a, ys.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map3 = F4(function(f, xs, ys, zs)
-{
-	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A3(f, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map4 = F5(function(f, ws, xs, ys, zs)
-{
-	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
-{
-	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_sortBy = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		return _Utils_cmp(f(a), f(b));
-	}));
-});
-
-var _List_sortWith = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		var ord = A2(f, a, b);
-		return ord === $elm$core$Basics$EQ ? 0 : ord === $elm$core$Basics$LT ? -1 : 1;
-	}));
-});
 
 
 
@@ -4347,36 +4347,10 @@ var _Bitwise_shiftRightZfBy = F2(function(offset, a)
 {
 	return a >>> offset;
 });
-var $elm$core$Basics$False = 1;
-var $author$project$Types$Results = F4(
-	function (sc, am, cl, cc) {
-		return {U: am, p: cc, D: cl, G: sc};
-	});
+var $elm$core$Basics$EQ = 1;
+var $elm$core$Basics$GT = 2;
+var $elm$core$Basics$LT = 0;
 var $elm$core$List$cons = _List_cons;
-var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
-var $elm$core$Array$foldr = F3(
-	function (func, baseCase, _v0) {
-		var tree = _v0.c;
-		var tail = _v0.d;
-		var helper = F2(
-			function (node, acc) {
-				if (!node.$) {
-					var subTree = node.a;
-					return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
-				} else {
-					var values = node.a;
-					return A3($elm$core$Elm$JsArray$foldr, func, acc, values);
-				}
-			});
-		return A3(
-			$elm$core$Elm$JsArray$foldr,
-			helper,
-			A3($elm$core$Elm$JsArray$foldr, func, baseCase, tail),
-			tree);
-	});
-var $elm$core$Array$toList = function (array) {
-	return A3($elm$core$Array$foldr, $elm$core$List$cons, _List_Nil, array);
-};
 var $elm$core$Dict$foldr = F3(
 	function (func, acc, t) {
 		foldr:
@@ -4429,16 +4403,80 @@ var $elm$core$Set$toList = function (_v0) {
 	var dict = _v0;
 	return $elm$core$Dict$keys(dict);
 };
-var $elm$core$Basics$EQ = 1;
-var $elm$core$Basics$GT = 2;
-var $elm$core$Basics$LT = 0;
-var $author$project$Types$Agree = 0;
-var $author$project$Types$Disagree = 3;
-var $author$project$Types$Neutral = 2;
-var $elm$core$Maybe$Nothing = {$: 1};
-var $author$project$Types$StronglyAgree = 1;
-var $author$project$Types$StronglyDisagree = 4;
+var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
+var $elm$core$Array$foldr = F3(
+	function (func, baseCase, _v0) {
+		var tree = _v0.c;
+		var tail = _v0.d;
+		var helper = F2(
+			function (node, acc) {
+				if (!node.$) {
+					var subTree = node.a;
+					return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
+				} else {
+					var values = node.a;
+					return A3($elm$core$Elm$JsArray$foldr, func, acc, values);
+				}
+			});
+		return A3(
+			$elm$core$Elm$JsArray$foldr,
+			helper,
+			A3($elm$core$Elm$JsArray$foldr, func, baseCase, tail),
+			tree);
+	});
+var $elm$core$Array$toList = function (array) {
+	return A3($elm$core$Array$foldr, $elm$core$List$cons, _List_Nil, array);
+};
+var $elm$core$Result$Err = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$json$Json$Decode$Failure = F2(
+	function (a, b) {
+		return {$: 3, a: a, b: b};
+	});
+var $elm$json$Json$Decode$Field = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
+	});
+var $elm$json$Json$Decode$Index = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
+var $elm$core$Result$Ok = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$json$Json$Decode$OneOf = function (a) {
+	return {$: 2, a: a};
+};
+var $elm$core$Basics$False = 1;
 var $elm$core$Basics$add = _Basics_add;
+var $elm$core$Maybe$Just = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$core$Maybe$Nothing = {$: 1};
+var $elm$core$String$all = _String_all;
+var $elm$core$Basics$and = _Basics_and;
+var $elm$core$Basics$append = _Utils_append;
+var $elm$json$Json$Encode$encode = _Json_encode;
+var $elm$core$String$fromInt = _String_fromNumber;
+var $elm$core$String$join = F2(
+	function (sep, chunks) {
+		return A2(
+			_String_join,
+			sep,
+			_List_toArray(chunks));
+	});
+var $elm$core$String$split = F2(
+	function (sep, string) {
+		return _List_fromArray(
+			A2(_String_split, sep, string));
+	});
+var $elm$json$Json$Decode$indent = function (str) {
+	return A2(
+		$elm$core$String$join,
+		'\n    ',
+		A2($elm$core$String$split, '\n', str));
+};
 var $elm$core$List$foldl = F3(
 	function (func, acc, list) {
 		foldl:
@@ -4503,318 +4541,6 @@ var $elm$core$List$indexedMap = F2(
 				$elm$core$List$length(xs) - 1),
 			xs);
 	});
-var $author$project$Main$newPrompts = function (listQuestions) {
-	return A2(
-		$elm$core$List$indexedMap,
-		F2(
-			function (index, _v0) {
-				var s = _v0.a;
-				var i = _v0.b;
-				var pc = _v0.c;
-				var ls = _v0.d;
-				return {
-					ah: ls,
-					P: index,
-					as: pc,
-					Y: s,
-					Z: _List_fromArray(
-						[1, 0, 2, 3, 4]),
-					d: $elm$core$Maybe$Nothing,
-					k: i
-				};
-			}),
-		listQuestions);
-};
-var $author$project$Types$AgileMindset = 1;
-var $author$project$Types$CCCL = 4;
-var $author$project$Types$CoachingLeadership = 2;
-var $author$project$Types$CollaborativeCulture = 3;
-var $author$project$Types$Question = F4(
-	function (a, b, c, d) {
-		return {$: 0, a: a, b: b, c: c, d: d};
-	});
-var $author$project$Types$SCCC = 5;
-var $author$project$Types$SafetyCulture = 0;
-var $elm$core$Basics$identity = function (x) {
-	return x;
-};
-var $author$project$Types$Feedback = $elm$core$Basics$identity;
-var $elm$core$Basics$gt = _Utils_gt;
-var $elm$core$List$reverse = function (list) {
-	return A3($elm$core$List$foldl, $elm$core$List$cons, _List_Nil, list);
-};
-var $elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							$elm$core$List$foldl,
-							fn,
-							acc,
-							$elm$core$List$reverse(r4)) : A4($elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var $elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4($elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
-var $elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						$elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
-var $author$project$Data$feedbackListFromStrings = function (strings) {
-	return A2(
-		$elm$core$List$map,
-		function (s) {
-			return s;
-		},
-		strings);
-};
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var $author$project$Data$questionList = _List_fromArray(
-	[
-		A4(
-		$author$project$Types$Question,
-		'My team can clearly articulate their goals',
-		1,
-		1,
-		$author$project$Data$feedbackListFromStrings(
-			_List_fromArray(
-				['Either you are not clear on the goals for your team, or you are struggling to articulate or communicate those goals.', 'Your team have goals, but they are not clear enough for them to achieve. Looks for ways to improve your communication approach.', 'Your communication hits the mark and you encourage collaboration!']))),
-		A4(
-		$author$project$Types$Question,
-		'My team feels recognized for their accomplishments',
-		1,
-		2,
-		$author$project$Data$feedbackListFromStrings(
-			_List_fromArray(
-				['Your team may not be able to deliver expected results and may feel oppressed and invisible.', 'Some accomplishments are recognised and rewarded, but these needs to be a consistent approach to motivate your team.', 'You have a motivated team which leads to high morale. Think about how you can maintain that level.']))),
-		A4(
-		$author$project$Types$Question,
-		'All team members have personal development plans and see regular progress towards their goals',
-		1,
-		2,
-		$author$project$Data$feedbackListFromStrings(
-			_List_fromArray(
-				['Team members do not feel valued. Their skills are not being developed which will have a detrimental effect on team performance and their ability to meet expectations.', 'Development is ADHOC and may be limited to certain individuals or specific topics. Consider how personal development contributes to team achievements.', 'Team members feel valued, and enhancing their skills ensures your team’s bandwidth is continually increasing. Ensure you are prepared for team members to move on in their career and plan for replacements.']))),
-		A4(
-		$author$project$Types$Question,
-		'My team feels empowered to make decisions',
-		1,
-		0,
-		$author$project$Data$feedbackListFromStrings(
-			_List_fromArray(
-				['Decisions are most effective and efficient when made at the point with the most information. Time is wasted on escalating decisions that are able to be made within the team.', 'The team is comfortable with making some decisions, but a lot are unnecessarily escalated. Consider delegating decisions and showing team members that they are entrusted with these.', 'Team members feel trusted and decisions are made at the point where the most knowledge exists.']))),
-		A4(
-		$author$project$Types$Question,
-		'My team is more efficient when I’m not there',
-		-1,
-		4,
-		$author$project$Data$feedbackListFromStrings(
-			_List_fromArray(
-				['Time is wasted escalating concerns and decisions to you that should be managed within the team. Beware of micro-management.', 'The team is comfortable with allocating some of their own workload, but still look to you to confirm decisions and add validate direction.', 'You allow your team the flexibility to collaborate and make appropriate decisions, and rely on expectations being met.']))),
-		A4(
-		$author$project$Types$Question,
-		'My team has productive meetings that everyone is involved in (but only when necessary)',
-		1,
-		3,
-		$author$project$Data$feedbackListFromStrings(
-			_List_fromArray(
-				['Time is wasted in unnecessary meetings, and meetings without purpose or agenda. Be careful to engage in efficient meeting etiquette.', 'You have some unnecessary and unproductive meetings, but your team are learning to embrace new ways of collaboration.', 'You have an environment that doesn’t encourage meetings just for the sake of having a meeting. Collaboration is key skill of your team.']))),
-		A4(
-		$author$project$Types$Question,
-		'Team members will openly express their opinions and concerns',
-		1,
-		5,
-		$author$project$Data$feedbackListFromStrings(
-			_List_fromArray(
-				['Your team may not feel as though their contributions are valued may feel oppressed and invisible.', 'b', 'Team members are confident in your ability to listen and to accept feedback.']))),
-		A4(
-		$author$project$Types$Question,
-		'Other people want to be on our team',
-		1,
-		0,
-		$author$project$Data$feedbackListFromStrings(
-			_List_fromArray(
-				['People don’t see your team as an aspiration or a career progression.', 'Your team culture is productive, but is not seen as dynamic and a great place to work. Consider and approach to team visibility.', 'Your team feels nurtured and encouraged, whilst having a clear direction. Having the right team culture is important to you and others recognise that.']))),
-		A4(
-		$author$project$Types$Question,
-		'My team has created their own set of operating guidelines and practices which they are fully bought into',
-		1,
-		1,
-		$author$project$Data$feedbackListFromStrings(
-			_List_fromArray(
-				['Your team is in need of processes and controls that they are able and willing to follow.', 'You have processes established within the team, but are still evolving their maturity; a consistency of usage; and a level of flexibility.', 'There is a fine line between having an open and relaxed culture, and having a lack of control. You seem to have found the perfect balance and also understand the emotional impact of too many dictated and rigid controls.']))),
-		A4(
-		$author$project$Types$Question,
-		'All team members hold each other, including me, accountable for outcomes',
-		1,
-		1,
-		$author$project$Data$feedbackListFromStrings(
-			_List_fromArray(
-				['Teams members are more comfortable with rigid rules and guidelines, than are empowered to hold themselves accountable.', 'Team members have explored making some decisions themselves, but are more comfortable with allowing you to make decisions. Explore ways of enforcing decision making control further down the chain of command.', 'You are a true servant leader. Guiding the team from within, so that you are perceived as a truly valuable team member and not a manager.'])))
-	]);
-var $author$project$Types$AnsweringQuestions = function (a) {
-	return {$: 0, a: a};
-};
-var $author$project$Types$FillingOutForm = {$: 1};
-var $elm$core$Basics$apR = F2(
-	function (x, f) {
-		return f(x);
-	});
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var $elm$core$Basics$True = 0;
-var $author$project$Main$filterOutUnanswered = function (prompt) {
-	var _v0 = prompt.d;
-	if (!_v0.$) {
-		var selectedResponse = _v0.a;
-		return false;
-	} else {
-		return true;
-	}
-};
-var $elm$core$Maybe$Just = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $author$project$Main$nextUnansweredQuestion = function (prompts) {
-	return $elm$core$List$head(
-		A2($elm$core$List$filter, $author$project$Main$filterOutUnanswered, prompts));
-};
-var $author$project$Main$selectState = function (prompts) {
-	var _v0 = $author$project$Main$nextUnansweredQuestion(prompts);
-	if (!_v0.$) {
-		var prompt = _v0.a;
-		return $author$project$Types$AnsweringQuestions(prompt);
-	} else {
-		return $author$project$Types$FillingOutForm;
-	}
-};
-var $author$project$Main$init = function () {
-	var prompts = $author$project$Main$newPrompts($author$project$Data$questionList);
-	var emptyFormData = {L: '', M: '', N: '', O: ''};
-	return {
-		u: false,
-		e: emptyFormData,
-		F: prompts,
-		Q: A4($author$project$Types$Results, 0, 0, 0, 0),
-		R: $author$project$Main$selectState(prompts)
-	};
-}();
-var $elm$core$Result$Err = function (a) {
-	return {$: 1, a: a};
-};
-var $elm$json$Json$Decode$Failure = F2(
-	function (a, b) {
-		return {$: 3, a: a, b: b};
-	});
-var $elm$json$Json$Decode$Field = F2(
-	function (a, b) {
-		return {$: 0, a: a, b: b};
-	});
-var $elm$json$Json$Decode$Index = F2(
-	function (a, b) {
-		return {$: 1, a: a, b: b};
-	});
-var $elm$core$Result$Ok = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$json$Json$Decode$OneOf = function (a) {
-	return {$: 2, a: a};
-};
-var $elm$core$String$all = _String_all;
-var $elm$core$Basics$and = _Basics_and;
-var $elm$core$Basics$append = _Utils_append;
-var $elm$json$Json$Encode$encode = _Json_encode;
-var $elm$core$String$fromInt = _String_fromNumber;
-var $elm$core$String$join = F2(
-	function (sep, chunks) {
-		return A2(
-			_String_join,
-			sep,
-			_List_toArray(chunks));
-	});
-var $elm$core$String$split = F2(
-	function (sep, string) {
-		return _List_fromArray(
-			A2(_String_split, sep, string));
-	});
-var $elm$json$Json$Decode$indent = function (str) {
-	return A2(
-		$elm$core$String$join,
-		'\n    ',
-		A2($elm$core$String$split, '\n', str));
-};
 var $elm$core$Char$toCode = _Char_toCode;
 var $elm$core$Char$isLower = function (_char) {
 	var code = $elm$core$Char$toCode(_char);
@@ -4834,6 +4560,9 @@ var $elm$core$Char$isDigit = function (_char) {
 };
 var $elm$core$Char$isAlphaNum = function (_char) {
 	return $elm$core$Char$isLower(_char) || ($elm$core$Char$isUpper(_char) || $elm$core$Char$isDigit(_char));
+};
+var $elm$core$List$reverse = function (list) {
+	return A3($elm$core$List$foldl, $elm$core$List$cons, _List_Nil, list);
 };
 var $elm$core$String$uncons = _String_uncons;
 var $elm$json$Json$Decode$errorOneOf = F2(
@@ -4963,9 +4692,14 @@ var $elm$core$Basics$apL = F2(
 	function (f, x) {
 		return f(x);
 	});
+var $elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
+	});
 var $elm$core$Basics$eq = _Utils_equal;
 var $elm$core$Basics$floor = _Basics_floor;
 var $elm$core$Elm$JsArray$length = _JsArray_length;
+var $elm$core$Basics$gt = _Utils_gt;
 var $elm$core$Basics$max = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) > 0) ? x : y;
@@ -5080,6 +4814,7 @@ var $elm$core$Array$initialize = F2(
 			return A5($elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
+var $elm$core$Basics$True = 0;
 var $elm$core$Result$isOk = function (result) {
 	if (!result.$) {
 		return true;
@@ -5107,6 +4842,9 @@ var $elm$browser$Browser$External = function (a) {
 };
 var $elm$browser$Browser$Internal = function (a) {
 	return {$: 0, a: a};
+};
+var $elm$core$Basics$identity = function (x) {
+	return x;
 };
 var $elm$browser$Browser$Dom$NotFound = $elm$core$Basics$identity;
 var $elm$url$Url$Http = 0;
@@ -5250,6 +4988,75 @@ var $elm$core$Basics$never = function (_v0) {
 var $elm$core$Task$Perform = $elm$core$Basics$identity;
 var $elm$core$Task$succeed = _Scheduler_succeed;
 var $elm$core$Task$init = $elm$core$Task$succeed(0);
+var $elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							$elm$core$List$foldl,
+							fn,
+							acc,
+							$elm$core$List$reverse(r4)) : A4($elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var $elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4($elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var $elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						$elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
 var $elm$core$Task$andThen = _Scheduler_andThen;
 var $elm$core$Task$map = F2(
 	function (func, taskA) {
@@ -5322,27 +5129,208 @@ var $elm$core$Task$perform = F2(
 		return $elm$core$Task$command(
 			A2($elm$core$Task$map, toMessage, task));
 	});
+var $elm$browser$Browser$element = _Browser_element;
+var $author$project$Types$Results = F4(
+	function (sc, am, cl, cc) {
+		return {U: am, p: cc, D: cl, G: sc};
+	});
+var $author$project$Types$Agree = 0;
+var $author$project$Types$Disagree = 3;
+var $author$project$Types$Neutral = 2;
+var $author$project$Types$StronglyAgree = 1;
+var $author$project$Types$StronglyDisagree = 4;
+var $author$project$Main$newPrompts = function (listQuestions) {
+	return A2(
+		$elm$core$List$indexedMap,
+		F2(
+			function (index, _v0) {
+				var s = _v0.a;
+				var i = _v0.b;
+				var pc = _v0.c;
+				var ls = _v0.d;
+				return {
+					ah: ls,
+					P: index,
+					as: pc,
+					Y: s,
+					Z: _List_fromArray(
+						[1, 0, 2, 3, 4]),
+					d: $elm$core$Maybe$Nothing,
+					k: i
+				};
+			}),
+		listQuestions);
+};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Types$AgileMindset = 1;
+var $author$project$Types$CCCL = 4;
+var $author$project$Types$CoachingLeadership = 2;
+var $author$project$Types$CollaborativeCulture = 3;
+var $author$project$Types$Question = F4(
+	function (a, b, c, d) {
+		return {$: 0, a: a, b: b, c: c, d: d};
+	});
+var $author$project$Types$SCCC = 5;
+var $author$project$Types$SafetyCulture = 0;
+var $author$project$Types$Feedback = $elm$core$Basics$identity;
+var $author$project$Data$feedbackListFromStrings = function (strings) {
+	return A2(
+		$elm$core$List$map,
+		function (s) {
+			return s;
+		},
+		strings);
+};
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $author$project$Data$questionList = _List_fromArray(
+	[
+		A4(
+		$author$project$Types$Question,
+		'My team can clearly articulate their goals',
+		1,
+		1,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Either you are not clear on the goals for your team, or you are struggling to articulate or communicate those goals.', 'Your team have goals, but they are not clear enough for them to achieve. Looks for ways to improve your communication approach.', 'Your communication hits the mark and you encourage collaboration!']))),
+		A4(
+		$author$project$Types$Question,
+		'My team feels recognized for their accomplishments',
+		1,
+		2,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Your team may not be able to deliver expected results and may feel oppressed and invisible.', 'Some accomplishments are recognised and rewarded, but these needs to be a consistent approach to motivate your team.', 'You have a motivated team which leads to high morale. Think about how you can maintain that level.']))),
+		A4(
+		$author$project$Types$Question,
+		'All team members have personal development plans and see regular progress towards their goals',
+		1,
+		2,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Team members do not feel valued. Their skills are not being developed which will have a detrimental effect on team performance and their ability to meet expectations.', 'Development is ADHOC and may be limited to certain individuals or specific topics. Consider how personal development contributes to team achievements.', 'Team members feel valued, and enhancing their skills ensures your team’s bandwidth is continually increasing. Ensure you are prepared for team members to move on in their career and plan for replacements.']))),
+		A4(
+		$author$project$Types$Question,
+		'My team feels empowered to make decisions',
+		1,
+		0,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Decisions are most effective and efficient when made at the point with the most information. Time is wasted on escalating decisions that are able to be made within the team.', 'The team is comfortable with making some decisions, but a lot are unnecessarily escalated. Consider delegating decisions and showing team members that they are entrusted with these.', 'Team members feel trusted and decisions are made at the point where the most knowledge exists.']))),
+		A4(
+		$author$project$Types$Question,
+		'My team is more efficient when I’m not there',
+		-1,
+		4,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Time is wasted escalating concerns and decisions to you that should be managed within the team. Beware of micro-management.', 'The team is comfortable with allocating some of their own workload, but still look to you to confirm decisions and add validate direction.', 'You allow your team the flexibility to collaborate and make appropriate decisions, and rely on expectations being met.']))),
+		A4(
+		$author$project$Types$Question,
+		'My team has productive meetings that everyone is involved in (but only when necessary)',
+		1,
+		3,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Time is wasted in unnecessary meetings, and meetings without purpose or agenda. Be careful to engage in efficient meeting etiquette.', 'You have some unnecessary and unproductive meetings, but your team are learning to embrace new ways of collaboration.', 'You have an environment that doesn’t encourage meetings just for the sake of having a meeting. Collaboration is key skill of your team.']))),
+		A4(
+		$author$project$Types$Question,
+		'Team members will openly express their opinions and concerns',
+		1,
+		5,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Your team may not feel as though their contributions are valued may feel oppressed and invisible.', 'b', 'Team members are confident in your ability to listen and to accept feedback.']))),
+		A4(
+		$author$project$Types$Question,
+		'Other people want to be on our team',
+		1,
+		0,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['People don’t see your team as an aspiration or a career progression.', 'Your team culture is productive, but is not seen as dynamic and a great place to work. Consider and approach to team visibility.', 'Your team feels nurtured and encouraged, whilst having a clear direction. Having the right team culture is important to you and others recognise that.']))),
+		A4(
+		$author$project$Types$Question,
+		'My team has created their own set of operating guidelines and practices which they are fully bought into',
+		1,
+		1,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Your team is in need of processes and controls that they are able and willing to follow.', 'You have processes established within the team, but are still evolving their maturity; a consistency of usage; and a level of flexibility.', 'There is a fine line between having an open and relaxed culture, and having a lack of control. You seem to have found the perfect balance and also understand the emotional impact of too many dictated and rigid controls.']))),
+		A4(
+		$author$project$Types$Question,
+		'All team members hold each other, including me, accountable for outcomes',
+		1,
+		1,
+		$author$project$Data$feedbackListFromStrings(
+			_List_fromArray(
+				['Teams members are more comfortable with rigid rules and guidelines, than are empowered to hold themselves accountable.', 'Team members have explored making some decisions themselves, but are more comfortable with allowing you to make decisions. Explore ways of enforcing decision making control further down the chain of command.', 'You are a true servant leader. Guiding the team from within, so that you are perceived as a truly valuable team member and not a manager.'])))
+	]);
+var $author$project$Types$AnsweringQuestions = function (a) {
+	return {$: 0, a: a};
+};
+var $author$project$Types$FillingOutForm = {$: 1};
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $author$project$Main$filterOutUnanswered = function (prompt) {
+	var _v0 = prompt.d;
+	if (!_v0.$) {
+		var selectedResponse = _v0.a;
+		return false;
+	} else {
+		return true;
+	}
+};
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Main$nextUnansweredQuestion = function (prompts) {
+	return $elm$core$List$head(
+		A2($elm$core$List$filter, $author$project$Main$filterOutUnanswered, prompts));
+};
+var $author$project$Main$selectState = function (prompts) {
+	var _v0 = $author$project$Main$nextUnansweredQuestion(prompts);
+	if (!_v0.$) {
+		var prompt = _v0.a;
+		return $author$project$Types$AnsweringQuestions(prompt);
+	} else {
+		return $author$project$Types$FillingOutForm;
+	}
+};
+var $author$project$Main$init = function (_v0) {
+	var prompts = $author$project$Main$newPrompts($author$project$Data$questionList);
+	var emptyFormData = {L: '', M: '', N: '', O: ''};
+	return _Utils_Tuple2(
+		{
+			u: false,
+			e: emptyFormData,
+			F: prompts,
+			Q: A4($author$project$Types$Results, 0, 0, 0, 0),
+			R: $author$project$Main$selectState(prompts)
+		},
+		$elm$core$Platform$Cmd$none);
+};
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $elm$browser$Browser$sandbox = function (impl) {
-	return _Browser_element(
-		{
-			aJ: function (_v0) {
-				return _Utils_Tuple2(impl.aJ, $elm$core$Platform$Cmd$none);
-			},
-			aP: function (_v1) {
-				return $elm$core$Platform$Sub$none;
-			},
-			aR: F2(
-				function (msg, model) {
-					return _Utils_Tuple2(
-						A2(impl.aR, msg, model),
-						$elm$core$Platform$Cmd$none);
-				}),
-			aS: impl.aS
-		});
+var $author$project$Main$subscriptions = function (model) {
+	return $elm$core$Platform$Sub$none;
 };
 var $author$project$Types$ShowingResults = {$: 2};
 var $elm$core$List$any = F2(
@@ -5430,6 +5418,25 @@ var $elm$core$List$drop = F2(
 			}
 		}
 	});
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $elm$json$Json$Encode$list = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(0),
+				entries));
+	});
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Ports$storeResponses = _Platform_outgoingPort('storeResponses', $elm$json$Json$Encode$string);
+var $author$project$Ports$saveResponses = function (responses) {
+	return $author$project$Ports$storeResponses(
+		A2(
+			$elm$json$Json$Encode$encode,
+			0,
+			A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$int, responses)));
+};
 var $author$project$Main$scoreResponse = function (response) {
 	switch (response) {
 		case 1:
@@ -5648,13 +5655,17 @@ var $author$project$Main$update = F2(
 						Q: updatedResults,
 						R: $author$project$Main$selectState(updatedPrompts)
 					});
-				return updatedModel;
+				return _Utils_Tuple2(
+					updatedModel,
+					$author$project$Ports$saveResponses(
+						_List_fromArray(
+							[1, 2, 3])));
 			case 1:
 				var updatedModelState = _Utils_update(
 					model,
 					{R: $author$project$Types$ShowingResults});
 				var conditional = model.u;
-				return conditional ? updatedModelState : model;
+				return conditional ? _Utils_Tuple2(updatedModelState, $elm$core$Platform$Cmd$none) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 2:
 				var updatedFirstname = msg.a;
 				var formData = model.e;
@@ -5662,9 +5673,11 @@ var $author$project$Main$update = F2(
 				var updatedFormData = _Utils_update(
 					formData,
 					{N: updatedFirstname});
-				return _Utils_update(
-					model,
-					{u: updatedAllowSubmit, e: updatedFormData});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{u: updatedAllowSubmit, e: updatedFormData}),
+					$elm$core$Platform$Cmd$none);
 			case 3:
 				var updatedLastname = msg.a;
 				var formData = model.e;
@@ -5672,9 +5685,11 @@ var $author$project$Main$update = F2(
 				var updatedFormData = _Utils_update(
 					formData,
 					{O: updatedLastname});
-				return _Utils_update(
-					model,
-					{u: updatedAllowSubmit, e: updatedFormData});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{u: updatedAllowSubmit, e: updatedFormData}),
+					$elm$core$Platform$Cmd$none);
 			case 4:
 				var updatedEmail = msg.a;
 				var formData = model.e;
@@ -5682,9 +5697,11 @@ var $author$project$Main$update = F2(
 				var updatedFormData = _Utils_update(
 					formData,
 					{M: updatedEmail});
-				return _Utils_update(
-					model,
-					{u: updatedAllowSubmit, e: updatedFormData});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{u: updatedAllowSubmit, e: updatedFormData}),
+					$elm$core$Platform$Cmd$none);
 			default:
 				var updatedCompany = msg.a;
 				var formData = model.e;
@@ -5692,9 +5709,11 @@ var $author$project$Main$update = F2(
 				var updatedFormData = _Utils_update(
 					formData,
 					{L: updatedCompany});
-				return _Utils_update(
-					model,
-					{u: updatedAllowSubmit, e: updatedFormData});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{u: updatedAllowSubmit, e: updatedFormData}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Types$ChangeModelState = {$: 1};
@@ -5755,7 +5774,6 @@ var $author$project$GraphElements$bar = function (barHeight) {
 			]));
 };
 var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -6602,7 +6620,7 @@ var $author$project$Main$view = function (model) {
 					]));
 	}
 };
-var $author$project$Main$main = $elm$browser$Browser$sandbox(
-	{aJ: $author$project$Main$init, aR: $author$project$Main$update, aS: $author$project$Main$view});
+var $author$project$Main$main = $elm$browser$Browser$element(
+	{aJ: $author$project$Main$init, aP: $author$project$Main$subscriptions, aR: $author$project$Main$update, aS: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));

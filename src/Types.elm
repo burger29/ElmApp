@@ -1,6 +1,6 @@
 module Types
     exposing
-        (Feedback(..)
+        ( Feedback(..)
         , FormData
         , Model
         , ModelState(..)

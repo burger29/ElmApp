@@ -18,6 +18,11 @@
     var app = Elm.Main.init({
       node: document.getElementById('elm')
     });
+    app.ports.storeResponses.subscribe(function(responses) {
+        var responsesJson = JSON.stringify(responses);
+        localStorage.setItem('reponses-app-save', responsesJson);
+        console.log("Responses: ", responsesJson);
+    });
     </script>
   </body>
 </html>
