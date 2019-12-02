@@ -45,6 +45,7 @@ import Html.Attributes as A
         )
 import Html.Events exposing (onClick, onInput)
 import Json.Encode
+import Json.Decode as Decode
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Types
@@ -63,7 +64,7 @@ import Types
         )
 import Ports exposing (saveResponses)
 
-
+main : Program (Maybe (List Int)) Model Msg
 main =
     Browser.element
         { init = init
@@ -73,8 +74,8 @@ main =
         }
 
 
-init : () -> (Model, Cmd msg)
-init _ =
+init : Maybe (List Int) -> (Model, Cmd msg)
+init flags =
     let
         prompts =
             newPrompts questionList
@@ -85,9 +86,30 @@ init _ =
             , formEmail = ""
             , formCompany = ""
             }
+
+        -- decodedString =
+        --   flags
+        --     |> Decode.list
+        --     |> Decode.int
+
+        savedResponses =
+            case flags of
+                Just responses ->
+                    List.map intToSelectedResponse responses
+
+                Nothing ->
+                    List.repeat (List.length prompts) Nothing
+
+        savedPrompts =
+            List.map2
+              (\ savedResponse prompt ->
+                  { prompt | selectedResponse = savedResponse}
+              ) savedResponses prompts
+
+
     in
-    ( { prompts = prompts
-      , state = selectState prompts
+    ( { prompts = savedPrompts
+      , state = selectState savedPrompts
       , results = Results 0 0 0 0
       , formData = emptyFormData
       , allowSubmit = False
@@ -188,8 +210,11 @@ update msg model =
 
                 updatedModel =
                     { model | prompts = updatedPrompts, results = updatedResults, state = selectState updatedPrompts }
+
+                responsesList =
+                    List.map selectedResponseToInt updatedModel.prompts
             in
-            (updatedModel, saveResponses [1,2,3])
+            (updatedModel, saveResponses responsesList)
 
         ChangeModelState ->
             let
@@ -418,8 +443,54 @@ promptToFeedback prompt =
         Array.get feedbackIndex (Array.fromList prompt.feedbackList)
 
 
+selectedResponseToInt : Prompt -> Int
+selectedResponseToInt prompt =
+      case prompt.selectedResponse of
+            Just response ->
+                  case response of
+                      StronglyAgree ->
+                          1
 
---
+                      Agree ->
+                          2
+
+                      Neutral ->
+                          3
+
+                      Disagree ->
+                          4
+
+                      StronglyDisagree ->
+                          5
+
+            Nothing ->
+                0
+
+intToSelectedResponse : Int -> Maybe Response
+intToSelectedResponse flag =
+      case flag of
+          1 ->
+              Just StronglyAgree
+
+          2 ->
+              Just Agree
+
+          3 ->
+              Just Neutral
+
+          4 ->
+              Just Disagree
+
+          5 ->
+              Just StronglyDisagree
+
+          _ ->
+              Nothing
+
+
+
+
+
 --
 --VIEW AND HTML MSGS
 
