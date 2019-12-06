@@ -45,7 +45,7 @@ import Html.Attributes as A
         )
 import Html.Events exposing (onClick, onInput)
 import Json.Encode
-import Json.Decode as Decode
+import Json.Decode as Decode exposing (int, list)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Types
@@ -86,11 +86,10 @@ init flags =
             , formEmail = ""
             , formCompany = ""
             }
-
+        --
+        -- decodedString : String ->
         -- decodedString =
-        --   flags
-        --     |> Decode.list
-        --     |> Decode.int
+        --   Decode.decodeString (list int) flags
 
         savedResponses =
             case flags of
