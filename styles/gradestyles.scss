@@ -8,6 +8,22 @@ h4 {
   }
 }
 
+.tracker {
+  padding-top: 30px;
+  font-family: "Proxima Nova", sans-serif;
+  font-weight: 600;
+  font-size: 2em;
+  color: #151746;
+  & span {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+.active-tracker {
+  color: #ff671f;
+}
+
 .question {
   color: black;
   font-family: "Adelle Sans", sans-serif;
@@ -21,7 +37,7 @@ h4 {
   color: black;
   font-family: "Adelle Sans", sans-serif;
   font-weight: 400;
-  padding-top: 16px;
+  padding-top: 30px;
 }
 
 .question-number {
