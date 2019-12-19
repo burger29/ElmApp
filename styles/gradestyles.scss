@@ -101,10 +101,19 @@ h4 {
   font-family: "Proxima Nova", sans-serif;
   font-weight: 600;
   line-height: 1;
+  color: #151746;
 }
 
 .bar-style {
   fill: #151746;
+}
+
+.bar-strong {
+  fill: #6cc24a;
+}
+
+.bar-weak {
+  fill: #ff671f;
 }
 
 .response-header {

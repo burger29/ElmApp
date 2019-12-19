@@ -10287,7 +10287,11 @@ var $author$project$Types$UpdateFormFirstName = function (a) {
 var $author$project$Types$UpdateFormLastName = function (a) {
 	return {$: 'UpdateFormLastName', a: a};
 };
+var $author$project$GraphElements$barColor = function (sumResults) {
+	return (sumResults >= 3) ? '#6cc24a' : ((_Utils_cmp(sumResults, -3) < 1) ? '#ff671f' : '#151746');
+};
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$g = $elm$svg$Svg$trustedNode('g');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
@@ -10298,39 +10302,42 @@ var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
 var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var $author$project$GraphElements$bar = function (barHeight) {
-	return A2(
-		$elm$svg$Svg$svg,
-		_List_fromArray(
-			[
-				$elm$svg$Svg$Attributes$x('0px'),
-				$elm$svg$Svg$Attributes$y('0px'),
-				$elm$svg$Svg$Attributes$viewBox(
-				'-25 0 100 ' + $elm$core$String$fromInt(barHeight)),
-				$elm$svg$Svg$Attributes$style('enable-background:new 0 0 175 400;')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$elm$svg$Svg$g,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$svg$Svg$rect,
-						_List_fromArray(
-							[
-								$elm$svg$Svg$Attributes$x('0.5'),
-								$elm$svg$Svg$Attributes$y('0'),
-								$elm$svg$Svg$Attributes$class('st0'),
-								$elm$svg$Svg$Attributes$width('50'),
-								$elm$svg$Svg$Attributes$height(
-								$elm$core$String$fromInt(barHeight))
-							]),
-						_List_Nil)
-					]))
-			]));
-};
+var $author$project$GraphElements$bar = F2(
+	function (barHeight, colorBar) {
+		return A2(
+			$elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x('0px'),
+					$elm$svg$Svg$Attributes$y('0px'),
+					$elm$svg$Svg$Attributes$viewBox(
+					'-25 0 100 ' + $elm$core$String$fromInt(barHeight)),
+					$elm$svg$Svg$Attributes$style('enable-background:new 0 0 175 400;')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$svg$Svg$g,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$svg$Svg$rect,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$x('0.5'),
+									$elm$svg$Svg$Attributes$y('0'),
+									$elm$svg$Svg$Attributes$class('st0'),
+									$elm$svg$Svg$Attributes$width('50'),
+									$elm$svg$Svg$Attributes$height(
+									$elm$core$String$fromInt(barHeight)),
+									$elm$svg$Svg$Attributes$fill(
+									$author$project$GraphElements$barColor(colorBar))
+								]),
+							_List_Nil)
+						]))
+				]));
+	});
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$h4 = _VirtualDom_node('h4');
@@ -11045,41 +11052,41 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 bar-style')
+												$elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2')
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.sc + 6) * 12)
+												A2($author$project$GraphElements$bar, (exposeResults.sc + 6) * 12, exposeResults.sc)
 											])),
 										A2(
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center')
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.am + 6) * 12)
+												A2($author$project$GraphElements$bar, (exposeResults.am + 6) * 12, exposeResults.am)
 											])),
 										A2(
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center')
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.cl + 6) * 12)
+												A2($author$project$GraphElements$bar, (exposeResults.cl + 6) * 12, exposeResults.cl)
 											])),
 										A2(
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center')
 											]),
 										_List_fromArray(
 											[
-												$author$project$GraphElements$bar((exposeResults.cc + 6) * 12)
+												A2($author$project$GraphElements$bar, (exposeResults.cc + 6) * 12, exposeResults.cc)
 											]))
 									])),
 								A2(
@@ -11094,7 +11101,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 bar-style')
+												$elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 ')
 											]),
 										_List_fromArray(
 											[
@@ -11113,7 +11120,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center ')
 											]),
 										_List_fromArray(
 											[
@@ -11132,7 +11139,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center  pl-2 pr-2')
 											]),
 										_List_fromArray(
 											[
@@ -11151,7 +11158,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center bar-style')
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center  pl-2 pr-2')
 											]),
 										_List_fromArray(
 											[
@@ -11202,6 +11209,176 @@ var $author$project$Main$view = function (model) {
 														]));
 											},
 											model.prompts))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row align-items-start no-gutters')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 ')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$h4,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('bar-label text-center')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Safety Culture')
+													]))
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center ')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$h4,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('bar-label text-center')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Agile Mindset')
+													]))
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center  pl-2 pr-2')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$h4,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('bar-label text-center')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Coaching Leadership')
+													]))
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center  pl-2 pr-2')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$h4,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('bar-label text-center')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Collaborative Culture')
+													]))
+											]))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row align-items-start no-gutters pb-4')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 ')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$h4,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('text-center list-courses')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Management of Risk® Foundation DevOps Foundation ITIL®4 Direct, Plan, & Improve')
+													]))
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center ')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$h4,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('text-center list-courses')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('AgileSHIFT® Agile Foundation Agile Scrum Master ITIL®4 High Velocity IT')
+													]))
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center  pl-2 pr-2')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$h4,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('text-center list-courses')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('ITIL®4 Direct, Plan, & Improve ITIL®4 Digital & IT Strategy Management of Risk®')
+													]))
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center  pl-2 pr-2')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$h4,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('text-center list-courses')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('DevOps Foundation DevOps Professional SIAM Foundation')
+													]))
+											]))
 									]))
 							]))
 					]));

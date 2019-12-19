@@ -488,8 +488,6 @@ intToSelectedResponse flag =
 
 
 
-
-
 --
 --VIEW AND HTML MSGS
 
@@ -656,30 +654,30 @@ view model =
                       ]
                 , div [ A.class "container" ]
                     [ div [ A.class "row pt-5 align-items-end no-gutters" ]
-                        [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 bar-style" ]
-                            [ bar ((exposeResults.sc + 6) * 12)
+                        [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2" ]
+                            [ bar ((exposeResults.sc + 6) * 12) exposeResults.sc
                             ]
-                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                            [ bar ((exposeResults.am + 6) * 12)
+                        , div [ A.class "col-3 col-md-2 text-center" ]
+                            [ bar ((exposeResults.am + 6) * 12) exposeResults.am
                             ]
-                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                            [ bar ((exposeResults.cl + 6) * 12)
+                        , div [ A.class "col-3 col-md-2 text-center" ]
+                            [ bar ((exposeResults.cl + 6) * 12) exposeResults.cl
                             ]
-                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
-                            [ bar ((exposeResults.cc + 6) * 12)
+                        , div [ A.class "col-3 col-md-2 text-center" ]
+                            [ bar ((exposeResults.cc + 6) * 12) exposeResults.cc
                             ]
                         ]
                     , div [ A.class "row align-items-start no-gutters" ]
-                        [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 bar-style" ]
+                        [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 " ]
                             [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Safety Culture" ]
                             ]
-                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                        , div [ A.class "col-3 col-md-2 text-center " ]
                             [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Agile Mindset" ]
                             ]
-                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                        , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
                             [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Coaching Leadership" ]
                             ]
-                        , div [ A.class "col-3 col-md-2 text-center bar-style" ]
+                        , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
                             [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
                             ]
                         ]
@@ -698,6 +696,34 @@ view model =
                                 )
                                 model.prompts
                             )
+                        ]
+                    , div [ A.class "row align-items-start no-gutters" ]
+                        [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 " ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Safety Culture" ]
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center " ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Agile Mindset" ]
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Coaching Leadership" ]
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
+                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
+                            ]
+                        ]
+                    , div [ A.class "row align-items-start no-gutters pb-4" ]
+                        [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 " ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text "Management of Risk® Foundation DevOps Foundation ITIL®4 Direct, Plan, & Improve" ]
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center " ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text "AgileSHIFT® Agile Foundation Agile Scrum Master ITIL®4 High Velocity IT" ]
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text "ITIL®4 Direct, Plan, & Improve ITIL®4 Digital & IT Strategy Management of Risk®" ]
+                            ]
+                        , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text "DevOps Foundation DevOps Professional SIAM Foundation" ]
+                            ]
                         ]
                     ]
                 ]
