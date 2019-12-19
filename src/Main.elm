@@ -513,7 +513,7 @@ view model =
         AnsweringQuestions prompt ->
             div []
                 [ div [ A.class "container-fluid p-0" ]
-                    [ div []
+                    [ div [ A.class "banner-image d-flex justify-content-center" ]
                         [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
                         ]
                     ]
@@ -544,7 +544,7 @@ view model =
         FillingOutForm ->
             div []
                 [ div [ A.class "container-fluid p-0" ]
-                    [ div []
+                    [ div [ A.class "banner-image d-flex justify-content-center" ]
                         [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
                         ]
                     ]
@@ -557,7 +557,7 @@ view model =
                       ]
                 , div [ A.class "container" ]
                     [ div [ A.class "row" ]
-                        [ div [ A.class "col-12 col-md-6 offset-md-3 justify-content-center unlock-results" ]
+                        [ div [ A.class "col-12 col-md-6 offset-md-3 justify-content-center unlock-results text-center" ]
                             [ Html.text "Unlock Your Results!"
                             , form
                                 [ A.class "form-group justify-content-center row"
@@ -628,8 +628,8 @@ view model =
                                         []
                                     ]
                                 ]
-                            , div [ A.class "row justify-content-center pt-4" ]
-                                [ button [ A.class "button-submit", onClick ChangeModelState ] [ Html.text "Submit" ]
+                            , div [ A.class "row justify-content-center pt-4 pb-5 mb-5" ]
+                                [ button [ A.class "button-submit btn btn-lg", onClick ChangeModelState ] [ Html.text "Submit" ]
                                 ]
                             ]
                         ]
@@ -643,7 +643,7 @@ view model =
             in
             div []
                 [ div [ A.class "container-fluid p-0" ]
-                    [ div []
+                    [ div [ A.class "banner-image d-flex justify-content-center" ]
                         [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
                         ]
                     ]

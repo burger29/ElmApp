@@ -9752,7 +9752,7 @@ var $author$project$Data$questionList = _List_fromArray(
 		$author$project$Types$SCCC,
 		$author$project$Data$feedbackListFromStrings(
 			_List_fromArray(
-				['Your team may not feel as though their contributions are valued may feel oppressed and invisible.', 'b', 'Team members are confident in your ability to listen and to accept feedback.']))),
+				['Your team may not feel as though their contributions are valued may feel oppressed and invisible.', 'Your team is content within their own environment, but this will need your attention to ensure that satisfaction levels do not drop.', 'Team members are confident in your ability to listen and to accept feedback.']))),
 		A4(
 		$author$project$Types$Question,
 		'Other people want to be on our team',
@@ -10530,7 +10530,10 @@ var $author$project$Main$view = function (model) {
 							[
 								A2(
 								$elm$html$Html$div,
-								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('banner-image d-flex justify-content-center')
+									]),
 								_List_fromArray(
 									[
 										A2(
@@ -10676,7 +10679,10 @@ var $author$project$Main$view = function (model) {
 							[
 								A2(
 								$elm$html$Html$div,
-								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('banner-image d-flex justify-content-center')
+									]),
 								_List_fromArray(
 									[
 										A2(
@@ -10756,7 +10762,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-12 col-md-6 offset-md-3 justify-content-center unlock-results')
+												$elm$html$Html$Attributes$class('col-12 col-md-6 offset-md-3 justify-content-center unlock-results text-center')
 											]),
 										_List_fromArray(
 											[
@@ -10919,7 +10925,7 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$div,
 												_List_fromArray(
 													[
-														$elm$html$Html$Attributes$class('row justify-content-center pt-4')
+														$elm$html$Html$Attributes$class('row justify-content-center pt-4 pb-5 mb-5')
 													]),
 												_List_fromArray(
 													[
@@ -10927,7 +10933,7 @@ var $author$project$Main$view = function (model) {
 														$elm$html$Html$button,
 														_List_fromArray(
 															[
-																$elm$html$Html$Attributes$class('button-submit'),
+																$elm$html$Html$Attributes$class('button-submit btn btn-lg'),
 																$elm$html$Html$Events$onClick($author$project$Types$ChangeModelState)
 															]),
 														_List_fromArray(
@@ -10956,7 +10962,10 @@ var $author$project$Main$view = function (model) {
 							[
 								A2(
 								$elm$html$Html$div,
-								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('banner-image d-flex justify-content-center')
+									]),
 								_List_fromArray(
 									[
 										A2(
