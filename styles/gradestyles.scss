@@ -148,3 +148,23 @@ h4 {
   padding-top: 30px;
   font-size: 2em;
 }
+
+.recommended-courses {
+  font-family: "Proxima Nova", sans-serif;
+  font-weight: 600;
+  font-size: 1.6em;
+  color: #6cc24a;
+  padding-bottom: 30px;
+}
+
+.CTA-link {
+  font-family: "Proxima Nova", sans-serif;
+  font-weight: 600;
+  font-size: 1.2em;
+  color: #ff671f;
+  padding-bottom: 50px;
+  &:hover {
+    color: #ff676f;
+    text-decoration: none;
+  }
+}

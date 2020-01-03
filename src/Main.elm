@@ -21,6 +21,7 @@ import Html
         , span
         , text
         , ul
+        , a
         )
 import Html.Attributes as A
     exposing
@@ -487,6 +488,44 @@ intToSelectedResponse flag =
               Nothing
 
 
+-- selectVideoSC : Int -> String
+-- selectVideoSC results =
+--
+--       if results >= 3 then
+--         "Management of Risk® Foundation"
+--
+--       else if results <= -3 then
+--         "ITIL®4 Direct, Plan, & Improve"
+--
+--       else
+--         "DevOps Foundation"
+
+
+resultsToIndex : Int -> Int
+resultsToIndex results =
+
+      if results >= 3 then
+        0
+
+      else if results <= -3 then
+        2
+
+      else
+        1
+
+
+resultsToCourses : Int -> List String -> String
+resultsToCourses x courses =
+  Array.fromList courses
+    |> Array.get (resultsToIndex x)
+    |> Maybe.withDefault "No courses."
+
+
+resultsToOverviews : Int -> List String -> String
+resultsToOverviews x courses =
+  Array.fromList courses
+    |> Array.get (resultsToIndex x)
+    |> Maybe.withDefault "https://www.youtube.com/embed/YihH5Gs1V9Q"
 
 --
 --VIEW AND HTML MSGS
@@ -527,7 +566,7 @@ view model =
                         [ Html.text "How well do you think your team is performing? ITIL master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert."
                         ]
                     , div [ A.class "pt-5 row justify-content-center" ]
-                        [ div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe ]
+                        [ div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe "https://www.youtube.com/embed/YihH5Gs1V9Q"]
                         ]
                     , p [ A.class "question-number pt-5" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
                     , p [ A.class "question" ] [ Html.text prompt.question ]
@@ -682,8 +721,6 @@ view model =
                             ]
                         ]
                     , div [ A.class "response-header" ] [ Html.text "More about your team" ]
-
-                    -- , div [ A.class "response-style" ] []
                     , div [ A.class "list-courses" ]
                         [ ul []
                             (List.map
@@ -697,32 +734,26 @@ view model =
                                 model.prompts
                             )
                         ]
-                    , div [ A.class "row align-items-start no-gutters" ]
-                        [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 " ]
-                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Safety Culture" ]
-                            ]
-                        , div [ A.class "col-3 col-md-2 text-center " ]
-                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Agile Mindset" ]
-                            ]
-                        , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
-                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Coaching Leadership" ]
-                            ]
-                        , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
-                            [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
-                            ]
-                        ]
+                    , div [ A.class "d-flex justify-content-center recommended-courses" ] [ Html.text "Recommended Courses For Your Team" ]
+                    , div [ A.class "row align-items-start no-gutters" ] []
                     , div [ A.class "row align-items-start no-gutters pb-4" ]
                         [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 " ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text "Management of Risk® Foundation DevOps Foundation ITIL®4 Direct, Plan, & Improve" ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.sc [ "Management of Risk® Foundation", "ITIL®4 Direct, Plan, & Improve", "DevOps Foundation" ]) ]
+                            , div [] [ videoframe (resultsToOverviews exposeResults.sc ["https://player.vimeo.com/video/276090853?autoplay=1", "https://player.vimeo.com/video/223335912?autoplay=1", "https://player.vimeo.com/video/312270891?autoplay=1"])]
                             ]
                         , div [ A.class "col-3 col-md-2 text-center " ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text "AgileSHIFT® Agile Foundation Agile Scrum Master ITIL®4 High Velocity IT" ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.am [ "AgileSHIFT®", "Agile Foundation", "Agile Scrum Master" ]) ]
                             ]
                         , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text "ITIL®4 Direct, Plan, & Improve ITIL®4 Digital & IT Strategy Management of Risk®" ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.cl [ "ITIL®4 Direct, Plan, & Improve", "ITIL®4 Digital & IT Strategy", "Management of Risk®" ]) ]
                             ]
                         , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text "DevOps Foundation DevOps Professional SIAM Foundation" ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.cc [ "DevOps Foundation", "DevOps Professional", "SIAM Foundation" ]) ]
+                            ]
+                        ]
+                    , div [ A.class "row align-items-center"]
+                        [ div [ A.class "col-12 text-center" ]
+                            [ Html.a [ A.href "https://www.itpro.tv/", A.class "CTA-link" ] [ Html.text "Check out these courses and more at itpro.tv!"]
                             ]
                         ]
                     ]

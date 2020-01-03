@@ -10466,6 +10466,29 @@ var $elm$html$Html$Attributes$boolProperty = F2(
 			$elm$json$Json$Encode$bool(bool));
 	});
 var $elm$html$Html$Attributes$required = $elm$html$Html$Attributes$boolProperty('required');
+var $author$project$Main$resultsToIndex = function (results) {
+	return (results >= 3) ? 0 : ((_Utils_cmp(results, -3) < 1) ? 2 : 1);
+};
+var $author$project$Main$resultsToCourses = F2(
+	function (x, courses) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			'No courses.',
+			A2(
+				$elm$core$Array$get,
+				$author$project$Main$resultsToIndex(x),
+				$elm$core$Array$fromList(courses)));
+	});
+var $author$project$Main$resultsToOverviews = F2(
+	function (x, courses) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			'https://www.youtube.com/embed/YihH5Gs1V9Q',
+			A2(
+				$elm$core$Array$get,
+				$author$project$Main$resultsToIndex(x),
+				$elm$core$Array$fromList(courses)));
+	});
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
@@ -10499,20 +10522,22 @@ var $elm$html$Html$Attributes$width = function (n) {
 		'width',
 		$elm$core$String$fromInt(n));
 };
-var $author$project$Data$videoframe = A2(
-	$elm$html$Html$iframe,
-	_List_fromArray(
-		[
-			$elm$html$Html$Attributes$width(560),
-			$elm$html$Html$Attributes$height(315),
-			$elm$html$Html$Attributes$src('https://www.youtube.com/embed/YihH5Gs1V9Q'),
-			A2(
-			$elm$html$Html$Attributes$property,
-			'allowfullscreen',
-			$elm$json$Json$Encode$string('true')),
-			$elm$html$Html$Attributes$class('embed-responsive-item')
-		]),
-	_List_Nil);
+var $author$project$Data$videoframe = function (url) {
+	return A2(
+		$elm$html$Html$iframe,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$width(560),
+				$elm$html$Html$Attributes$height(315),
+				$elm$html$Html$Attributes$src(url),
+				A2(
+				$elm$html$Html$Attributes$property,
+				'allowfullscreen',
+				$elm$json$Json$Encode$string('true')),
+				$elm$html$Html$Attributes$class('embed-responsive-item')
+			]),
+		_List_Nil);
+};
 var $author$project$Main$view = function (model) {
 	var formLastName = model.formData.formLastName;
 	var formFirstName = model.formData.formFirstName;
@@ -10633,7 +10658,9 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$Attributes$class('pt-5 embed-responsive embed-responsive-16by9 video-div col-8')
 											]),
 										_List_fromArray(
-											[$author$project$Data$videoframe]))
+											[
+												$author$project$Data$videoframe('https://www.youtube.com/embed/YihH5Gs1V9Q')
+											]))
 									])),
 								A2(
 								$elm$html$Html$p,
@@ -11214,87 +11241,19 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('row align-items-start no-gutters')
+										$elm$html$Html$Attributes$class('d-flex justify-content-center recommended-courses')
 									]),
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 ')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$h4,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('bar-label text-center')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Safety Culture')
-													]))
-											])),
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center ')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$h4,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('bar-label text-center')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Agile Mindset')
-													]))
-											])),
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center  pl-2 pr-2')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$h4,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('bar-label text-center')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Coaching Leadership')
-													]))
-											])),
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center  pl-2 pr-2')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$h4,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('bar-label text-center')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Collaborative Culture')
-													]))
-											]))
+										$elm$html$Html$text('Recommended Courses For Your Team')
 									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row align-items-start no-gutters')
+									]),
+								_List_Nil),
 								A2(
 								$elm$html$Html$div,
 								_List_fromArray(
@@ -11319,7 +11278,24 @@ var $author$project$Main$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														$elm$html$Html$text('Management of Risk® Foundation DevOps Foundation ITIL®4 Direct, Plan, & Improve')
+														$elm$html$Html$text(
+														A2(
+															$author$project$Main$resultsToCourses,
+															exposeResults.sc,
+															_List_fromArray(
+																['Management of Risk® Foundation', 'ITIL®4 Direct, Plan, & Improve', 'DevOps Foundation'])))
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$author$project$Data$videoframe(
+														A2(
+															$author$project$Main$resultsToOverviews,
+															exposeResults.sc,
+															_List_fromArray(
+																['https://player.vimeo.com/video/276090853?autoplay=1', 'https://player.vimeo.com/video/223335912?autoplay=1', 'https://player.vimeo.com/video/312270891?autoplay=1'])))
 													]))
 											])),
 										A2(
@@ -11338,7 +11314,12 @@ var $author$project$Main$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														$elm$html$Html$text('AgileSHIFT® Agile Foundation Agile Scrum Master ITIL®4 High Velocity IT')
+														$elm$html$Html$text(
+														A2(
+															$author$project$Main$resultsToCourses,
+															exposeResults.am,
+															_List_fromArray(
+																['AgileSHIFT®', 'Agile Foundation', 'Agile Scrum Master'])))
 													]))
 											])),
 										A2(
@@ -11357,7 +11338,12 @@ var $author$project$Main$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														$elm$html$Html$text('ITIL®4 Direct, Plan, & Improve ITIL®4 Digital & IT Strategy Management of Risk®')
+														$elm$html$Html$text(
+														A2(
+															$author$project$Main$resultsToCourses,
+															exposeResults.cl,
+															_List_fromArray(
+																['ITIL®4 Direct, Plan, & Improve', 'ITIL®4 Digital & IT Strategy', 'Management of Risk®'])))
 													]))
 											])),
 										A2(
@@ -11376,7 +11362,41 @@ var $author$project$Main$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														$elm$html$Html$text('DevOps Foundation DevOps Professional SIAM Foundation')
+														$elm$html$Html$text(
+														A2(
+															$author$project$Main$resultsToCourses,
+															exposeResults.cc,
+															_List_fromArray(
+																['DevOps Foundation', 'DevOps Professional', 'SIAM Foundation'])))
+													]))
+											]))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row align-items-center')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('col-12 text-center')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$a,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$href('https://www.itpro.tv/'),
+														$elm$html$Html$Attributes$class('CTA-link')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Check out these courses and more at itpro.tv!')
 													]))
 											]))
 									]))

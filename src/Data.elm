@@ -4,7 +4,7 @@ import Array as Array
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Json.Encode
-import Types exposing (Feedback(..), PromptCategory(..), Question(..))
+import Types exposing (Feedback(..), PromptCategory(..), Question(..), Msg(..))
 
 
 questionList : List Question
@@ -102,11 +102,12 @@ questionList =
     ]
 
 
-videoframe =
+videoframe : String -> Html Msg
+videoframe url =
     iframe
         [ width 560
         , height 315
-        , src "https://www.youtube.com/embed/YihH5Gs1V9Q"
+        , src (url)
         , property "allowfullscreen" (Json.Encode.string "true")
         , class "embed-responsive-item"
         ]
