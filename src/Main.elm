@@ -44,7 +44,7 @@ import Html.Attributes as A
         , value
         , width
         )
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (onClick, onInput, onSubmit)
 import Json.Encode
 import Json.Decode as Decode exposing (int, list)
 import Svg exposing (..)
@@ -599,6 +599,7 @@ view model =
                             , form
                                 [ A.class "form-group justify-content-center row"
                                 , A.method "post"
+                                , onSubmit ChangeModelState
                                 ]
                                 [ label [ A.class "sr-only", for "pardot_firstName" ] [ Html.text "First Name" ]
                                 , div [ A.class "col-12" ]
@@ -664,10 +665,14 @@ view model =
                                         ]
                                         []
                                     ]
+                                , input
+                                  [ A.class "button-submit btn btn-lg"
+                                  , A.type_ "submit"
+                                  ] [ Html.text "Submit" ]
+
                                 ]
-                            , div [ A.class "row justify-content-center pt-4 pb-5 mb-5" ]
-                                [ button [ A.class "button-submit btn btn-lg", onClick ChangeModelState ] [ Html.text "Submit" ]
-                                ]
+
+
                             ]
                         ]
                     ]
