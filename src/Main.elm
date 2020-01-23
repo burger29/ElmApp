@@ -3,10 +3,11 @@ module Main exposing (main, update, view)
 import Array as Array
 import Browser
 import Data exposing (questionList, videoframe)
-import GraphElements exposing (bar)
+import GraphicalElements exposing (bar)
 import Html
     exposing
         ( Html
+        , a
         , button
         , div
         , form
@@ -21,7 +22,6 @@ import Html
         , span
         , text
         , ul
-        , a
         )
 import Html.Attributes as A
     exposing
@@ -45,8 +45,9 @@ import Html.Attributes as A
         , width
         )
 import Html.Events exposing (onClick, onInput, onSubmit)
-import Json.Encode
 import Json.Decode as Decode exposing (int, list)
+import Json.Encode
+import Ports exposing (saveResponses)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Types
@@ -63,7 +64,7 @@ import Types
         , Results
         , unwrapFeedback
         )
-import Ports exposing (saveResponses)
+
 
 main : Program (Maybe (List Int)) Model Msg
 main =
@@ -75,7 +76,7 @@ main =
         }
 
 
-init : Maybe (List Int) -> (Model, Cmd msg)
+init : Maybe (List Int) -> ( Model, Cmd msg )
 init flags =
     let
         prompts =
@@ -87,11 +88,11 @@ init flags =
             , formEmail = ""
             , formCompany = ""
             }
+
         --
         -- decodedString : String ->
         -- decodedString =
         --   Decode.decodeString (list int) flags
-
         savedResponses =
             case flags of
                 Just responses ->
@@ -102,11 +103,11 @@ init flags =
 
         savedPrompts =
             List.map2
-              (\ savedResponse prompt ->
-                  { prompt | selectedResponse = savedResponse}
-              ) savedResponses prompts
-
-
+                (\savedResponse prompt ->
+                    { prompt | selectedResponse = savedResponse }
+                )
+                savedResponses
+                prompts
     in
     ( { prompts = savedPrompts
       , state = selectState savedPrompts
@@ -149,7 +150,7 @@ selectState prompts =
             FillingOutForm
 
 
-update : Msg -> Model -> (Model, Cmd msg)
+update : Msg -> Model -> ( Model, Cmd msg )
 update msg model =
     case msg of
         SelectResponse response prompt ->
@@ -214,7 +215,7 @@ update msg model =
                 responsesList =
                     List.map selectedResponseToInt updatedModel.prompts
             in
-            (updatedModel, saveResponses responsesList)
+            ( updatedModel, saveResponses responsesList )
 
         ChangeModelState ->
             let
@@ -225,10 +226,10 @@ update msg model =
                     model.allowSubmit
             in
             if conditional then
-                (updatedModelState, Cmd.none)
+                ( updatedModelState, Cmd.none )
 
             else
-                (model, Cmd.none)
+                ( model, Cmd.none )
 
         UpdateFormFirstName updatedFirstname ->
             let
@@ -241,7 +242,7 @@ update msg model =
                 updatedAllowSubmit =
                     checkToSubmit formData
             in
-            ({ model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none)
+            ( { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none )
 
         UpdateFormLastName updatedLastname ->
             let
@@ -254,7 +255,7 @@ update msg model =
                 updatedAllowSubmit =
                     checkToSubmit formData
             in
-            ({ model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none)
+            ( { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none )
 
         UpdateFormEmail updatedEmail ->
             let
@@ -267,7 +268,7 @@ update msg model =
                 updatedAllowSubmit =
                     checkToSubmit formData
             in
-            ({ model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none)
+            ( { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none )
 
         UpdateFormCompany updatedCompany ->
             let
@@ -280,7 +281,7 @@ update msg model =
                 updatedAllowSubmit =
                     checkToSubmit formData
             in
-            ({ model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none)
+            ( { model | formData = updatedFormData, allowSubmit = updatedAllowSubmit }, Cmd.none )
 
 
 convertResponse : Response -> String
@@ -445,47 +446,49 @@ promptToFeedback prompt =
 
 selectedResponseToInt : Prompt -> Int
 selectedResponseToInt prompt =
-      case prompt.selectedResponse of
-            Just response ->
-                  case response of
-                      StronglyAgree ->
-                          1
+    case prompt.selectedResponse of
+        Just response ->
+            case response of
+                StronglyAgree ->
+                    1
 
-                      Agree ->
-                          2
+                Agree ->
+                    2
 
-                      Neutral ->
-                          3
+                Neutral ->
+                    3
 
-                      Disagree ->
-                          4
+                Disagree ->
+                    4
 
-                      StronglyDisagree ->
-                          5
+                StronglyDisagree ->
+                    5
 
-            Nothing ->
-                0
+        Nothing ->
+            0
+
 
 intToSelectedResponse : Int -> Maybe Response
 intToSelectedResponse flag =
-      case flag of
-          1 ->
-              Just StronglyAgree
+    case flag of
+        1 ->
+            Just StronglyAgree
 
-          2 ->
-              Just Agree
+        2 ->
+            Just Agree
 
-          3 ->
-              Just Neutral
+        3 ->
+            Just Neutral
 
-          4 ->
-              Just Disagree
+        4 ->
+            Just Disagree
 
-          5 ->
-              Just StronglyDisagree
+        5 ->
+            Just StronglyDisagree
 
-          _ ->
-              Nothing
+        _ ->
+            Nothing
+
 
 
 -- selectVideoSC : Int -> String
@@ -503,29 +506,30 @@ intToSelectedResponse flag =
 
 resultsToIndex : Int -> Int
 resultsToIndex results =
-
-      if results >= 3 then
+    if results >= 3 then
         0
 
-      else if results <= -3 then
+    else if results <= -3 then
         2
 
-      else
+    else
         1
 
 
 resultsToCourses : Int -> List String -> String
 resultsToCourses x courses =
-  Array.fromList courses
-    |> Array.get (resultsToIndex x)
-    |> Maybe.withDefault "No courses."
+    Array.fromList courses
+        |> Array.get (resultsToIndex x)
+        |> Maybe.withDefault "No courses."
 
 
 resultsToOverviews : Int -> List String -> String
 resultsToOverviews x courses =
-  Array.fromList courses
-    |> Array.get (resultsToIndex x)
-    |> Maybe.withDefault "https://www.youtube.com/embed/YihH5Gs1V9Q"
+    Array.fromList courses
+        |> Array.get (resultsToIndex x)
+        |> Maybe.withDefault "https://www.youtube.com/embed/YihH5Gs1V9Q"
+
+
 
 --
 --VIEW AND HTML MSGS
@@ -551,22 +555,22 @@ view model =
             div []
                 [ div [ A.class "container-fluid p-0" ]
                     [ div [ A.class "banner-image d-flex justify-content-center" ]
-                        [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
+                        [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.jpg" ] []
                         ]
                     ]
                 , div [ A.class "container" ]
                     [ div [ A.class "d-flex justify-content-center tracker" ]
-                          [ Html.span [ A.class "active-tracker" ] [ Html.text "Step 1" ]
-                          , Html.span [] [ Html.text "//" ]
-                          , Html.span [] [ Html.text "Step 2" ]
-                          , Html.span [] [ Html.text "//" ]
-                          , Html.span [] [ Html.text "Step 3" ]
-                          ]
+                        [ Html.span [ A.class "active-tracker" ] [ Html.text "Step 1" ]
+                        , Html.span [] [ Html.text "//" ]
+                        , Html.span [] [ Html.text "Step 2" ]
+                        , Html.span [] [ Html.text "//" ]
+                        , Html.span [] [ Html.text "Step 3" ]
+                        ]
                     , div [ A.class "intro container" ]
                         [ Html.text "How well do you think your team is performing? ITIL master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert."
                         ]
                     , div [ A.class "pt-5 row justify-content-center" ]
-                        [ div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe "https://www.youtube.com/embed/YihH5Gs1V9Q"]
+                        [ div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe "https://www.youtube.com/embed/YihH5Gs1V9Q" ]
                         ]
                     , p [ A.class "question-number pt-5" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
                     , p [ A.class "question" ] [ Html.text prompt.question ]
@@ -582,16 +586,16 @@ view model =
             div []
                 [ div [ A.class "container-fluid p-0" ]
                     [ div [ A.class "banner-image d-flex justify-content-center" ]
-                        [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
+                        [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.jpg" ] []
                         ]
                     ]
                 , div [ A.class "d-flex justify-content-center tracker" ]
-                      [ Html.span [] [ Html.text "Step 1" ]
-                      , Html.span [] [ Html.text "//" ]
-                      , Html.span [ A.class "active-tracker" ] [ Html.text "Step 2" ]
-                      , Html.span [] [ Html.text "//" ]
-                      , Html.span [] [ Html.text "Step 3" ]
-                      ]
+                    [ Html.span [] [ Html.text "Step 1" ]
+                    , Html.span [] [ Html.text "//" ]
+                    , Html.span [ A.class "active-tracker" ] [ Html.text "Step 2" ]
+                    , Html.span [] [ Html.text "//" ]
+                    , Html.span [] [ Html.text "Step 3" ]
+                    ]
                 , div [ A.class "container" ]
                     [ div [ A.class "row" ]
                         [ div [ A.class "col-12 col-md-6 offset-md-3 justify-content-center unlock-results text-center" ]
@@ -666,13 +670,11 @@ view model =
                                         []
                                     ]
                                 , input
-                                  [ A.class "button-submit btn btn-lg"
-                                  , A.type_ "submit"
-                                  ] [ Html.text "Submit" ]
-
+                                    [ A.class "button-submit btn btn-lg"
+                                    , A.type_ "submit"
+                                    ]
+                                    [ Html.text "Submit" ]
                                 ]
-
-
                             ]
                         ]
                     ]
@@ -686,16 +688,16 @@ view model =
             div []
                 [ div [ A.class "container-fluid p-0" ]
                     [ div [ A.class "banner-image d-flex justify-content-center" ]
-                        [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.png" ] []
+                        [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.jpg" ] []
                         ]
                     ]
                 , div [ A.class "d-flex justify-content-center tracker" ]
-                      [ Html.span [] [ Html.text "Step 1" ]
-                      , Html.span [] [ Html.text "//" ]
-                      , Html.span [] [ Html.text "Step 2" ]
-                      , Html.span [] [ Html.text "//" ]
-                      , Html.span [ A.class "active-tracker" ] [ Html.text "Step 3" ]
-                      ]
+                    [ Html.span [] [ Html.text "Step 1" ]
+                    , Html.span [] [ Html.text "//" ]
+                    , Html.span [] [ Html.text "Step 2" ]
+                    , Html.span [] [ Html.text "//" ]
+                    , Html.span [ A.class "active-tracker" ] [ Html.text "Step 3" ]
+                    ]
                 , div [ A.class "container" ]
                     [ div [ A.class "row pt-5 align-items-end no-gutters" ]
                         [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2" ]
@@ -725,8 +727,8 @@ view model =
                             [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
                             ]
                         ]
-                    , div [ A.class "response-header" ] [ Html.text "More about your team" ]
-                    , div [ A.class "list-courses" ]
+                    , div [ A.class "response-header text-center" ] [ Html.text "More About Your Team" ]
+                    , div [ A.class "list-courses pb-5" ]
                         [ ul []
                             (List.map
                                 (\prompt ->
@@ -740,25 +742,33 @@ view model =
                             )
                         ]
                     , div [ A.class "d-flex justify-content-center recommended-courses" ] [ Html.text "Recommended Courses For Your Team" ]
-                    , div [ A.class "row align-items-start no-gutters" ] []
-                    , div [ A.class "row align-items-start no-gutters pb-4" ]
-                        [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 " ]
+                    , div [ A.class "row text-center align-items-center" ]
+                        [ div [ A.class "col-12" ]
                             [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.sc [ "Management of Risk® Foundation", "ITIL®4 Direct, Plan, & Improve", "DevOps Foundation" ]) ]
-                            , div [] [ videoframe (resultsToOverviews exposeResults.sc ["https://player.vimeo.com/video/276090853?autoplay=1", "https://player.vimeo.com/video/223335912?autoplay=1", "https://player.vimeo.com/video/312270891?autoplay=1"])]
-                            ]
-                        , div [ A.class "col-3 col-md-2 text-center " ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.am [ "AgileSHIFT®", "Agile Foundation", "Agile Scrum Master" ]) ]
-                            ]
-                        , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.cl [ "ITIL®4 Direct, Plan, & Improve", "ITIL®4 Digital & IT Strategy", "Management of Risk®" ]) ]
-                            ]
-                        , div [ A.class "col-3 col-md-2 text-center  pl-2 pr-2" ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.cc [ "DevOps Foundation", "DevOps Professional", "SIAM Foundation" ]) ]
+                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/276090853?autoplay=1", "https://player.vimeo.com/video/223335912?autoplay=1", "https://player.vimeo.com/video/312270891?autoplay=1" ]) ]
                             ]
                         ]
-                    , div [ A.class "row align-items-center"]
+                    , div [ A.class "row text-center align-items-center" ]
+                        [ div [ A.class "col-12" ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.am [ "AgileSHIFT®", "Agile Foundation", "Agile Scrum Master" ]) ]
+                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/276090853?autoplay=1", "https://player.vimeo.com/video/223335912?autoplay=1", "https://player.vimeo.com/video/312270891?autoplay=1" ]) ]
+                            ]
+                        ]
+                    , div [ A.class "row text-center align-items-center" ]
+                        [ div [ A.class "col-12" ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.cl [ "ITIL®4 Direct, Plan, & Improve", "ITIL®4 Digital & IT Strategy", "Management of Risk®" ]) ]
+                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/276090853?autoplay=1", "https://player.vimeo.com/video/223335912?autoplay=1", "https://player.vimeo.com/video/312270891?autoplay=1" ]) ]
+                            ]
+                        ]
+                    , div [ A.class "row text-center align-items-center" ]
+                        [ div [ A.class "col-12" ]
+                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.cc [ "DevOps Foundation", "DevOps Professional", "SIAM Foundation" ]) ]
+                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/276090853?autoplay=1", "https://player.vimeo.com/video/223335912?autoplay=1", "https://player.vimeo.com/video/312270891?autoplay=1" ]) ]
+                            ]
+                        ]
+                    , div [ A.class "row align-items-center" ]
                         [ div [ A.class "col-12 text-center" ]
-                            [ Html.a [ A.href "https://www.itpro.tv/", A.class "CTA-link" ] [ Html.text "Check out these courses and more at itpro.tv!"]
+                            [ Html.a [ A.href "https://www.itpro.tv/", A.class "CTA-link" ] [ Html.text "Check out these courses and more at itpro.tv!" ]
                             ]
                         ]
                     ]

@@ -11129,7 +11129,7 @@ var $author$project$Types$UpdateFormFirstName = function (a) {
 var $author$project$Types$UpdateFormLastName = function (a) {
 	return {$: 'UpdateFormLastName', a: a};
 };
-var $author$project$GraphElements$barColor = function (sumResults) {
+var $author$project$GraphicalElements$barColor = function (sumResults) {
 	return (sumResults >= 3) ? '#6cc24a' : ((_Utils_cmp(sumResults, -3) < 1) ? '#ff671f' : '#151746');
 };
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
@@ -11144,7 +11144,7 @@ var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
 var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var $author$project$GraphElements$bar = F2(
+var $author$project$GraphicalElements$bar = F2(
 	function (barHeight, colorBar) {
 		return A2(
 			$elm$svg$Svg$svg,
@@ -11174,7 +11174,7 @@ var $author$project$GraphElements$bar = F2(
 									$elm$svg$Svg$Attributes$height(
 									$elm$core$String$fromInt(barHeight)),
 									$elm$svg$Svg$Attributes$fill(
-									$author$project$GraphElements$barColor(colorBar))
+									$author$project$GraphicalElements$barColor(colorBar))
 								]),
 							_List_Nil)
 						]))
@@ -11403,7 +11403,7 @@ var $author$project$Main$view = function (model) {
 										_List_fromArray(
 											[
 												$elm$html$Html$Attributes$class('img-fluid'),
-												$elm$html$Html$Attributes$src('https://assets.itpro.tv/go/RateYourTeam/mockup.png')
+												$elm$html$Html$Attributes$src('https://assets.itpro.tv/go/RateYourTeam/mockup.jpg')
 											]),
 										_List_Nil)
 									]))
@@ -11554,7 +11554,7 @@ var $author$project$Main$view = function (model) {
 										_List_fromArray(
 											[
 												$elm$html$Html$Attributes$class('img-fluid'),
-												$elm$html$Html$Attributes$src('https://assets.itpro.tv/go/RateYourTeam/mockup.png')
+												$elm$html$Html$Attributes$src('https://assets.itpro.tv/go/RateYourTeam/mockup.jpg')
 											]),
 										_List_Nil)
 									]))
@@ -11829,7 +11829,7 @@ var $author$project$Main$view = function (model) {
 										_List_fromArray(
 											[
 												$elm$html$Html$Attributes$class('img-fluid'),
-												$elm$html$Html$Attributes$src('https://assets.itpro.tv/go/RateYourTeam/mockup.png')
+												$elm$html$Html$Attributes$src('https://assets.itpro.tv/go/RateYourTeam/mockup.jpg')
 											]),
 										_List_Nil)
 									]))
@@ -11905,7 +11905,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												A2($author$project$GraphElements$bar, (exposeResults.sc + 6) * 12, exposeResults.sc)
+												A2($author$project$GraphicalElements$bar, (exposeResults.sc + 6) * 12, exposeResults.sc)
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -11915,7 +11915,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												A2($author$project$GraphElements$bar, (exposeResults.am + 6) * 12, exposeResults.am)
+												A2($author$project$GraphicalElements$bar, (exposeResults.am + 6) * 12, exposeResults.am)
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -11925,7 +11925,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												A2($author$project$GraphElements$bar, (exposeResults.cl + 6) * 12, exposeResults.cl)
+												A2($author$project$GraphicalElements$bar, (exposeResults.cl + 6) * 12, exposeResults.cl)
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -11935,7 +11935,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												A2($author$project$GraphElements$bar, (exposeResults.cc + 6) * 12, exposeResults.cc)
+												A2($author$project$GraphicalElements$bar, (exposeResults.cc + 6) * 12, exposeResults.cc)
 											]))
 									])),
 								A2(
@@ -12027,17 +12027,17 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('response-header')
+										$elm$html$Html$Attributes$class('response-header text-center')
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('More about your team')
+										$elm$html$Html$text('More About Your Team')
 									])),
 								A2(
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('list-courses')
+										$elm$html$Html$Attributes$class('list-courses pb-5')
 									]),
 								_List_fromArray(
 									[
@@ -12073,14 +12073,7 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('row align-items-start no-gutters')
-									]),
-								_List_Nil),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('row align-items-start no-gutters pb-4')
+										$elm$html$Html$Attributes$class('row text-center align-items-center')
 									]),
 								_List_fromArray(
 									[
@@ -12088,7 +12081,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 offset-0 col-md-2 offset-md-2 ')
+												$elm$html$Html$Attributes$class('col-12')
 											]),
 										_List_fromArray(
 											[
@@ -12109,7 +12102,10 @@ var $author$project$Main$view = function (model) {
 													])),
 												A2(
 												$elm$html$Html$div,
-												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('pb-5')
+													]),
 												_List_fromArray(
 													[
 														$author$project$Data$videoframe(
@@ -12119,12 +12115,21 @@ var $author$project$Main$view = function (model) {
 															_List_fromArray(
 																['https://player.vimeo.com/video/276090853?autoplay=1', 'https://player.vimeo.com/video/223335912?autoplay=1', 'https://player.vimeo.com/video/312270891?autoplay=1'])))
 													]))
-											])),
+											]))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row text-center align-items-center')
+									]),
+								_List_fromArray(
+									[
 										A2(
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center ')
+												$elm$html$Html$Attributes$class('col-12')
 											]),
 										_List_fromArray(
 											[
@@ -12142,13 +12147,37 @@ var $author$project$Main$view = function (model) {
 															exposeResults.am,
 															_List_fromArray(
 																['AgileSHIFT®', 'Agile Foundation', 'Agile Scrum Master'])))
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('pb-5')
+													]),
+												_List_fromArray(
+													[
+														$author$project$Data$videoframe(
+														A2(
+															$author$project$Main$resultsToOverviews,
+															exposeResults.sc,
+															_List_fromArray(
+																['https://player.vimeo.com/video/276090853?autoplay=1', 'https://player.vimeo.com/video/223335912?autoplay=1', 'https://player.vimeo.com/video/312270891?autoplay=1'])))
 													]))
-											])),
+											]))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row text-center align-items-center')
+									]),
+								_List_fromArray(
+									[
 										A2(
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center  pl-2 pr-2')
+												$elm$html$Html$Attributes$class('col-12')
 											]),
 										_List_fromArray(
 											[
@@ -12166,13 +12195,37 @@ var $author$project$Main$view = function (model) {
 															exposeResults.cl,
 															_List_fromArray(
 																['ITIL®4 Direct, Plan, & Improve', 'ITIL®4 Digital & IT Strategy', 'Management of Risk®'])))
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('pb-5')
+													]),
+												_List_fromArray(
+													[
+														$author$project$Data$videoframe(
+														A2(
+															$author$project$Main$resultsToOverviews,
+															exposeResults.sc,
+															_List_fromArray(
+																['https://player.vimeo.com/video/276090853?autoplay=1', 'https://player.vimeo.com/video/223335912?autoplay=1', 'https://player.vimeo.com/video/312270891?autoplay=1'])))
 													]))
-											])),
+											]))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('row text-center align-items-center')
+									]),
+								_List_fromArray(
+									[
 										A2(
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-3 col-md-2 text-center  pl-2 pr-2')
+												$elm$html$Html$Attributes$class('col-12')
 											]),
 										_List_fromArray(
 											[
@@ -12190,6 +12243,21 @@ var $author$project$Main$view = function (model) {
 															exposeResults.cc,
 															_List_fromArray(
 																['DevOps Foundation', 'DevOps Professional', 'SIAM Foundation'])))
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('pb-5')
+													]),
+												_List_fromArray(
+													[
+														$author$project$Data$videoframe(
+														A2(
+															$author$project$Main$resultsToOverviews,
+															exposeResults.sc,
+															_List_fromArray(
+																['https://player.vimeo.com/video/276090853?autoplay=1', 'https://player.vimeo.com/video/223335912?autoplay=1', 'https://player.vimeo.com/video/312270891?autoplay=1'])))
 													]))
 											]))
 									])),
