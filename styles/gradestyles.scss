@@ -61,6 +61,9 @@ h4 {
   font-family: "Proxima Nova", sans-serif;
   font-weight: 600;
   text-align: center;
+    &:hover {
+      cursor: pointer;
+    }
 }
 
 .button-submit {
@@ -73,6 +76,9 @@ h4 {
   border-radius: 5px;
   margin-top: 35px;
   margin-bottom: 35px;
+    &:hover {
+      cursor: pointer;
+    }
 }
 
 .button-responses:hover {
@@ -123,7 +129,7 @@ h4 {
   font-weight: 700;
   color: #151746;
   padding-top: 30px;
-  font-size: 1.5em;
+  font-size: 1.8em;
 }
 
 .response-style {
@@ -143,6 +149,14 @@ h4 {
   padding-bottom: 10px;
 }
 
+.course-recommendations {
+  font-family: "Proxima Nova", sans-serif;
+  font-weight: 600;
+  color: #151746;
+  font-size: 1.4em;
+  padding-bottom: 8px;
+}
+
 .unlock-results {
   font-family: "Proxima Nova", sans-serif;
   font-weight: 700;
@@ -151,10 +165,10 @@ h4 {
   font-size: 2em;
 }
 
-.recommended-courses {
+.rc-header {
   font-family: "Proxima Nova", sans-serif;
   font-weight: 600;
-  font-size: 1.6em;
+  font-size: 1.8em;
   color: #56A437;
   padding-bottom: 30px;
 }
@@ -167,6 +181,12 @@ h4 {
   padding-bottom: 50px;
   &:hover {
     color: #EA4B00;
-    text-decoration: none;
+    text-decoration: none!important;
+    text-decoration-color: #EA4B00;
+    cursor: pointer;
   }
+}
+
+.double-arrow {
+  padding-left: 10px;
 }

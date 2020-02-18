@@ -11180,6 +11180,31 @@ var $author$project$GraphicalElements$bar = F2(
 						]))
 				]));
 	});
+var $elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
+var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
+var $elm$svg$Svg$path = $elm$svg$Svg$trustedNode('path');
+var $elm$svg$Svg$Attributes$transform = _VirtualDom_attribute('transform');
+var $author$project$GraphicalElements$doubleArrow = A2(
+	$elm$svg$Svg$svg,
+	_List_fromArray(
+		[
+			$elm$svg$Svg$Attributes$width('22.003'),
+			$elm$svg$Svg$Attributes$height('16.901'),
+			$elm$svg$Svg$Attributes$viewBox('0 0 22.003 16.901')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$path,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$id('Path_45'),
+					$elm$svg$Svg$Attributes$d('M1.274-15.392v4.338l4.789,4.1L1.274-2.829V1.509l9.648-8.468Zm12.355,0v4.338l4.789,4.1-4.789,4.13V1.509l9.648-8.468Z'),
+					$elm$svg$Svg$Attributes$transform('translate(-1.274 15.392)'),
+					$elm$svg$Svg$Attributes$fill('#f6621c')
+				]),
+			_List_Nil)
+		]));
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$h4 = _VirtualDom_node('h4');
@@ -11485,11 +11510,11 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('pt-5 embed-responsive embed-responsive-16by9 video-div col-8')
+												$elm$html$Html$Attributes$class('embed-responsive embed-responsive-16by9 video-div col-8')
 											]),
 										_List_fromArray(
 											[
-												$author$project$Data$videoframe('https://www.youtube.com/embed/YihH5Gs1V9Q')
+												$author$project$Data$videoframe('https://player.vimeo.com/video/391234360%22')
 											]))
 									])),
 								A2(
@@ -11741,10 +11766,10 @@ var $author$project$Main$view = function (model) {
 																		$elm$html$Html$Attributes$placeholder('Email'),
 																		$elm$html$Html$Attributes$id('pardot_email'),
 																		$elm$html$Html$Attributes$name('pardot_email'),
-																		$elm$html$Html$Attributes$type_('text'),
+																		$elm$html$Html$Attributes$type_('email'),
 																		$elm$html$Html$Attributes$value(formEmail),
 																		$elm$html$Html$Attributes$required(true),
-																		$elm$html$Html$Attributes$minlength(2),
+																		$elm$html$Html$Attributes$minlength(6),
 																		$elm$html$Html$Attributes$maxlength(40)
 																	]),
 																_List_Nil)
@@ -12063,7 +12088,7 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('d-flex justify-content-center recommended-courses')
+										$elm$html$Html$Attributes$class('d-flex justify-content-center rc-header')
 									]),
 								_List_fromArray(
 									[
@@ -12089,7 +12114,7 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$h4,
 												_List_fromArray(
 													[
-														$elm$html$Html$Attributes$class('text-center list-courses')
+														$elm$html$Html$Attributes$class('text-center course-recommendations')
 													]),
 												_List_fromArray(
 													[
@@ -12113,7 +12138,7 @@ var $author$project$Main$view = function (model) {
 															$author$project$Main$resultsToOverviews,
 															exposeResults.sc,
 															_List_fromArray(
-																['https://player.vimeo.com/video/276090853?autoplay=1', 'https://player.vimeo.com/video/223335912?autoplay=1', 'https://player.vimeo.com/video/312270891?autoplay=1'])))
+																['https://player.vimeo.com/video/349665066?autoplay=0', 'https://player.vimeo.com/video/363848139?api=1&player_id=vimeoplayer', 'https://player.vimeo.com/video/334731289?autoplay=0'])))
 													]))
 											]))
 									])),
@@ -12137,7 +12162,7 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$h4,
 												_List_fromArray(
 													[
-														$elm$html$Html$Attributes$class('text-center list-courses')
+														$elm$html$Html$Attributes$class('text-center course-recommendations')
 													]),
 												_List_fromArray(
 													[
@@ -12161,7 +12186,7 @@ var $author$project$Main$view = function (model) {
 															$author$project$Main$resultsToOverviews,
 															exposeResults.sc,
 															_List_fromArray(
-																['https://player.vimeo.com/video/276090853?autoplay=1', 'https://player.vimeo.com/video/223335912?autoplay=1', 'https://player.vimeo.com/video/312270891?autoplay=1'])))
+																['https://player.vimeo.com/video/305580479?autoplay=0', 'https://player.vimeo.com/video/255558343?autoplay=0', 'https://player.vimeo.com/video/285162807?autoplay=0'])))
 													]))
 											]))
 									])),
@@ -12185,7 +12210,7 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$h4,
 												_List_fromArray(
 													[
-														$elm$html$Html$Attributes$class('text-center list-courses')
+														$elm$html$Html$Attributes$class('text-center course-recommendations')
 													]),
 												_List_fromArray(
 													[
@@ -12209,7 +12234,7 @@ var $author$project$Main$view = function (model) {
 															$author$project$Main$resultsToOverviews,
 															exposeResults.sc,
 															_List_fromArray(
-																['https://player.vimeo.com/video/276090853?autoplay=1', 'https://player.vimeo.com/video/223335912?autoplay=1', 'https://player.vimeo.com/video/312270891?autoplay=1'])))
+																['https://player.vimeo.com/video/363848139?api=1&player_id=vimeoplayer', 'https://player.vimeo.com/video/223335912?autoplay=0', 'https://player.vimeo.com/video/374492741?autoplay=0'])))
 													]))
 											]))
 									])),
@@ -12233,7 +12258,7 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$h4,
 												_List_fromArray(
 													[
-														$elm$html$Html$Attributes$class('text-center list-courses')
+														$elm$html$Html$Attributes$class('text-center course-recommendations')
 													]),
 												_List_fromArray(
 													[
@@ -12257,7 +12282,7 @@ var $author$project$Main$view = function (model) {
 															$author$project$Main$resultsToOverviews,
 															exposeResults.sc,
 															_List_fromArray(
-																['https://player.vimeo.com/video/276090853?autoplay=1', 'https://player.vimeo.com/video/223335912?autoplay=1', 'https://player.vimeo.com/video/312270891?autoplay=1'])))
+																['https://player.vimeo.com/video/334731289?autoplay=0', 'https://player.vimeo.com/video/223335912?autoplay=0', 'https://player.vimeo.com/video/261002322?autoplay=0'])))
 													]))
 											]))
 									])),
@@ -12286,7 +12311,21 @@ var $author$project$Main$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														$elm$html$Html$text('Check out these courses and more at itpro.tv!')
+														A2(
+														$elm$html$Html$span,
+														_List_Nil,
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Check out these courses and more at ITProTV')
+															])),
+														A2(
+														$elm$html$Html$span,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('double-arrow')
+															]),
+														_List_fromArray(
+															[$author$project$GraphicalElements$doubleArrow]))
 													]))
 											]))
 									]))

@@ -3,7 +3,7 @@ module Main exposing (main, update, view)
 import Array as Array
 import Browser
 import Data exposing (questionList, videoframe)
-import GraphicalElements exposing (bar)
+import GraphicalElements exposing (bar, doubleArrow)
 import Html
     exposing
         ( Html
@@ -37,6 +37,7 @@ import Html.Attributes as A
         , method
         , minlength
         , name
+        , pattern
         , placeholder
         , required
         , src
@@ -89,10 +90,6 @@ init flags =
             , formCompany = ""
             }
 
-        --
-        -- decodedString : String ->
-        -- decodedString =
-        --   Decode.decodeString (list int) flags
         savedResponses =
             case flags of
                 Just responses ->
@@ -570,7 +567,7 @@ view model =
                         [ Html.text "How well do you think your team is performing? ITIL master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert."
                         ]
                     , div [ A.class "pt-5 row justify-content-center" ]
-                        [ div [ A.class "pt-5 embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe "https://www.youtube.com/embed/YihH5Gs1V9Q" ]
+                        [ div [ A.class "embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe "https://player.vimeo.com/video/391234360?autoplay=0" ]
                         ]
                     , p [ A.class "question-number pt-5" ] [ Html.text (String.fromInt (prompt.index + 1) ++ ".") ]
                     , p [ A.class "question" ] [ Html.text prompt.question ]
@@ -645,10 +642,12 @@ view model =
                                         , placeholder "Email"
                                         , A.id "pardot_email"
                                         , A.name "pardot_email"
-                                        , A.type_ "text"
+                                        , A.type_ "email"
                                         , A.value formEmail
+                                        -- , A.pattern "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
+                                        -- , attribute "required" ""
                                         , required True
-                                        , minlength 2
+                                        , minlength 6
                                         , maxlength 40
                                         ]
                                         []
@@ -741,34 +740,37 @@ view model =
                                 model.prompts
                             )
                         ]
-                    , div [ A.class "d-flex justify-content-center recommended-courses" ] [ Html.text "Recommended Courses For Your Team" ]
+                    , div [ A.class "d-flex justify-content-center rc-header" ] [ Html.text "Recommended Courses For Your Team" ]
                     , div [ A.class "row text-center align-items-center" ]
                         [ div [ A.class "col-12" ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.sc [ "Management of Risk® Foundation", "ITIL®4 Direct, Plan, & Improve", "DevOps Foundation" ]) ]
-                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/276090853?autoplay=1", "https://player.vimeo.com/video/223335912?autoplay=1", "https://player.vimeo.com/video/312270891?autoplay=1" ]) ]
+                            [ Html.h4 [ A.class "text-center course-recommendations" ] [ Html.text (resultsToCourses exposeResults.sc [ "Management of Risk® Foundation", "ITIL®4 Direct, Plan, & Improve", "DevOps Foundation" ]) ]
+                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/349665066?autoplay=0", "https://player.vimeo.com/video/363848139?api=1&player_id=vimeoplayer", "https://player.vimeo.com/video/334731289?autoplay=0" ]) ]
                             ]
                         ]
                     , div [ A.class "row text-center align-items-center" ]
                         [ div [ A.class "col-12" ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.am [ "AgileSHIFT®", "Agile Foundation", "Agile Scrum Master" ]) ]
-                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/276090853?autoplay=1", "https://player.vimeo.com/video/223335912?autoplay=1", "https://player.vimeo.com/video/312270891?autoplay=1" ]) ]
+                            [ Html.h4 [ A.class "text-center course-recommendations" ] [ Html.text (resultsToCourses exposeResults.am [ "AgileSHIFT®", "Agile Foundation", "Agile Scrum Master" ]) ]
+                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/305580479?autoplay=0", "https://player.vimeo.com/video/255558343?autoplay=0", "https://player.vimeo.com/video/285162807?autoplay=0" ]) ]
                             ]
                         ]
                     , div [ A.class "row text-center align-items-center" ]
                         [ div [ A.class "col-12" ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.cl [ "ITIL®4 Direct, Plan, & Improve", "ITIL®4 Digital & IT Strategy", "Management of Risk®" ]) ]
-                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/276090853?autoplay=1", "https://player.vimeo.com/video/223335912?autoplay=1", "https://player.vimeo.com/video/312270891?autoplay=1" ]) ]
+                            [ Html.h4 [ A.class "text-center course-recommendations" ] [ Html.text (resultsToCourses exposeResults.cl [ "ITIL®4 Direct, Plan, & Improve", "ITIL®4 Digital & IT Strategy", "Management of Risk®" ]) ]
+                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/363848139?api=1&player_id=vimeoplayer", "https://player.vimeo.com/video/223335912?autoplay=0", "https://player.vimeo.com/video/374492741?autoplay=0" ]) ]
                             ]
                         ]
                     , div [ A.class "row text-center align-items-center" ]
                         [ div [ A.class "col-12" ]
-                            [ Html.h4 [ A.class "text-center list-courses" ] [ Html.text (resultsToCourses exposeResults.cc [ "DevOps Foundation", "DevOps Professional", "SIAM Foundation" ]) ]
-                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/276090853?autoplay=1", "https://player.vimeo.com/video/223335912?autoplay=1", "https://player.vimeo.com/video/312270891?autoplay=1" ]) ]
+                            [ Html.h4 [ A.class "text-center course-recommendations" ] [ Html.text (resultsToCourses exposeResults.cc [ "DevOps Foundation", "DevOps Professional", "SIAM Foundation" ]) ]
+                            , div [ A.class "pb-5" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/334731289?autoplay=0", "https://player.vimeo.com/video/223335912?autoplay=0", "https://player.vimeo.com/video/261002322?autoplay=0" ]) ]
                             ]
                         ]
                     , div [ A.class "row align-items-center" ]
                         [ div [ A.class "col-12 text-center" ]
-                            [ Html.a [ A.href "https://www.itpro.tv/", A.class "CTA-link" ] [ Html.text "Check out these courses and more at itpro.tv!" ]
+                            [ Html.a [ A.href "https://www.itpro.tv/", A.class "CTA-link" ]
+                              [ Html.span [] [ Html.text "Check out these courses and more at ITProTV" ]
+                              , Html.span [ A.class "double-arrow" ] [ doubleArrow ]
+                              ]
                             ]
                         ]
                     ]
