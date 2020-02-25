@@ -80,271 +80,6 @@ function A9(fun, a, b, c, d, e, f, g, h, i) {
 console.warn('Compiled in DEBUG mode. Follow the advice at https://elm-lang.org/0.19.1/optimize for better performance and smaller assets.');
 
 
-// EQUALITY
-
-function _Utils_eq(x, y)
-{
-	for (
-		var pair, stack = [], isEqual = _Utils_eqHelp(x, y, 0, stack);
-		isEqual && (pair = stack.pop());
-		isEqual = _Utils_eqHelp(pair.a, pair.b, 0, stack)
-		)
-	{}
-
-	return isEqual;
-}
-
-function _Utils_eqHelp(x, y, depth, stack)
-{
-	if (depth > 100)
-	{
-		stack.push(_Utils_Tuple2(x,y));
-		return true;
-	}
-
-	if (x === y)
-	{
-		return true;
-	}
-
-	if (typeof x !== 'object' || x === null || y === null)
-	{
-		typeof x === 'function' && _Debug_crash(5);
-		return false;
-	}
-
-	/**/
-	if (x.$ === 'Set_elm_builtin')
-	{
-		x = $elm$core$Set$toList(x);
-		y = $elm$core$Set$toList(y);
-	}
-	if (x.$ === 'RBNode_elm_builtin' || x.$ === 'RBEmpty_elm_builtin')
-	{
-		x = $elm$core$Dict$toList(x);
-		y = $elm$core$Dict$toList(y);
-	}
-	//*/
-
-	/**_UNUSED/
-	if (x.$ < 0)
-	{
-		x = $elm$core$Dict$toList(x);
-		y = $elm$core$Dict$toList(y);
-	}
-	//*/
-
-	for (var key in x)
-	{
-		if (!_Utils_eqHelp(x[key], y[key], depth + 1, stack))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-var _Utils_equal = F2(_Utils_eq);
-var _Utils_notEqual = F2(function(a, b) { return !_Utils_eq(a,b); });
-
-
-
-// COMPARISONS
-
-// Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
-// the particular integer values assigned to LT, EQ, and GT.
-
-function _Utils_cmp(x, y, ord)
-{
-	if (typeof x !== 'object')
-	{
-		return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;
-	}
-
-	/**/
-	if (x instanceof String)
-	{
-		var a = x.valueOf();
-		var b = y.valueOf();
-		return a === b ? 0 : a < b ? -1 : 1;
-	}
-	//*/
-
-	/**_UNUSED/
-	if (typeof x.$ === 'undefined')
-	//*/
-	/**/
-	if (x.$[0] === '#')
-	//*/
-	{
-		return (ord = _Utils_cmp(x.a, y.a))
-			? ord
-			: (ord = _Utils_cmp(x.b, y.b))
-				? ord
-				: _Utils_cmp(x.c, y.c);
-	}
-
-	// traverse conses until end of a list or a mismatch
-	for (; x.b && y.b && !(ord = _Utils_cmp(x.a, y.a)); x = x.b, y = y.b) {} // WHILE_CONSES
-	return ord || (x.b ? /*GT*/ 1 : y.b ? /*LT*/ -1 : /*EQ*/ 0);
-}
-
-var _Utils_lt = F2(function(a, b) { return _Utils_cmp(a, b) < 0; });
-var _Utils_le = F2(function(a, b) { return _Utils_cmp(a, b) < 1; });
-var _Utils_gt = F2(function(a, b) { return _Utils_cmp(a, b) > 0; });
-var _Utils_ge = F2(function(a, b) { return _Utils_cmp(a, b) >= 0; });
-
-var _Utils_compare = F2(function(x, y)
-{
-	var n = _Utils_cmp(x, y);
-	return n < 0 ? $elm$core$Basics$LT : n ? $elm$core$Basics$GT : $elm$core$Basics$EQ;
-});
-
-
-// COMMON VALUES
-
-var _Utils_Tuple0_UNUSED = 0;
-var _Utils_Tuple0 = { $: '#0' };
-
-function _Utils_Tuple2_UNUSED(a, b) { return { a: a, b: b }; }
-function _Utils_Tuple2(a, b) { return { $: '#2', a: a, b: b }; }
-
-function _Utils_Tuple3_UNUSED(a, b, c) { return { a: a, b: b, c: c }; }
-function _Utils_Tuple3(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
-
-function _Utils_chr_UNUSED(c) { return c; }
-function _Utils_chr(c) { return new String(c); }
-
-
-// RECORDS
-
-function _Utils_update(oldRecord, updatedFields)
-{
-	var newRecord = {};
-
-	for (var key in oldRecord)
-	{
-		newRecord[key] = oldRecord[key];
-	}
-
-	for (var key in updatedFields)
-	{
-		newRecord[key] = updatedFields[key];
-	}
-
-	return newRecord;
-}
-
-
-// APPEND
-
-var _Utils_append = F2(_Utils_ap);
-
-function _Utils_ap(xs, ys)
-{
-	// append Strings
-	if (typeof xs === 'string')
-	{
-		return xs + ys;
-	}
-
-	// append Lists
-	if (!xs.b)
-	{
-		return ys;
-	}
-	var root = _List_Cons(xs.a, ys);
-	xs = xs.b
-	for (var curr = root; xs.b; xs = xs.b) // WHILE_CONS
-	{
-		curr = curr.b = _List_Cons(xs.a, ys);
-	}
-	return root;
-}
-
-
-
-var _List_Nil_UNUSED = { $: 0 };
-var _List_Nil = { $: '[]' };
-
-function _List_Cons_UNUSED(hd, tl) { return { $: 1, a: hd, b: tl }; }
-function _List_Cons(hd, tl) { return { $: '::', a: hd, b: tl }; }
-
-
-var _List_cons = F2(_List_Cons);
-
-function _List_fromArray(arr)
-{
-	var out = _List_Nil;
-	for (var i = arr.length; i--; )
-	{
-		out = _List_Cons(arr[i], out);
-	}
-	return out;
-}
-
-function _List_toArray(xs)
-{
-	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
-	{
-		out.push(xs.a);
-	}
-	return out;
-}
-
-var _List_map2 = F3(function(f, xs, ys)
-{
-	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
-	{
-		arr.push(A2(f, xs.a, ys.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map3 = F4(function(f, xs, ys, zs)
-{
-	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A3(f, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map4 = F5(function(f, ws, xs, ys, zs)
-{
-	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
-{
-	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_sortBy = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		return _Utils_cmp(f(a), f(b));
-	}));
-});
-
-var _List_sortWith = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		var ord = A2(f, a, b);
-		return ord === $elm$core$Basics$EQ ? 0 : ord === $elm$core$Basics$LT ? -1 : 1;
-	}));
-});
-
-
-
 var _JsArray_empty = [];
 
 function _JsArray_singleton(value)
@@ -790,6 +525,271 @@ function _Debug_regionToString(region)
 	}
 	return 'on lines ' + region.start.line + ' through ' + region.end.line;
 }
+
+
+
+// EQUALITY
+
+function _Utils_eq(x, y)
+{
+	for (
+		var pair, stack = [], isEqual = _Utils_eqHelp(x, y, 0, stack);
+		isEqual && (pair = stack.pop());
+		isEqual = _Utils_eqHelp(pair.a, pair.b, 0, stack)
+		)
+	{}
+
+	return isEqual;
+}
+
+function _Utils_eqHelp(x, y, depth, stack)
+{
+	if (depth > 100)
+	{
+		stack.push(_Utils_Tuple2(x,y));
+		return true;
+	}
+
+	if (x === y)
+	{
+		return true;
+	}
+
+	if (typeof x !== 'object' || x === null || y === null)
+	{
+		typeof x === 'function' && _Debug_crash(5);
+		return false;
+	}
+
+	/**/
+	if (x.$ === 'Set_elm_builtin')
+	{
+		x = $elm$core$Set$toList(x);
+		y = $elm$core$Set$toList(y);
+	}
+	if (x.$ === 'RBNode_elm_builtin' || x.$ === 'RBEmpty_elm_builtin')
+	{
+		x = $elm$core$Dict$toList(x);
+		y = $elm$core$Dict$toList(y);
+	}
+	//*/
+
+	/**_UNUSED/
+	if (x.$ < 0)
+	{
+		x = $elm$core$Dict$toList(x);
+		y = $elm$core$Dict$toList(y);
+	}
+	//*/
+
+	for (var key in x)
+	{
+		if (!_Utils_eqHelp(x[key], y[key], depth + 1, stack))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+var _Utils_equal = F2(_Utils_eq);
+var _Utils_notEqual = F2(function(a, b) { return !_Utils_eq(a,b); });
+
+
+
+// COMPARISONS
+
+// Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
+// the particular integer values assigned to LT, EQ, and GT.
+
+function _Utils_cmp(x, y, ord)
+{
+	if (typeof x !== 'object')
+	{
+		return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;
+	}
+
+	/**/
+	if (x instanceof String)
+	{
+		var a = x.valueOf();
+		var b = y.valueOf();
+		return a === b ? 0 : a < b ? -1 : 1;
+	}
+	//*/
+
+	/**_UNUSED/
+	if (typeof x.$ === 'undefined')
+	//*/
+	/**/
+	if (x.$[0] === '#')
+	//*/
+	{
+		return (ord = _Utils_cmp(x.a, y.a))
+			? ord
+			: (ord = _Utils_cmp(x.b, y.b))
+				? ord
+				: _Utils_cmp(x.c, y.c);
+	}
+
+	// traverse conses until end of a list or a mismatch
+	for (; x.b && y.b && !(ord = _Utils_cmp(x.a, y.a)); x = x.b, y = y.b) {} // WHILE_CONSES
+	return ord || (x.b ? /*GT*/ 1 : y.b ? /*LT*/ -1 : /*EQ*/ 0);
+}
+
+var _Utils_lt = F2(function(a, b) { return _Utils_cmp(a, b) < 0; });
+var _Utils_le = F2(function(a, b) { return _Utils_cmp(a, b) < 1; });
+var _Utils_gt = F2(function(a, b) { return _Utils_cmp(a, b) > 0; });
+var _Utils_ge = F2(function(a, b) { return _Utils_cmp(a, b) >= 0; });
+
+var _Utils_compare = F2(function(x, y)
+{
+	var n = _Utils_cmp(x, y);
+	return n < 0 ? $elm$core$Basics$LT : n ? $elm$core$Basics$GT : $elm$core$Basics$EQ;
+});
+
+
+// COMMON VALUES
+
+var _Utils_Tuple0_UNUSED = 0;
+var _Utils_Tuple0 = { $: '#0' };
+
+function _Utils_Tuple2_UNUSED(a, b) { return { a: a, b: b }; }
+function _Utils_Tuple2(a, b) { return { $: '#2', a: a, b: b }; }
+
+function _Utils_Tuple3_UNUSED(a, b, c) { return { a: a, b: b, c: c }; }
+function _Utils_Tuple3(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
+
+function _Utils_chr_UNUSED(c) { return c; }
+function _Utils_chr(c) { return new String(c); }
+
+
+// RECORDS
+
+function _Utils_update(oldRecord, updatedFields)
+{
+	var newRecord = {};
+
+	for (var key in oldRecord)
+	{
+		newRecord[key] = oldRecord[key];
+	}
+
+	for (var key in updatedFields)
+	{
+		newRecord[key] = updatedFields[key];
+	}
+
+	return newRecord;
+}
+
+
+// APPEND
+
+var _Utils_append = F2(_Utils_ap);
+
+function _Utils_ap(xs, ys)
+{
+	// append Strings
+	if (typeof xs === 'string')
+	{
+		return xs + ys;
+	}
+
+	// append Lists
+	if (!xs.b)
+	{
+		return ys;
+	}
+	var root = _List_Cons(xs.a, ys);
+	xs = xs.b
+	for (var curr = root; xs.b; xs = xs.b) // WHILE_CONS
+	{
+		curr = curr.b = _List_Cons(xs.a, ys);
+	}
+	return root;
+}
+
+
+
+var _List_Nil_UNUSED = { $: 0 };
+var _List_Nil = { $: '[]' };
+
+function _List_Cons_UNUSED(hd, tl) { return { $: 1, a: hd, b: tl }; }
+function _List_Cons(hd, tl) { return { $: '::', a: hd, b: tl }; }
+
+
+var _List_cons = F2(_List_Cons);
+
+function _List_fromArray(arr)
+{
+	var out = _List_Nil;
+	for (var i = arr.length; i--; )
+	{
+		out = _List_Cons(arr[i], out);
+	}
+	return out;
+}
+
+function _List_toArray(xs)
+{
+	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
+	{
+		out.push(xs.a);
+	}
+	return out;
+}
+
+var _List_map2 = F3(function(f, xs, ys)
+{
+	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
+	{
+		arr.push(A2(f, xs.a, ys.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map3 = F4(function(f, xs, ys, zs)
+{
+	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A3(f, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map4 = F5(function(f, ws, xs, ys, zs)
+{
+	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
+{
+	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_sortBy = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		return _Utils_cmp(f(a), f(b));
+	}));
+});
+
+var _List_sortWith = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		var ord = A2(f, a, b);
+		return ord === $elm$core$Basics$EQ ? 0 : ord === $elm$core$Basics$LT ? -1 : 1;
+	}));
+});
 
 
 
@@ -4897,10 +4897,31 @@ var $elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
 };
 var $elm$core$Maybe$Nothing = {$: 'Nothing'};
-var $elm$core$Basics$EQ = {$: 'EQ'};
-var $elm$core$Basics$GT = {$: 'GT'};
-var $elm$core$Basics$LT = {$: 'LT'};
 var $elm$core$List$cons = _List_cons;
+var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
+var $elm$core$Array$foldr = F3(
+	function (func, baseCase, _v0) {
+		var tree = _v0.c;
+		var tail = _v0.d;
+		var helper = F2(
+			function (node, acc) {
+				if (node.$ === 'SubTree') {
+					var subTree = node.a;
+					return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
+				} else {
+					var values = node.a;
+					return A3($elm$core$Elm$JsArray$foldr, func, acc, values);
+				}
+			});
+		return A3(
+			$elm$core$Elm$JsArray$foldr,
+			helper,
+			A3($elm$core$Elm$JsArray$foldr, func, baseCase, tail),
+			tree);
+	});
+var $elm$core$Array$toList = function (array) {
+	return A3($elm$core$Array$foldr, $elm$core$List$cons, _List_Nil, array);
+};
 var $elm$core$Dict$foldr = F3(
 	function (func, acc, t) {
 		foldr:
@@ -4953,30 +4974,9 @@ var $elm$core$Set$toList = function (_v0) {
 	var dict = _v0.a;
 	return $elm$core$Dict$keys(dict);
 };
-var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
-var $elm$core$Array$foldr = F3(
-	function (func, baseCase, _v0) {
-		var tree = _v0.c;
-		var tail = _v0.d;
-		var helper = F2(
-			function (node, acc) {
-				if (node.$ === 'SubTree') {
-					var subTree = node.a;
-					return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
-				} else {
-					var values = node.a;
-					return A3($elm$core$Elm$JsArray$foldr, func, acc, values);
-				}
-			});
-		return A3(
-			$elm$core$Elm$JsArray$foldr,
-			helper,
-			A3($elm$core$Elm$JsArray$foldr, func, baseCase, tail),
-			tree);
-	});
-var $elm$core$Array$toList = function (array) {
-	return A3($elm$core$Array$foldr, $elm$core$List$cons, _List_Nil, array);
-};
+var $elm$core$Basics$EQ = {$: 'EQ'};
+var $elm$core$Basics$GT = {$: 'GT'};
+var $elm$core$Basics$LT = {$: 'LT'};
 var $elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
@@ -5368,6 +5368,7 @@ var $elm$core$Result$isOk = function (result) {
 		return false;
 	}
 };
+var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$map = _Json_map1;
 var $elm$json$Json$Decode$map2 = _Json_map2;
 var $elm$json$Json$Decode$succeed = _Json_succeed;
@@ -10495,6 +10496,23 @@ var $author$project$Types$Results = F4(
 	function (sc, am, cl, cc) {
 		return {am: am, cc: cc, cl: cl, sc: sc};
 	});
+var $elm$json$Json$Decode$map4 = _Json_map4;
+var $author$project$Main$resultsDecoder = A5(
+	$elm$json$Json$Decode$map4,
+	$author$project$Types$Results,
+	A2($elm$json$Json$Decode$field, 'sc', $elm$json$Json$Decode$int),
+	A2($elm$json$Json$Decode$field, 'am', $elm$json$Json$Decode$int),
+	A2($elm$json$Json$Decode$field, 'cl', $elm$json$Json$Decode$int),
+	A2($elm$json$Json$Decode$field, 'cc', $elm$json$Json$Decode$int));
+var $author$project$Main$decodeResults = function (resultsJson) {
+	var _v0 = A2($elm$json$Json$Decode$decodeString, $author$project$Main$resultsDecoder, resultsJson);
+	if (_v0.$ === 'Ok') {
+		var results = _v0.a;
+		return results;
+	} else {
+		return A4($author$project$Types$Results, 0, 0, 0, -3);
+	}
+};
 var $author$project$Types$Agree = {$: 'Agree'};
 var $author$project$Types$Disagree = {$: 'Disagree'};
 var $author$project$Types$Neutral = {$: 'Neutral'};
@@ -10710,10 +10728,20 @@ var $author$project$Main$selectState = function (prompts) {
 	}
 };
 var $author$project$Main$init = function (flags) {
+	var savedResults = function () {
+		var _v1 = A2($elm$json$Json$Decode$decodeValue, $elm$json$Json$Decode$string, flags.startingResults);
+		if (_v1.$ === 'Ok') {
+			var results = _v1.a;
+			return $author$project$Main$decodeResults(results);
+		} else {
+			return A4($author$project$Types$Results, 3, 3, 3, 3);
+		}
+	}();
 	var prompts = $author$project$Main$newPrompts($author$project$Data$questionList);
 	var savedResponses = function () {
-		if (flags.$ === 'Just') {
-			var responses = flags.a;
+		var _v0 = flags.startingState;
+		if (_v0.$ === 'Just') {
+			var responses = _v0.a;
 			return A2($elm$core$List$map, $author$project$Main$intToSelectedResponse, responses);
 		} else {
 			return A2(
@@ -10738,7 +10766,7 @@ var $author$project$Main$init = function (flags) {
 			allowSubmit: false,
 			formData: emptyFormData,
 			prompts: savedPrompts,
-			results: A4($author$project$Types$Results, 0, 0, 0, 0),
+			results: savedResults,
 			state: $author$project$Main$selectState(savedPrompts)
 		},
 		$elm$core$Platform$Cmd$none);
@@ -10817,6 +10845,32 @@ var $author$project$Ports$saveResponses = function (responses) {
 			$elm$json$Json$Encode$encode,
 			0,
 			A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$int, responses)));
+};
+var $author$project$Ports$encodeResults = function (results) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'sc',
+				$elm$json$Json$Encode$int(results.sc)),
+				_Utils_Tuple2(
+				'am',
+				$elm$json$Json$Encode$int(results.am)),
+				_Utils_Tuple2(
+				'cl',
+				$elm$json$Json$Encode$int(results.cl)),
+				_Utils_Tuple2(
+				'cc',
+				$elm$json$Json$Encode$int(results.cc))
+			]));
+};
+var $author$project$Ports$storeResults = _Platform_outgoingPort('storeResults', $elm$json$Json$Encode$string);
+var $author$project$Ports$saveResults = function (results) {
+	return $author$project$Ports$storeResults(
+		A2(
+			$elm$json$Json$Encode$encode,
+			0,
+			$author$project$Ports$encodeResults(results)));
 };
 var $author$project$Main$scoreResponse = function (response) {
 	switch (response.$) {
@@ -11059,7 +11113,12 @@ var $author$project$Main$update = F2(
 				var responsesList = A2($elm$core$List$map, $author$project$Main$selectedResponseToInt, updatedModel.prompts);
 				return _Utils_Tuple2(
 					updatedModel,
-					$author$project$Ports$saveResponses(responsesList));
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[
+								$author$project$Ports$saveResponses(responsesList),
+								$author$project$Ports$saveResults(updatedResults)
+							])));
 			case 'ChangeModelState':
 				var updatedModelState = _Utils_update(
 					model,
@@ -11102,7 +11161,7 @@ var $author$project$Main$update = F2(
 						model,
 						{allowSubmit: updatedAllowSubmit, formData: updatedFormData}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'UpdateFormCompany':
 				var updatedCompany = msg.a;
 				var formData = model.formData;
 				var updatedAllowSubmit = $author$project$Main$checkToSubmit(formData);
@@ -11114,9 +11173,18 @@ var $author$project$Main$update = F2(
 						model,
 						{allowSubmit: updatedAllowSubmit, formData: updatedFormData}),
 					$elm$core$Platform$Cmd$none);
+			default:
+				var formData = model.formData;
+				var updatedAllowSubmit = $author$project$Main$checkToSubmit(formData);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{allowSubmit: updatedAllowSubmit}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Types$ChangeModelState = {$: 'ChangeModelState'};
+var $author$project$Types$UpdateCheckToSubmit = {$: 'UpdateCheckToSubmit'};
 var $author$project$Types$UpdateFormCompany = function (a) {
 	return {$: 'UpdateFormCompany', a: a};
 };
@@ -11180,6 +11248,15 @@ var $author$project$GraphicalElements$bar = F2(
 						]))
 				]));
 	});
+var $author$project$Main$disabledButton = function (model) {
+	var buttonclass = model.allowSubmit ? 'button-submit' : 'button-disabled';
+	return _List_fromArray(
+		[
+			$elm$html$Html$Attributes$class(buttonclass + ' btn btn-lg'),
+			$elm$html$Html$Attributes$type_('submit'),
+			$elm$html$Html$Attributes$value('Submit')
+		]);
+};
 var $elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
 var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
 var $elm$svg$Svg$path = $elm$svg$Svg$trustedNode('path');
@@ -11224,6 +11301,12 @@ var $elm$html$Html$Attributes$minlength = function (n) {
 		$elm$core$String$fromInt(n));
 };
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $elm$html$Html$Events$onFocus = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'focus',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $elm$html$Html$Events$alwaysPreventDefault = function (msg) {
 	return _Utils_Tuple2(msg, true);
 };
@@ -11340,7 +11423,7 @@ var $author$project$Main$resultsToOverviews = F2(
 	function (x, courses) {
 		return A2(
 			$elm$core$Maybe$withDefault,
-			'https://www.youtube.com/embed/YihH5Gs1V9Q',
+			'https://player.vimeo.com/video/391234360?autoplay=0',
 			A2(
 				$elm$core$Array$get,
 				$author$project$Main$resultsToIndex(x),
@@ -11356,6 +11439,7 @@ var $author$project$Types$unwrapFeedback = function (_v0) {
 	var string = _v0.a;
 	return string;
 };
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $elm$html$Html$Attributes$height = function (n) {
 	return A2(
 		_VirtualDom_attribute,
@@ -11363,14 +11447,6 @@ var $elm$html$Html$Attributes$height = function (n) {
 		$elm$core$String$fromInt(n));
 };
 var $elm$html$Html$iframe = _VirtualDom_node('iframe');
-var $elm$virtual_dom$VirtualDom$property = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_property,
-			_VirtualDom_noInnerHtmlOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
-var $elm$html$Html$Attributes$property = $elm$virtual_dom$VirtualDom$property;
 var $elm$html$Html$Attributes$width = function (n) {
 	return A2(
 		_VirtualDom_attribute,
@@ -11385,10 +11461,7 @@ var $author$project$Data$videoframe = function (url) {
 				$elm$html$Html$Attributes$width(560),
 				$elm$html$Html$Attributes$height(315),
 				$elm$html$Html$Attributes$src(url),
-				A2(
-				$elm$html$Html$Attributes$property,
-				'allowfullscreen',
-				$elm$json$Json$Encode$string('true')),
+				A2($elm$html$Html$Attributes$attribute, 'allowfullscreen', 'true'),
 				$elm$html$Html$Attributes$class('embed-responsive-item')
 			]),
 		_List_Nil);
@@ -11492,11 +11565,21 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
+										$elm$html$Html$Attributes$class('page-one-header')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('How well do you think your team is performing?')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
 										$elm$html$Html$Attributes$class('intro container')
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('How well do you think your team is performing? ITIL master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert.')
+										$elm$html$Html$text('ITIL® master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert.')
 									])),
 								A2(
 								$elm$html$Html$div,
@@ -11514,7 +11597,7 @@ var $author$project$Main$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$author$project$Data$videoframe('https://player.vimeo.com/video/391234360%22')
+												$author$project$Data$videoframe('https://player.vimeo.com/video/391234360?autoplay=0')
 											]))
 									])),
 								A2(
@@ -11690,6 +11773,7 @@ var $author$project$Main$view = function (model) {
 																_List_fromArray(
 																	[
 																		$elm$html$Html$Events$onInput($author$project$Types$UpdateFormFirstName),
+																		$elm$html$Html$Events$onFocus($author$project$Types$UpdateCheckToSubmit),
 																		$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
 																		$elm$html$Html$Attributes$placeholder('First Name'),
 																		$elm$html$Html$Attributes$id('pardot_firstName'),
@@ -11726,6 +11810,7 @@ var $author$project$Main$view = function (model) {
 																_List_fromArray(
 																	[
 																		$elm$html$Html$Events$onInput($author$project$Types$UpdateFormLastName),
+																		$elm$html$Html$Events$onFocus($author$project$Types$UpdateCheckToSubmit),
 																		$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
 																		$elm$html$Html$Attributes$placeholder('Last Name'),
 																		$elm$html$Html$Attributes$id('pardot_lastName'),
@@ -11762,6 +11847,7 @@ var $author$project$Main$view = function (model) {
 																_List_fromArray(
 																	[
 																		$elm$html$Html$Events$onInput($author$project$Types$UpdateFormEmail),
+																		$elm$html$Html$Events$onFocus($author$project$Types$UpdateCheckToSubmit),
 																		$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
 																		$elm$html$Html$Attributes$placeholder('Email'),
 																		$elm$html$Html$Attributes$id('pardot_email'),
@@ -11798,6 +11884,7 @@ var $author$project$Main$view = function (model) {
 																_List_fromArray(
 																	[
 																		$elm$html$Html$Events$onInput($author$project$Types$UpdateFormCompany),
+																		$elm$html$Html$Events$onFocus($author$project$Types$UpdateCheckToSubmit),
 																		$elm$html$Html$Attributes$class('form-control flex-fill mt-4 mr-sm-2'),
 																		$elm$html$Html$Attributes$placeholder('Company'),
 																		$elm$html$Html$Attributes$id('pardot_company'),
@@ -11812,15 +11899,8 @@ var $author$project$Main$view = function (model) {
 															])),
 														A2(
 														$elm$html$Html$input,
-														_List_fromArray(
-															[
-																$elm$html$Html$Attributes$class('button-submit btn btn-lg'),
-																$elm$html$Html$Attributes$type_('submit')
-															]),
-														_List_fromArray(
-															[
-																$elm$html$Html$text('Submit')
-															]))
+														$author$project$Main$disabledButton(model),
+														_List_Nil)
 													]))
 											]))
 									]))
@@ -12098,7 +12178,7 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('row text-center align-items-center')
+										$elm$html$Html$Attributes$class('row text-center align-items-center justify-content-center')
 									]),
 								_List_fromArray(
 									[
@@ -12106,7 +12186,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-12')
+												$elm$html$Html$Attributes$class('col-sm-12 col-md-8 pb-5')
 											]),
 										_List_fromArray(
 											[
@@ -12129,7 +12209,7 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$div,
 												_List_fromArray(
 													[
-														$elm$html$Html$Attributes$class('pb-5')
+														$elm$html$Html$Attributes$class('embed-responsive embed-responsive-16by9')
 													]),
 												_List_fromArray(
 													[
@@ -12146,7 +12226,7 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('row text-center align-items-center')
+										$elm$html$Html$Attributes$class('row text-center align-items-center justify-content-center')
 									]),
 								_List_fromArray(
 									[
@@ -12154,7 +12234,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-12')
+												$elm$html$Html$Attributes$class('col-sm-12 col-md-8 pb-5')
 											]),
 										_List_fromArray(
 											[
@@ -12177,7 +12257,7 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$div,
 												_List_fromArray(
 													[
-														$elm$html$Html$Attributes$class('pb-5')
+														$elm$html$Html$Attributes$class('embed-responsive embed-responsive-16by9')
 													]),
 												_List_fromArray(
 													[
@@ -12194,7 +12274,7 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('row text-center align-items-center')
+										$elm$html$Html$Attributes$class('row text-center align-items-center justify-content-center')
 									]),
 								_List_fromArray(
 									[
@@ -12202,7 +12282,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-12')
+												$elm$html$Html$Attributes$class('col-sm-12 col-md-8 pb-5')
 											]),
 										_List_fromArray(
 											[
@@ -12219,13 +12299,13 @@ var $author$project$Main$view = function (model) {
 															$author$project$Main$resultsToCourses,
 															exposeResults.cl,
 															_List_fromArray(
-																['ITIL®4 Direct, Plan, & Improve', 'ITIL®4 Digital & IT Strategy', 'Management of Risk®'])))
+																['ITIL®4 Direct, Plan, & Improve', 'Management of Risk® Practitioner', 'Management of Risk® Foundation'])))
 													])),
 												A2(
 												$elm$html$Html$div,
 												_List_fromArray(
 													[
-														$elm$html$Html$Attributes$class('pb-5')
+														$elm$html$Html$Attributes$class('embed-responsive embed-responsive-16by9')
 													]),
 												_List_fromArray(
 													[
@@ -12234,7 +12314,7 @@ var $author$project$Main$view = function (model) {
 															$author$project$Main$resultsToOverviews,
 															exposeResults.sc,
 															_List_fromArray(
-																['https://player.vimeo.com/video/363848139?api=1&player_id=vimeoplayer', 'https://player.vimeo.com/video/223335912?autoplay=0', 'https://player.vimeo.com/video/374492741?autoplay=0'])))
+																['https://player.vimeo.com/video/363848139?api=1&player_id=vimeoplayer', 'https://player.vimeo.com/video/374492741?autoplay=0', 'https://player.vimeo.com/video/349665066?autoplay=1'])))
 													]))
 											]))
 									])),
@@ -12242,7 +12322,7 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('row text-center align-items-center')
+										$elm$html$Html$Attributes$class('row text-center align-items-center justify-content-center')
 									]),
 								_List_fromArray(
 									[
@@ -12250,7 +12330,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('col-12')
+												$elm$html$Html$Attributes$class('col-sm-12 col-md-8 pb-5')
 											]),
 										_List_fromArray(
 											[
@@ -12273,7 +12353,7 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$div,
 												_List_fromArray(
 													[
-														$elm$html$Html$Attributes$class('pb-5')
+														$elm$html$Html$Attributes$class('embed-responsive embed-responsive-16by9')
 													]),
 												_List_fromArray(
 													[
@@ -12282,7 +12362,7 @@ var $author$project$Main$view = function (model) {
 															$author$project$Main$resultsToOverviews,
 															exposeResults.sc,
 															_List_fromArray(
-																['https://player.vimeo.com/video/334731289?autoplay=0', 'https://player.vimeo.com/video/223335912?autoplay=0', 'https://player.vimeo.com/video/261002322?autoplay=0'])))
+																['https://player.vimeo.com/video/334731289?autoplay=0', 'https://player.vimeo.com/video/301870101?autoplay=0', 'https://player.vimeo.com/video/261002322?autoplay=0'])))
 													]))
 											]))
 									])),
@@ -12336,12 +12416,26 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$oneOf(
-		_List_fromArray(
-			[
-				$elm$json$Json$Decode$null($elm$core$Maybe$Nothing),
-				A2(
-				$elm$json$Json$Decode$map,
-				$elm$core$Maybe$Just,
-				$elm$json$Json$Decode$list($elm$json$Json$Decode$int))
-			])))({"versions":{"elm":"0.19.1"},"types":{"message":"Types.Msg","aliases":{"Types.Prompt":{"args":[],"type":"{ question : String.String, variable : Basics.Int, responseOptions : List.List Types.Response, selectedResponse : Maybe.Maybe Types.Response, index : Basics.Int, promptCategory : Types.PromptCategory, feedbackList : List.List Types.Feedback }"}},"unions":{"Types.Msg":{"args":[],"tags":{"SelectResponse":["Types.Response","Types.Prompt"],"ChangeModelState":[],"UpdateFormFirstName":["String.String"],"UpdateFormLastName":["String.String"],"UpdateFormEmail":["String.String"],"UpdateFormCompany":["String.String"]}},"Types.Feedback":{"args":[],"tags":{"Feedback":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Types.PromptCategory":{"args":[],"tags":{"SafetyCulture":[],"AgileMindset":[],"CoachingLeadership":[],"CollaborativeCulture":[],"CCCL":[],"SCCC":[]}},"Types.Response":{"args":[],"tags":{"Agree":[],"StronglyAgree":[],"Neutral":[],"Disagree":[],"StronglyDisagree":[]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
+	A2(
+		$elm$json$Json$Decode$andThen,
+		function (startingState) {
+			return A2(
+				$elm$json$Json$Decode$andThen,
+				function (startingResults) {
+					return $elm$json$Json$Decode$succeed(
+						{startingResults: startingResults, startingState: startingState});
+				},
+				A2($elm$json$Json$Decode$field, 'startingResults', $elm$json$Json$Decode$value));
+		},
+		A2(
+			$elm$json$Json$Decode$field,
+			'startingState',
+			$elm$json$Json$Decode$oneOf(
+				_List_fromArray(
+					[
+						$elm$json$Json$Decode$null($elm$core$Maybe$Nothing),
+						A2(
+						$elm$json$Json$Decode$map,
+						$elm$core$Maybe$Just,
+						$elm$json$Json$Decode$list($elm$json$Json$Decode$int))
+					])))))({"versions":{"elm":"0.19.1"},"types":{"message":"Types.Msg","aliases":{"Types.Prompt":{"args":[],"type":"{ question : String.String, variable : Basics.Int, responseOptions : List.List Types.Response, selectedResponse : Maybe.Maybe Types.Response, index : Basics.Int, promptCategory : Types.PromptCategory, feedbackList : List.List Types.Feedback }"}},"unions":{"Types.Msg":{"args":[],"tags":{"SelectResponse":["Types.Response","Types.Prompt"],"ChangeModelState":[],"UpdateFormFirstName":["String.String"],"UpdateFormLastName":["String.String"],"UpdateFormEmail":["String.String"],"UpdateFormCompany":["String.String"],"UpdateCheckToSubmit":[]}},"Types.Feedback":{"args":[],"tags":{"Feedback":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Types.PromptCategory":{"args":[],"tags":{"SafetyCulture":[],"AgileMindset":[],"CoachingLeadership":[],"CollaborativeCulture":[],"CCCL":[],"SCCC":[]}},"Types.Response":{"args":[],"tags":{"Agree":[],"StronglyAgree":[],"Neutral":[],"Disagree":[],"StronglyDisagree":[]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));

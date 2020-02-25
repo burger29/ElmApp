@@ -2,9 +2,22 @@ module Data exposing (questionList, videoframe)
 
 import Array as Array
 import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Attributes as A
+    exposing
+        ( attribute
+        , height
+        , property
+        , src
+        , width
+        )
 import Json.Encode
-import Types exposing (Feedback(..), PromptCategory(..), Question(..), Msg(..))
+import Types
+    exposing
+        ( Feedback(..)
+        , Msg(..)
+        , PromptCategory(..)
+        , Question(..)
+        )
 
 
 questionList : List Question
@@ -105,11 +118,11 @@ questionList =
 videoframe : String -> Html Msg
 videoframe url =
     iframe
-        [ width 560
-        , height 315
-        , src (url)
-        , property "allowfullscreen" (Json.Encode.string "true")
-        , class "embed-responsive-item"
+        [ A.width 560
+        , A.height 315
+        , A.src url
+        , A.attribute "allowfullscreen" "true"
+        , A.class "embed-responsive-item"
         ]
         []
 

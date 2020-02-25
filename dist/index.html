@@ -19,12 +19,19 @@
     var startingState = storedState ? JSON.parse(storedState) : null;
     console.log("startingState: ", startingState)
     console.log("storedState: ", storedState)
+    var storedResults = localStorage.getItem('results-app-save');
+    var startingResults = storedResults ? storedResults : null;
+    console.log("startingResults: ", startingResults)
+    console.log("storedResults: ", storedResults)
     var app = Elm.Main.init({
-      flags: startingState,
+      flags: {startingState: startingState, startingResults: startingResults},
       node: document.getElementById('elm')
     });
     app.ports.storeResponses.subscribe(function(responses) {
         localStorage.setItem('responses-app-save', responses);
+    });
+    app.ports.storeResults.subscribe(function(results) {
+        localStorage.setItem('results-app-save', results);
     });
     </script>
   </body>

@@ -1,17 +1,19 @@
-module Types
-    exposing
-        ( Feedback(..)
-        , FormData
-        , Model
-        , ModelState(..)
-        , Msg(..)
-        , Prompt
-        , PromptCategory(..)
-        , Question(..)
-        , Response(..)
-        , Results
-        , unwrapFeedback
-        )
+module Types exposing
+    ( Feedback(..)
+    , Flags
+    , FormData
+    , Model
+    , ModelState(..)
+    , Msg(..)
+    , Prompt
+    , PromptCategory(..)
+    , Question(..)
+    , Response(..)
+    , Results
+    , unwrapFeedback
+    )
+
+import Json.Decode as Decode
 
 
 type alias Model =
@@ -57,6 +59,7 @@ type Msg
     | UpdateFormLastName String
     | UpdateFormEmail String
     | UpdateFormCompany String
+    | UpdateCheckToSubmit
 
 
 type PromptCategory
@@ -92,4 +95,10 @@ type alias FormData =
     , formLastName : String
     , formEmail : String
     , formCompany : String
+    }
+
+
+type alias Flags =
+    { startingState : Maybe (List Int)
+    , startingResults : Decode.Value
     }
