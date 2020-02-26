@@ -82,11 +82,11 @@ type ModelState
 
 
 type Feedback
-    = Feedback String
+    = Feedback String PromptCategory
 
 
 unwrapFeedback : Feedback -> String
-unwrapFeedback (Feedback string) =
+unwrapFeedback (Feedback string _) =
     string
 
 

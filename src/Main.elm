@@ -26,6 +26,7 @@ import Html
 import Html.Attributes as A
     exposing
         ( action
+        , alt
         , attribute
         , class
         , cols
@@ -476,7 +477,7 @@ promptToFeedback prompt =
             feedbackToIndex <|
                 Maybe.withDefault Neutral prompt.selectedResponse
     in
-    Maybe.withDefault (Feedback "No feedback found.") <|
+    Maybe.withDefault (Feedback "No feedback found." prompt.promptCategory) <|
         Array.get feedbackIndex (Array.fromList prompt.feedbackList)
 
 
@@ -552,7 +553,50 @@ resultsToOverviews x courses =
         |> Maybe.withDefault "https://player.vimeo.com/video/391234360?autoplay=0"
 
 
+filterSC : Prompt -> Bool
+filterSC prompt =
+    if prompt.promptCategory == SafetyCulture then
+        True
 
+    else
+        False
+
+
+filterByPromptCategory : PromptCategory -> Prompt -> Bool
+filterByPromptCategory pc prompt =
+    if prompt.promptCategory == pc then
+        True
+
+    else
+        False
+
+
+
+-- filterAM : Prompt -> Bool
+-- filterAM prompt =
+--     if prompt.promptCategory == AgileMindset then
+--         True
+--
+--     else
+--         False
+--
+--
+-- filterCL : Prompt -> Bool
+-- filterCL prompt =
+--     if prompt.promptCategory == CoachingLeadership then
+--         True
+--
+--     else
+--         False
+--
+--
+-- filterCC : Prompt -> Bool
+-- filterCC prompt =
+--     if prompt.promptCategory == CollaborativeCulture then
+--         True
+--
+--     else
+--         False
 --
 --VIEW AND HTML MSGS
 
@@ -577,7 +621,7 @@ view model =
             div []
                 [ div [ A.class "container-fluid p-0" ]
                     [ div [ A.class "banner-image d-flex justify-content-center" ]
-                        [ img [ A.class "img-fluid", src "https://assets.itpro.tv/go/RateYourTeam/mockup.jpg" ] []
+                        [ img [ A.class "img-fluid", A.alt "Rate Your Team", src "https://assets.itpro.tv/go/RateYourTeam/mockup.jpg" ] []
                         ]
                     ]
                 , div [ A.class "container" ]
@@ -588,9 +632,10 @@ view model =
                         , Html.span [] [ Html.text "//" ]
                         , Html.span [] [ Html.text "Step 3" ]
                         ]
-                    , div [ A.class "page-one-header" ]
-                        [ Html.text "How well do you think your team is performing?" ]
-                    , div [ A.class "intro container" ]
+                    , Html.h1 [ A.class "page-one-header" ]
+                        [ Html.text "How well do you think your team is performing?"
+                        ]
+                    , div [ A.class "intro container text-center lead" ]
                         [ Html.text "ITIL® master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert."
                         ]
                     , div [ A.class "pt-5 row justify-content-center" ]
@@ -727,6 +772,7 @@ view model =
                     , Html.span [] [ Html.text "//" ]
                     , Html.span [ A.class "active-tracker" ] [ Html.text "Step 3" ]
                     ]
+                , Html.h1 [ A.class "response-header text-center" ] [ Html.text "Your Results" ]
                 , div [ A.class "container" ]
                     [ div [ A.class "row pt-5 align-items-end no-gutters" ]
                         [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2" ]
@@ -756,18 +802,19 @@ view model =
                             [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
                             ]
                         ]
-                    , div [ A.class "response-header text-center" ] [ Html.text "More About Your Team" ]
-                    , div [ A.class "list-courses pb-5" ]
+                    , div [ A.class "list-courses pb-5 lead" ]
                         [ ul []
-                            (List.map
-                                (\prompt ->
-                                    li []
-                                        [ Html.text <|
-                                            unwrapFeedback <|
-                                                promptToFeedback prompt
-                                        ]
-                                )
+                            (List.filter
+                                (filterByPromptCategory SafetyCulture)
                                 model.prompts
+                                |> List.map
+                                    (\prompt ->
+                                        li []
+                                            [ promptToFeedback prompt
+                                                |> unwrapFeedback
+                                                |> Html.text
+                                            ]
+                                    )
                             )
                         ]
                     , div [ A.class "d-flex justify-content-center rc-header" ] [ Html.text "Recommended Courses For Your Team" ]
