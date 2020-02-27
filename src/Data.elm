@@ -79,7 +79,7 @@ questionList =
     , Question "Team members will openly express their opinions and concerns"
         1
         SCCC
-        (feedbackListFromStrings SafetyCulture
+        (feedbackListFromStrings SCCC
             [ "Your team may not feel as though their contributions are valued may feel oppressed and invisible."
             , "Your team is content within their own environment, but this will need your attention to ensure that satisfaction levels do not drop."
             , "Team members are confident in your ability to listen and to accept feedback."
