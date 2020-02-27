@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Q&A</title>
+    <script type="text/javascript" src="https://assets.itpro.tv/go/RateYourTeam/elm-app.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://assets.itpro.tv/go/RateYourTeam/gradestyles.css">
+    <link rel="stylesheet" href="https://use.typekit.net/omm3msn.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+  </head>
+  <body>
+    <div id="elm"></div>
+    <script>
+    var storedState = localStorage.getItem('responses-app-save');
+    var startingState = storedState ? JSON.parse(storedState) : null;
+    console.log("startingState: ", startingState)
+    console.log("storedState: ", storedState)
+    var app = Elm.Main.init({
+      flags: startingState,
+      node: document.getElementById('elm')
+    });
+    app.ports.storeResponses.subscribe(function(responses) {
+        localStorage.setItem('responses-app-save', responses);
+    });
+    </script>
+  </body>
+</html>
