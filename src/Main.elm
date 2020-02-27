@@ -553,50 +553,79 @@ resultsToOverviews x courses =
         |> Maybe.withDefault "https://player.vimeo.com/video/391234360?autoplay=0"
 
 
-filterSC : Prompt -> Bool
-filterSC prompt =
-    if prompt.promptCategory == SafetyCulture then
-        True
+feedbackHandler : List PromptCategory -> List Prompt -> List (Html msg)
+feedbackHandler promptCategories prompts =
+    List.foldl
+        (\category allFeedback ->
+            case category of
+                SafetyCulture ->
+                    allFeedback ++ groupFeedback [ filteredFeedback category prompts ++ filteredFeedback SCCC prompts ] category
 
-    else
-        False
+                CollaborativeCulture ->
+                    allFeedback ++ groupFeedback [ filteredFeedback category prompts ++ filteredFeedback CCCL prompts ++ filteredFeedback SCCC prompts ] category
+
+                CoachingLeadership ->
+                    allFeedback ++ groupFeedback [ filteredFeedback category prompts ++ filteredFeedback CCCL prompts ] category
+
+                SCCC ->
+                    allFeedback
+
+                CCCL ->
+                    allFeedback
+
+                _ ->
+                    allFeedback ++ groupFeedback [ filteredFeedback category prompts ] category
+        )
+        []
+        promptCategories
 
 
-filterByPromptCategory : PromptCategory -> Prompt -> Bool
-filterByPromptCategory pc prompt =
-    if prompt.promptCategory == pc then
-        True
+groupFeedback : List (List (Html msg)) -> PromptCategory -> List (Html msg)
+groupFeedback feedbackLists pc =
+    [ Html.h4 []
+        [ Html.text <|
+            promptCategoryToString pc
+        ]
+    , ul [] <|
+        List.concat feedbackLists
+    ]
 
-    else
-        False
+
+filteredFeedback : PromptCategory -> List Prompt -> List (Html msg)
+filteredFeedback pc prompts =
+    List.filter
+        (\prompt -> prompt.promptCategory == pc)
+        prompts
+        |> List.map
+            (\prompt ->
+                li []
+                    [ promptToFeedback prompt
+                        |> unwrapFeedback
+                        |> Html.text
+                    ]
+            )
+
+
+promptCategoryToString : PromptCategory -> String
+promptCategoryToString pc =
+    case pc of
+        SafetyCulture ->
+            "SafetyCulture"
+
+        AgileMindset ->
+            "AgileMindset"
+
+        CoachingLeadership ->
+            "CoachingLeadership"
+
+        CollaborativeCulture ->
+            "CollaborativeCulture"
+
+        _ ->
+            ""
 
 
 
--- filterAM : Prompt -> Bool
--- filterAM prompt =
---     if prompt.promptCategory == AgileMindset then
---         True
---
---     else
---         False
---
---
--- filterCL : Prompt -> Bool
--- filterCL prompt =
---     if prompt.promptCategory == CoachingLeadership then
---         True
---
---     else
---         False
---
---
--- filterCC : Prompt -> Bool
--- filterCC prompt =
---     if prompt.promptCategory == CollaborativeCulture then
---         True
---
---     else
---         False
 --
 --VIEW AND HTML MSGS
 
@@ -802,21 +831,17 @@ view model =
                             [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
                             ]
                         ]
-                    , div [ A.class "list-courses pb-5 lead" ]
-                        [ ul []
-                            (List.filter
-                                (filterByPromptCategory SafetyCulture)
-                                model.prompts
-                                |> List.map
-                                    (\prompt ->
-                                        li []
-                                            [ promptToFeedback prompt
-                                                |> unwrapFeedback
-                                                |> Html.text
-                                            ]
-                                    )
-                            )
-                        ]
+                    , div [ A.class "list-feedback pb-5" ]
+                        (feedbackHandler
+                            [ SafetyCulture
+                            , AgileMindset
+                            , CoachingLeadership
+                            , CollaborativeCulture
+                            , CCCL
+                            , SCCC
+                            ]
+                            model.prompts
+                        )
                     , div [ A.class "d-flex justify-content-center rc-header" ] [ Html.text "Recommended Courses For Your Team" ]
                     , div [ A.class "row text-center align-items-center justify-content-center" ]
                         [ div [ A.class "col-sm-12 col-md-8 pb-5" ]

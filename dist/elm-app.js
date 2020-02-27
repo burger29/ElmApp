@@ -10648,7 +10648,7 @@ var $author$project$Data$questionList = _List_fromArray(
 		$author$project$Types$SCCC,
 		A2(
 			$author$project$Data$feedbackListFromStrings,
-			$author$project$Types$SafetyCulture,
+			$author$project$Types$SCCC,
 			_List_fromArray(
 				['Your team may not feel as though their contributions are valued may feel oppressed and invisible.', 'Your team is content within their own environment, but this will need your attention to ensure that satisfaction levels do not drop.', 'Team members are confident in your ability to listen and to accept feedback.']))),
 		A4(
@@ -11305,14 +11305,157 @@ var $author$project$GraphicalElements$doubleArrow = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Main$filterByPromptCategory = F2(
-	function (pc, prompt) {
-		return _Utils_eq(prompt.promptCategory, pc) ? true : false;
+var $author$project$Main$feedbackToIndex = function (response) {
+	switch (response.$) {
+		case 'StronglyAgree':
+			return 2;
+		case 'Agree':
+			return 2;
+		case 'Neutral':
+			return 1;
+		case 'Disagree':
+			return 0;
+		default:
+			return 0;
+	}
+};
+var $author$project$Main$promptToFeedback = function (prompt) {
+	var feedbackIndex = $author$project$Main$feedbackToIndex(
+		A2($elm$core$Maybe$withDefault, $author$project$Types$Neutral, prompt.selectedResponse));
+	return A2(
+		$elm$core$Maybe$withDefault,
+		A2($author$project$Types$Feedback, 'No feedback found.', prompt.promptCategory),
+		A2(
+			$elm$core$Array$get,
+			feedbackIndex,
+			$elm$core$Array$fromList(prompt.feedbackList)));
+};
+var $author$project$Types$unwrapFeedback = function (_v0) {
+	var string = _v0.a;
+	return string;
+};
+var $author$project$Main$filteredFeedback = F2(
+	function (pc, prompts) {
+		return A2(
+			$elm$core$List$map,
+			function (prompt) {
+				return A2(
+					$elm$html$Html$li,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							$author$project$Types$unwrapFeedback(
+								$author$project$Main$promptToFeedback(prompt)))
+						]));
+			},
+			A2(
+				$elm$core$List$filter,
+				function (prompt) {
+					return _Utils_eq(prompt.promptCategory, pc);
+				},
+				prompts));
+	});
+var $elm$html$Html$h4 = _VirtualDom_node('h4');
+var $author$project$Main$promptCategoryToString = function (pc) {
+	switch (pc.$) {
+		case 'SafetyCulture':
+			return 'SafetyCulture';
+		case 'AgileMindset':
+			return 'AgileMindset';
+		case 'CoachingLeadership':
+			return 'CoachingLeadership';
+		case 'CollaborativeCulture':
+			return 'CollaborativeCulture';
+		default:
+			return '';
+	}
+};
+var $author$project$Main$groupFeedback = F2(
+	function (feedbackLists, pc) {
+		return _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$h4,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						$author$project$Main$promptCategoryToString(pc))
+					])),
+				A2(
+				$elm$html$Html$ul,
+				_List_Nil,
+				$elm$core$List$concat(feedbackLists))
+			]);
+	});
+var $author$project$Main$feedbackHandler = F2(
+	function (promptCategories, prompts) {
+		return A3(
+			$elm$core$List$foldl,
+			F2(
+				function (category, allFeedback) {
+					switch (category.$) {
+						case 'SafetyCulture':
+							return _Utils_ap(
+								allFeedback,
+								A2(
+									$author$project$Main$groupFeedback,
+									_List_fromArray(
+										[
+											_Utils_ap(
+											A2($author$project$Main$filteredFeedback, category, prompts),
+											A2($author$project$Main$filteredFeedback, $author$project$Types$SCCC, prompts))
+										]),
+									category));
+						case 'CollaborativeCulture':
+							return _Utils_ap(
+								allFeedback,
+								A2(
+									$author$project$Main$groupFeedback,
+									_List_fromArray(
+										[
+											_Utils_ap(
+											A2($author$project$Main$filteredFeedback, category, prompts),
+											_Utils_ap(
+												A2($author$project$Main$filteredFeedback, $author$project$Types$CCCL, prompts),
+												A2($author$project$Main$filteredFeedback, $author$project$Types$SCCC, prompts)))
+										]),
+									category));
+						case 'CoachingLeadership':
+							return _Utils_ap(
+								allFeedback,
+								A2(
+									$author$project$Main$groupFeedback,
+									_List_fromArray(
+										[
+											_Utils_ap(
+											A2($author$project$Main$filteredFeedback, category, prompts),
+											A2($author$project$Main$filteredFeedback, $author$project$Types$CCCL, prompts))
+										]),
+									category));
+						case 'SCCC':
+							return allFeedback;
+						case 'CCCL':
+							return allFeedback;
+						default:
+							return _Utils_ap(
+								allFeedback,
+								A2(
+									$author$project$Main$groupFeedback,
+									_List_fromArray(
+										[
+											A2($author$project$Main$filteredFeedback, category, prompts)
+										]),
+									category));
+					}
+				}),
+			_List_Nil,
+			promptCategories);
 	});
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$h4 = _VirtualDom_node('h4');
 var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$maxlength = function (n) {
@@ -11358,31 +11501,6 @@ var $elm$html$Html$Events$onSubmit = function (msg) {
 			$elm$json$Json$Decode$succeed(msg)));
 };
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
-var $author$project$Main$feedbackToIndex = function (response) {
-	switch (response.$) {
-		case 'StronglyAgree':
-			return 2;
-		case 'Agree':
-			return 2;
-		case 'Neutral':
-			return 1;
-		case 'Disagree':
-			return 0;
-		default:
-			return 0;
-	}
-};
-var $author$project$Main$promptToFeedback = function (prompt) {
-	var feedbackIndex = $author$project$Main$feedbackToIndex(
-		A2($elm$core$Maybe$withDefault, $author$project$Types$Neutral, prompt.selectedResponse));
-	return A2(
-		$elm$core$Maybe$withDefault,
-		A2($author$project$Types$Feedback, 'No feedback found.', prompt.promptCategory),
-		A2(
-			$elm$core$Array$get,
-			feedbackIndex,
-			$elm$core$Array$fromList(prompt.feedbackList)));
-};
 var $author$project$Types$SelectResponse = F2(
 	function (a, b) {
 		return {$: 'SelectResponse', a: a, b: b};
@@ -11462,10 +11580,6 @@ var $elm$html$Html$Attributes$src = function (url) {
 		$elm$html$Html$Attributes$stringProperty,
 		'src',
 		_VirtualDom_noJavaScriptOrHtmlUri(url));
-};
-var $author$project$Types$unwrapFeedback = function (_v0) {
-	var string = _v0.a;
-	return string;
 };
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $elm$html$Html$Attributes$height = function (n) {
@@ -12171,31 +12285,13 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('list-courses pb-5 lead')
+										$elm$html$Html$Attributes$class('list-feedback pb-5')
 									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$ul,
-										_List_Nil,
-										A2(
-											$elm$core$List$map,
-											function (prompt) {
-												return A2(
-													$elm$html$Html$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$elm$html$Html$text(
-															$author$project$Types$unwrapFeedback(
-																$author$project$Main$promptToFeedback(prompt)))
-														]));
-											},
-											A2(
-												$elm$core$List$filter,
-												$author$project$Main$filterByPromptCategory($author$project$Types$SafetyCulture),
-												model.prompts)))
-									])),
+								A2(
+									$author$project$Main$feedbackHandler,
+									_List_fromArray(
+										[$author$project$Types$SafetyCulture, $author$project$Types$AgileMindset, $author$project$Types$CoachingLeadership, $author$project$Types$CollaborativeCulture, $author$project$Types$CCCL, $author$project$Types$SCCC]),
+									model.prompts)),
 								A2(
 								$elm$html$Html$div,
 								_List_fromArray(
