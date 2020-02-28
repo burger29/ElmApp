@@ -582,11 +582,11 @@ feedbackHandler promptCategories prompts =
 
 groupFeedback : List (List (Html msg)) -> PromptCategory -> List (Html msg)
 groupFeedback feedbackLists pc =
-    [ Html.h4 []
+    [ Html.h4 [ A.class "text-center feeback-header" ]
         [ Html.text <|
             promptCategoryToString pc
         ]
-    , ul [] <|
+    , ul [ A.class "list-feedback pb-5" ] <|
         List.concat feedbackLists
     ]
 
@@ -610,16 +610,16 @@ promptCategoryToString : PromptCategory -> String
 promptCategoryToString pc =
     case pc of
         SafetyCulture ->
-            "SafetyCulture"
+            "Safety Culture"
 
         AgileMindset ->
-            "AgileMindset"
+            "Agile Mindset"
 
         CoachingLeadership ->
-            "CoachingLeadership"
+            "Coaching Leadership"
 
         CollaborativeCulture ->
-            "CollaborativeCulture"
+            "Collaborative Culture"
 
         _ ->
             ""
@@ -817,7 +817,7 @@ view model =
                             [ bar ((exposeResults.cc + 6) * 12) exposeResults.cc
                             ]
                         ]
-                    , div [ A.class "row align-items-start no-gutters" ]
+                    , div [ A.class "row align-items-start no-gutters pb-5" ]
                         [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2 " ]
                             [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Safety Culture" ]
                             ]
@@ -831,7 +831,7 @@ view model =
                             [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
                             ]
                         ]
-                    , div [ A.class "list-feedback pb-5" ]
+                    , div [ A.class "pb-5" ]
                         (feedbackHandler
                             [ SafetyCulture
                             , AgileMindset

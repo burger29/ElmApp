@@ -1,5 +1,5 @@
 h4, h1 {
-  font-size: .6rem;
+  font-size: .8rem;
   @media (min-width: 500px) {
     font-size: 1rem;
   }
@@ -24,7 +24,7 @@ h4, h1 {
   @media (min-width: 300px) {
     font-size: 1.3em;
   }
-  @media (min-width: 500px) {
+  @media (min-width: 800px) {
     font-size: 1.5em;
   }
 }
@@ -49,14 +49,27 @@ h4, h1 {
   font-style: normal;
   font-size: 1.5em;
   margin-left: 4%;
+  @media (min-width: 300px) {
+    font-size: 1.1em;
+  }
+  @media (min-width: 800px) {
+    font-size: 1.5em;
+  }
 }
 
 .intro {
   color: black;
+  font-size: 1.4em;
   font-family: "Adelle Sans", sans-serif;
   font-weight: 400;
   padding-top: 30px;
   max-width: 900px;
+  @media (min-width: 300px) {
+    font-size: 1.1em;
+  }
+  @media (min-width: 800px) {
+    font-size: 1.4em;
+  }
 }
 
 .question-number {
@@ -139,9 +152,10 @@ h4, h1 {
 .bar-label {
   padding-top: 10px;
   font-family: "Proxima Nova", sans-serif;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   color: #151746;
+
 }
 
 .bar-style {
@@ -172,13 +186,20 @@ h4, h1 {
   padding-top: 15px;
 }
 
-.list-courses {
+.list-feedback {
   font-family: "Adelle Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 1em;
+  font-size: 1.2em;
+  line-height: 1.6em;
   padding-top: 15px;
   padding-bottom: 10px;
+  @media (min-width: 300px) {
+    font-size: .9em;
+  }
+  @media (min-width: 800px) {
+    font-size: 1.2em;
+  }
 }
 
 .course-recommendations {
@@ -187,6 +208,12 @@ h4, h1 {
   color: #151746;
   font-size: 1.4em;
   padding-bottom: 8px;
+  @media (min-width: 300px) {
+    font-size: 1.1em;
+  }
+  @media (min-width: 800px) {
+    font-size: 1.4em;
+  }
 }
 
 .unlock-results {
@@ -200,17 +227,20 @@ h4, h1 {
 .rc-header {
   font-family: "Proxima Nova", sans-serif;
   font-weight: 600;
-  font-size: 1.8em;
+  font-size: 1.9em;
   color: #56A437;
   padding-bottom: 30px;
+  text-align: center;
+  line-height: 1.2em;
 }
 
 .CTA-link {
   font-family: "Proxima Nova", sans-serif;
   font-weight: 600;
-  font-size: 1.2em;
+  font-size: 1.4em;
   color: #ff671f;
   padding-bottom: 50px;
+  line-height: normal;
   &:hover {
     color: #e64900;
     text-decoration: none!important;
@@ -221,4 +251,14 @@ h4, h1 {
 
 .double-arrow {
   padding-left: 10px;
+}
+
+.feeback-header {
+  font-family: "Proxima Nova", sans-serif;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 1.4em;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  background-color: #151746;
 }

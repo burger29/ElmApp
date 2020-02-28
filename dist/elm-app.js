@@ -11360,13 +11360,13 @@ var $elm$html$Html$h4 = _VirtualDom_node('h4');
 var $author$project$Main$promptCategoryToString = function (pc) {
 	switch (pc.$) {
 		case 'SafetyCulture':
-			return 'SafetyCulture';
+			return 'Safety Culture';
 		case 'AgileMindset':
-			return 'AgileMindset';
+			return 'Agile Mindset';
 		case 'CoachingLeadership':
-			return 'CoachingLeadership';
+			return 'Coaching Leadership';
 		case 'CollaborativeCulture':
-			return 'CollaborativeCulture';
+			return 'Collaborative Culture';
 		default:
 			return '';
 	}
@@ -11377,7 +11377,10 @@ var $author$project$Main$groupFeedback = F2(
 			[
 				A2(
 				$elm$html$Html$h4,
-				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('text-center feeback-header')
+					]),
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
@@ -11385,7 +11388,10 @@ var $author$project$Main$groupFeedback = F2(
 					])),
 				A2(
 				$elm$html$Html$ul,
-				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('list-feedback pb-5')
+					]),
 				$elm$core$List$concat(feedbackLists))
 			]);
 	});
@@ -12200,7 +12206,7 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('row align-items-start no-gutters')
+										$elm$html$Html$Attributes$class('row align-items-start no-gutters pb-5')
 									]),
 								_List_fromArray(
 									[
@@ -12285,7 +12291,7 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('list-feedback pb-5')
+										$elm$html$Html$Attributes$class('pb-5')
 									]),
 								A2(
 									$author$project$Main$feedbackHandler,
