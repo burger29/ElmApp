@@ -152,7 +152,7 @@ h4, h1 {
 .bar-label {
   padding-top: 10px;
   font-family: "Proxima Nova", sans-serif;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1;
   color: #151746;
 
@@ -190,15 +190,12 @@ h4, h1 {
   font-family: "Adelle Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 1.2em;
+  font-size: .9em;
   line-height: 1.6em;
   padding-top: 15px;
   padding-bottom: 10px;
-  @media (min-width: 300px) {
-    font-size: .9em;
-  }
   @media (min-width: 800px) {
-    font-size: 1.2em;
+    font-size: 1.1em;
   }
 }
 
@@ -261,4 +258,79 @@ h4, h1 {
   padding-bottom: 8px;
   padding-top: 8px;
   background-color: #151746;
+}
+
+.CTA-section {
+  background-color: #151746;
+  color: white;
+  font-size: 1.6em;
+  font-family: "Proxima Nova", sans-serif;
+  font-weight: 600;
+  padding-top: 25px;
+}
+
+.button-CTA {
+  color: #6cc24a;
+  background-color: #151746;
+  border-color: #6cc44a;
+  font-family: "Adelle Sans", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 5px;
+  margin-top: 30px;
+  margin-bottom: 100px;
+  &:hover, &:active {
+    color: white;
+    background-color: #469e24;
+    cursor: pointer;
+    border-color: #469e24;
+  }
+}
+
+.key-square-green {
+  background-color: #6cc24a;
+  width: 20px;
+  height: 20px;
+  @media (min-width: 800px) {
+    font-size: 14px;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.key-square-blue {
+  background-color: #151746;
+  width: 20px;
+  height: 20px;
+  @media (min-width: 800px) {
+    font-size: 14px;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.key-square-orange {
+  background-color: #ff671f;
+  width: 20px;
+  height: 20px;
+  @media (min-width: 800px) {
+    font-size: 14px;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.key-label {
+  font-family: "Adelle Sans", sans-serif;
+  font-size: .8em;
+  font-weight: 500;
+  @media (min-width: 800px) {
+    font-size: 1em;
+  }
+}
+
+.key {
+    max-width: 600px;
+    margin: 0 auto;
 }

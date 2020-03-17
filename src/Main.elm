@@ -115,7 +115,7 @@ init flags =
                     decodeResults results
 
                 Err _ ->
-                    Results 3 3 3 3
+                    Results 0 0 0 0
     in
     ( { prompts = savedPrompts
       , state = selectState savedPrompts
@@ -584,7 +584,8 @@ groupFeedback : List (List (Html msg)) -> PromptCategory -> List (Html msg)
 groupFeedback feedbackLists pc =
     [ Html.h4 [ A.class "text-center feeback-header" ]
         [ Html.text <|
-            promptCategoryToString pc
+            "Insights on your team's "
+                ++ promptCategoryToString pc
         ]
     , ul [ A.class "list-feedback pb-5" ] <|
         List.concat feedbackLists
@@ -665,7 +666,7 @@ view model =
                         [ Html.text "How well do you think your team is performing?"
                         ]
                     , div [ A.class "intro container text-center lead" ]
-                        [ Html.text "ITIL® master Jo Peacock can help you access your team’s performance under your leadership. Check out the video below and take the quiz to get your team rated by an expert."
+                        [ Html.text "Take this 10-question quiz, created by ITIL® master Jo Peacock, and get personalized, actionable results."
                         ]
                     , div [ A.class "pt-5 row justify-content-center" ]
                         [ div [ A.class "embed-responsive embed-responsive-16by9 video-div col-8" ] [ videoframe "https://player.vimeo.com/video/391234360?autoplay=0" ]
@@ -801,7 +802,7 @@ view model =
                     , Html.span [] [ Html.text "//" ]
                     , Html.span [ A.class "active-tracker" ] [ Html.text "Step 3" ]
                     ]
-                , Html.h1 [ A.class "response-header text-center" ] [ Html.text "Your Results" ]
+                , Html.h1 [ A.class "response-header text-center" ] [ Html.text "YOUR RESULTS" ]
                 , div [ A.class "container" ]
                     [ div [ A.class "row pt-5 align-items-end no-gutters" ]
                         [ div [ A.class "col-3 offset-0 col-md-2 offset-md-2" ]
@@ -831,6 +832,22 @@ view model =
                             [ Html.h4 [ A.class "bar-label text-center" ] [ Html.text "Collaborative Culture" ]
                             ]
                         ]
+                    , div [ A.class "key" ]
+                        [ div [ A.class "row mb-5  align-items-start d-flex" ]
+                            [ div [ A.class "col-1" ]
+                                [ div [ A.class " key-square-green" ] []
+                                ]
+                            , div [ A.class "col-3 key-label" ] [ Html.text "Efficient AND Effective" ]
+                            , div [ A.class "col-1" ]
+                                [ div [ A.class "key-square-blue" ] []
+                                ]
+                            , div [ A.class "col-3 key-label" ] [ Html.text "Efficient OR Effective" ]
+                            , div [ A.class "col-1" ]
+                                [ div [ A.class "key-square-orange" ] []
+                                ]
+                            , div [ A.class "col-3 key-label" ] [ Html.text "Needs Improvement" ]
+                            ]
+                        ]
                     , div [ A.class "pb-5" ]
                         (feedbackHandler
                             [ SafetyCulture
@@ -844,35 +861,35 @@ view model =
                         )
                     , div [ A.class "d-flex justify-content-center rc-header" ] [ Html.text "Recommended Courses For Your Team" ]
                     , div [ A.class "row text-center align-items-center justify-content-center" ]
-                        [ div [ A.class "col-sm-12 col-md-8 pb-5" ]
+                        [ div [ A.class "col-12 col-md-6 pb-5" ]
                             [ Html.h4 [ A.class "text-center course-recommendations" ] [ Html.text (resultsToCourses exposeResults.sc [ "Management of Risk® Foundation", "ITIL®4 Direct, Plan, & Improve", "DevOps Foundation" ]) ]
                             , div [ A.class "embed-responsive embed-responsive-16by9" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/349665066?autoplay=0", "https://player.vimeo.com/video/363848139?api=1&player_id=vimeoplayer", "https://player.vimeo.com/video/334731289?autoplay=0" ]) ]
                             ]
-                        ]
-                    , div [ A.class "row text-center align-items-center justify-content-center" ]
-                        [ div [ A.class "col-sm-12 col-md-8 pb-5" ]
+                        , div [ A.class "col-12 col-md-6 pb-5" ]
                             [ Html.h4 [ A.class "text-center course-recommendations" ] [ Html.text (resultsToCourses exposeResults.am [ "AgileSHIFT®", "Agile Foundation", "Agile Scrum Master" ]) ]
-                            , div [ A.class "embed-responsive embed-responsive-16by9" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/305580479?autoplay=0", "https://player.vimeo.com/video/255558343?autoplay=0", "https://player.vimeo.com/video/285162807?autoplay=0" ]) ]
+                            , div [ A.class "embed-responsive embed-responsive-16by9" ] [ videoframe (resultsToOverviews exposeResults.am [ "https://player.vimeo.com/video/305580479?autoplay=0", "https://player.vimeo.com/video/255558343?autoplay=0", "https://player.vimeo.com/video/285162807?autoplay=0" ]) ]
                             ]
-                        ]
-                    , div [ A.class "row text-center align-items-center justify-content-center" ]
-                        [ div [ A.class "col-sm-12 col-md-8 pb-5" ]
+                        , div [ A.class "col-12 col-md-6 pb-5" ]
                             [ Html.h4 [ A.class "text-center course-recommendations" ] [ Html.text (resultsToCourses exposeResults.cl [ "ITIL®4 Direct, Plan, & Improve", "Management of Risk® Practitioner", "Management of Risk® Foundation" ]) ]
-                            , div [ A.class "embed-responsive embed-responsive-16by9" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/363848139?api=1&player_id=vimeoplayer", "https://player.vimeo.com/video/374492741?autoplay=0", "https://player.vimeo.com/video/349665066?autoplay=1" ]) ]
+                            , div [ A.class "embed-responsive embed-responsive-16by9" ] [ videoframe (resultsToOverviews exposeResults.cl [ "https://player.vimeo.com/video/363848139?api=1&player_id=vimeoplayer", "https://player.vimeo.com/video/374492741?autoplay=0", "https://player.vimeo.com/video/349665066?autoplay=0" ]) ]
                             ]
-                        ]
-                    , div [ A.class "row text-center align-items-center justify-content-center" ]
-                        [ div [ A.class "col-sm-12 col-md-8 pb-5" ]
+                        , div [ A.class "col-12 col-md-6 pb-5" ]
                             [ Html.h4 [ A.class "text-center course-recommendations" ] [ Html.text (resultsToCourses exposeResults.cc [ "DevOps Foundation", "DevOps Professional", "SIAM Foundation" ]) ]
-                            , div [ A.class "embed-responsive embed-responsive-16by9" ] [ videoframe (resultsToOverviews exposeResults.sc [ "https://player.vimeo.com/video/334731289?autoplay=0", "https://player.vimeo.com/video/301870101?autoplay=0", "https://player.vimeo.com/video/261002322?autoplay=0" ]) ]
+                            , div [ A.class "embed-responsive embed-responsive-16by9" ] [ videoframe (resultsToOverviews exposeResults.cc [ "https://player.vimeo.com/video/334731289?autoplay=0", "https://player.vimeo.com/video/301870101?autoplay=0", "https://player.vimeo.com/video/261002322?autoplay=0" ]) ]
                             ]
                         ]
-                    , div [ A.class "row align-items-center" ]
+                    ]
+                , div [ A.class "CTA-section" ]
+                    [ div [ A.class "row align-items-center" ]
                         [ div [ A.class "col-12 text-center" ]
-                            [ Html.a [ A.href "https://www.itpro.tv/", A.class "CTA-link" ]
-                                [ Html.span [] [ Html.text "Check out these courses and more at ITProTV" ]
-                                , Html.span [ A.class "double-arrow" ] [ doubleArrow ]
-                                ]
+                            [ Html.text "Ready to upskill your team? Schedule a demo or buy now."
+                            ]
+                        ]
+                    , div [ A.class "row" ]
+                        [ div [ A.class "col-12 d-flex justify-content-center" ]
+                            [ button
+                                [ A.class "text-center btn btn-lg button-CTA", A.href "https://www.itpro.tv/" ]
+                                [ Html.text "View Business Plans" ]
                             ]
                         ]
                     ]
