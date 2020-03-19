@@ -702,6 +702,7 @@ view model =
                             , form
                                 [ A.class "form-group justify-content-center row"
                                 , A.method "post"
+                                , A.action "http://go.itpro.tv/l/425902/2020-02-06/8qzydq"
                                 , onSubmit ChangeModelState
                                 ]
                                 [ label [ A.class "sr-only", for "pardot_firstName" ] [ Html.text "First Name" ]
