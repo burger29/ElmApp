@@ -14,6 +14,7 @@ module Types exposing
     )
 
 import Json.Decode as Decode
+import Url as Url 
 
 
 type alias Model =
@@ -22,6 +23,7 @@ type alias Model =
     , results : Results
     , formData : FormData
     , allowSubmit : Bool
+    , maybePageUrl : Maybe Url.Url
     }
 
 
@@ -79,6 +81,7 @@ type ModelState
     = AnsweringQuestions Prompt
     | FillingOutForm
     | ShowingResults
+    | ErrorState
 
 
 type Feedback
@@ -101,4 +104,5 @@ type alias FormData =
 type alias Flags =
     { startingState : Maybe (List Int)
     , startingResults : Decode.Value
+    , pageUrl : String
     }

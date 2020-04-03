@@ -48,6 +48,9 @@ import Html.Attributes as A
         , width
         )
 import Html.Events exposing (onClick, onFocus, onInput, onSubmit)
+import Url as Url
+import Url.Parser as UrlParser exposing ((<?>))
+import Url.Parser.Query as Query
 import Json.Decode as Decode
 import Json.Encode
 import Ports exposing (saveResponses, saveResults)
@@ -116,12 +119,19 @@ init flags =
 
                 Err _ ->
                     Results 0 0 0 0
+
+        maybePageUrl =
+            Url.fromString flags.pageUrl
+
+
+
     in
     ( { prompts = savedPrompts
-      , state = selectState savedPrompts
+      , state = selectState savedPrompts maybePageUrl
       , results = savedResults
       , formData = emptyFormData
       , allowSubmit = False
+      , maybePageUrl = maybePageUrl
       }
     , Cmd.none
     )
@@ -167,14 +177,56 @@ newPrompts listQuestions =
         listQuestions
 
 
-selectState : List Prompt -> ModelState
-selectState prompts =
-    case nextUnansweredQuestion prompts of
-        Just prompt ->
-            AnsweringQuestions prompt
+selectState : List Prompt -> Maybe Url.Url -> ModelState
+selectState prompts maybePageUrl =
+    let
+        nextPrompt =
+            case nextUnansweredQuestion prompts of
+                Just prompt ->
+                    AnsweringQuestions prompt
+
+                Nothing ->
+                    FillingOutForm
+
+        maybeModelState =
+          case maybePageUrl of
+              Just url ->
+                  UrlParser.parse (parseModelState prompts) url
+
+              Nothing ->
+                  Just ErrorState
+
+    in
+    Maybe.withDefault ErrorState maybeModelState
+
+
+
+parseModelState : List Prompt -> UrlParser.Parser (ModelState -> a) a
+parseModelState prompts =
+    UrlParser.s "rate-your-team" <?> modelStateQueryParser prompts
+
+
+modelStateQueryParser : List Prompt -> Query.Parser ModelState
+modelStateQueryParser prompts =
+    Query.map (modelStateFromString prompts) (Query.string "submit")
+
+
+modelStateFromString: List Prompt -> Maybe String -> ModelState
+modelStateFromString prompts maybeQuery  =
+    case maybeQuery of
+        Just query ->
+          if query == "success" then
+            ShowingResults
+          else
+            FillingOutForm
 
         Nothing ->
-            FillingOutForm
+            case nextUnansweredQuestion prompts of
+                Just prompt ->
+                    AnsweringQuestions prompt
+
+                Nothing ->
+                    FillingOutForm
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
@@ -237,7 +289,7 @@ update msg model =
                             }
 
                 updatedModel =
-                    { model | prompts = updatedPrompts, results = updatedResults, state = selectState updatedPrompts }
+                    { model | prompts = updatedPrompts, results = updatedResults, state = selectState updatedPrompts model.maybePageUrl }
 
                 responsesList =
                     List.map selectedResponseToInt updatedModel.prompts
@@ -702,8 +754,7 @@ view model =
                             , form
                                 [ A.class "form-group justify-content-center row"
                                 , A.method "post"
-                                , A.action "http://go.itpro.tv/l/425902/2020-02-06/8qzydq"
-                                , onSubmit ChangeModelState
+                                , A.action "https://go.itpro.tv/l/425902/2020-02-06/8qzydq"
                                 ]
                                 [ label [ A.class "sr-only", for "pardot_firstName" ] [ Html.text "First Name" ]
                                 , div [ A.class "col-12" ]
@@ -750,9 +801,6 @@ view model =
                                         , A.name "pardot_email"
                                         , A.type_ "email"
                                         , A.value formEmail
-
-                                        -- , A.pattern "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
-                                        -- , attribute "required" ""
                                         , required True
                                         , minlength 6
                                         , maxlength 40
@@ -888,13 +936,16 @@ view model =
                         ]
                     , div [ A.class "row" ]
                         [ div [ A.class "col-12 d-flex justify-content-center" ]
-                            [ button
-                                [ A.class "text-center btn btn-lg button-CTA", A.href "https://www.itpro.tv/" ]
+                            [ Html.a
+                                [ A.class "text-center btn btn-lg button-CTA", A.href "https://www.itpro.tv/", A.target "_blank", A.rel "noopener noreferrer" ]
                                 [ Html.text "View Business Plans" ]
                             ]
                         ]
                     ]
                 ]
+
+        ErrorState ->
+            div [] [ Html.text "If you're seeing this, something has gone horribly wrong. Please try clearing your cache and refreshing."]
 
 
 renderQuestion : Prompt -> Html Msg

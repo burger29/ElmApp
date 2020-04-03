@@ -24,7 +24,11 @@
     console.log("startingResults: ", startingResults)
     console.log("storedResults: ", storedResults)
     var app = Elm.Main.init({
-      flags: {startingState: startingState, startingResults: startingResults},
+      flags: {
+        startingState: startingState,
+        startingResults: startingResults,
+        pageUrl: window.location.href,
+      },
       node: document.getElementById('elm')
     });
     app.ports.storeResponses.subscribe(function(responses) {
